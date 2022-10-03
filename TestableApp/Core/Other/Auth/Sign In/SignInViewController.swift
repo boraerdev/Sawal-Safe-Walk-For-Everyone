@@ -78,8 +78,8 @@ final class SignInViewController: UIViewController {
     private lazy var registerInButton: UIButton = {
        let btn = UIButton()
         btn.setTitle("Register", for: .normal)
+        btn.setTitleColor(.init(named: "main"), for: .normal)
         btn.layer.cornerRadius = 8
-        btn.setTitleColor(.systemBlue, for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
     }()

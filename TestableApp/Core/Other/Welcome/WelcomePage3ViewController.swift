@@ -85,7 +85,7 @@ extension WelcomePage3ViewController {
 extension WelcomePage3ViewController {
     private func setGradientBackground() {
         let colorTop =  UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0).cgColor
-        let colorBottom = UIColor(named: "main")?.cgColor
+        let colorBottom = UIColor(red: 106/255, green: 214/255, blue: 194/255, alpha: 1).cgColor
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colorTop, colorBottom]
         gradientLayer.locations = [0.0, 1.0]

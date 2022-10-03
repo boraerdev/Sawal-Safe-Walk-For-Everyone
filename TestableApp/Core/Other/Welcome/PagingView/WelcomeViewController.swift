@@ -38,10 +38,10 @@ final class WelcomeViewController: UIViewController {
             btn.setImage(starImg, for: .normal)
         }
         btn.setTitle(" Get Started", for: .normal)
-        btn.setTitleColor(.systemBlue, for: .normal)
+        btn.setTitleColor(.init(named: "main"), for: .normal)
         btn.addTarget(self, action: #selector(didTapStart(_:)), for: .touchUpInside)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.tintColor = .systemBlue
+        btn.tintColor = .init(named: "main")
         btn.isHidden = true
         
         return btn

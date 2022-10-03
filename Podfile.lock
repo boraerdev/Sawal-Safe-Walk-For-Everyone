@@ -1,0 +1,20 @@
+PODS:
+  - IQKeyboardManagerSwift (6.5.10)
+  - lottie-ios (3.4.3)
+
+DEPENDENCIES:
+  - IQKeyboardManagerSwift
+  - lottie-ios
+
+SPEC REPOS:
+  trunk:
+    - IQKeyboardManagerSwift
+    - lottie-ios
+
+SPEC CHECKSUMS:
+  IQKeyboardManagerSwift: 52962c76ab33532f15ad9f3ff4e5715eda5335bb
+  lottie-ios: 9ae750cdc7820fecbd3c2f0cfc493038208fcdc4
+
+PODFILE CHECKSUM: cb759a221a0a87a19e5c3cb036e1a78725c63d04
+
+COCOAPODS: 1.11.3

@@ -15,7 +15,7 @@ final class WelcomeViewController: UIViewController {
         sv.contentSize = .init(
             width: (view.frame.width * 0.9) * 3,
             height: view.frame.height * 0.8)
-        sv.backgroundColor = .red
+        sv.backgroundColor = .systemBackground
         sv.isPagingEnabled = true
         sv.frame = .init(
             x: 0,
@@ -27,16 +27,24 @@ final class WelcomeViewController: UIViewController {
         sv.layer.cornerRadius = 10
         sv.showsHorizontalScrollIndicator = false
         sv.layer.shadowColor = UIColor.black.cgColor
-        sv.layer.shadowRadius = 30
-        sv.layer.shadowOpacity = 0.3
-        sv.layer.shadowOffset = .zero
+        sv.layer.shadowPath = .init(ellipseIn: .init(x: 0, y: 0, width: 40, height: 40), transform: .none)
+        sv.layer.shadowRadius = 20
         return sv
     }()
     
-    private lazy var mockview: UIView = {
-        let view = UIView()
-        view.backgroundColor = .yellow
-        return view
+    private lazy var getStartBtn: UIButton = {
+        let btn = UIButton(type: .custom)
+        if let starImg = UIImage(systemName: "chevron.right.square") {
+            btn.setImage(starImg, for: .normal)
+        }
+        btn.setTitle(" Get Started", for: .normal)
+        btn.setTitleColor(.systemBlue, for: .normal)
+        btn.addTarget(self, action: #selector(didTapStart(_:)), for: .touchUpInside)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.tintColor = .systemBlue
+        btn.isHidden = true
+        
+        return btn
     }()
     
     private lazy var pagingView: UIPageControl = {
@@ -52,28 +60,32 @@ final class WelcomeViewController: UIViewController {
     //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        preparePageViews()
+        view.backgroundColor = .secondarySystemBackground
+        addSubViewForScrollView()
     }
     
-    private func preparePageViews() {
-        let vc = WelcomePage3ViewController()
-        addChild(vc)
-        vc.didMove(toParent: self)
-        scrollView.addSubview(vc.view)
-        vc.view.frame = .init(x: scrollView.frame.width * 2, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
+    private func addSubViewForScrollView(){
+        for (index, item) in[WelcomePage1ViewController(), WelcomePage2ViewController(), WelcomePage3ViewController()].enumerated() {
+            let vc = item
+            addChild(item)
+            vc.didMove(toParent: self)
+            scrollView.addSubview(vc.view)
+            item.view.frame = .init(x: scrollView.frame.width * Double(index), y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
+        }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.addSubview(scrollView)
         view.addSubview(pagingView)
-        scrollView.addSubview(mockview)
-        mockview.frame = .init(x: scrollView.frame.width * 1, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
+        view.addSubview(getStartBtn)
         
         NSLayoutConstraint.activate([
             pagingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pagingView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
+            pagingView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
+            
+            getStartBtn.centerXAnchor.constraint(equalTo: pagingView.centerXAnchor),
+            getStartBtn.centerYAnchor.constraint(equalTo: pagingView.centerYAnchor)
         ])
     }
 }
@@ -84,5 +96,24 @@ extension WelcomeViewController: UIScrollViewDelegate {
         let x = scrollView.contentOffset.x
         let width = view.frame.width
         pagingView.currentPage = x > width * 2 * 0.5 ? 2 : x > width * 0.5 ? 1 : 0
+        
+        if pagingView.currentPage == 2 {
+            pagingView.isHidden = true
+            getStartBtn.isHidden = false
+        }else {
+            pagingView.isHidden = false
+            getStartBtn.isHidden = true
+        }
+    }
+}
+
+//MARK: Objc
+extension WelcomeViewController {
+    @objc func didTapStart(_ sender: UIButton) {
+        //rUserDefaults.standard.set(true, forKey: "isStarted")
+        let vc = UINavigationController(rootViewController: SignInViewController())
+        vc.modalPresentationStyle = .fullScreen
+        vc.modalTransitionStyle = .coverVertical
+        present(vc, animated: true)
     }
 }

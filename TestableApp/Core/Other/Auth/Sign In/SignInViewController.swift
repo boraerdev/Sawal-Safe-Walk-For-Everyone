@@ -68,9 +68,10 @@ final class SignInViewController: UIViewController {
        let btn = UIButton()
         btn.setTitle("Sign In", for: .normal)
         btn.layer.cornerRadius = 8
-        btn.backgroundColor = .systemBlue
         btn.setTitleColor(.systemBackground, for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.clipsToBounds = true
+        btn.layer.masksToBounds = true
         return btn
     }()
     
@@ -100,6 +101,9 @@ final class SignInViewController: UIViewController {
         view.backgroundColor = .systemBackground
         prepareStacks()
         prepareButtons()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -126,6 +130,12 @@ final class SignInViewController: UIViewController {
     
     private func prepareButtons() {
         registerInButton.addTarget(self, action: #selector(didTapRegister), for: .touchUpInside)
+    }
+    
+    private func handleButtonGradients(){
+        signInButton.applyGradient(colours: [
+            UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0),
+            UIColor(red: 106.0/255.0, green: 214.0/255.0, blue: 194.0/255.0, alpha: 1.0)])
     }
     
     override func viewDidLayoutSubviews() {
@@ -163,8 +173,8 @@ final class SignInViewController: UIViewController {
             forgotBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
         ])
         
+        handleButtonGradients()
     }
-    
 }
 
 
@@ -174,5 +184,10 @@ extension SignInViewController {
         let vc = RegisterViewController()
         vc.title = "Register"
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
 }

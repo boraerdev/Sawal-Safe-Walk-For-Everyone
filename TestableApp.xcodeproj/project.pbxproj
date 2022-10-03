@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D155528E9EC09001E8240 /* SignInViewController.swift */; };
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
+		0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */; };
+		0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */; };
 		0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D121528E1FF7A009C2C4C /* AppDelegate.swift */; };
 		0A7D121828E1FF7A009C2C4C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D121728E1FF7A009C2C4C /* SceneDelegate.swift */; };
 		0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A7D121E28E1FF7A009C2C4C /* Assets.xcassets */; };
@@ -20,6 +22,7 @@
 		0A7D123E28E201C9009C2C4C /* QrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123D28E201C9009C2C4C /* QrViewController.swift */; };
 		0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D124028E201D4009C2C4C /* MapViewController.swift */; };
 		0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */; };
+		0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */; };
 		0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */; };
 		0ACB8F8828EA2EFD00A17CC4 /* WelcomePage3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */; };
 		0AF910E528E42C9C004779EF /* HomeControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF910E428E42C9C004779EF /* HomeControllerViewModel.swift */; };
@@ -29,6 +32,8 @@
 /* Begin PBXFileReference section */
 		0A2D155528E9EC09001E8240 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
+		0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage2ViewController.swift; sourceTree = "<group>"; };
+		0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage1ViewController.swift; sourceTree = "<group>"; };
 		0A7D121228E1FF7A009C2C4C /* TestableApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestableApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7D121528E1FF7A009C2C4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0A7D121728E1FF7A009C2C4C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -42,6 +47,7 @@
 		0A7D123D28E201C9009C2C4C /* QrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrViewController.swift; sourceTree = "<group>"; };
 		0A7D124028E201D4009C2C4C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extentions.swift"; sourceTree = "<group>"; };
 		0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage3ViewController.swift; sourceTree = "<group>"; };
 		0AF910E428E42C9C004779EF /* HomeControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeControllerViewModel.swift; sourceTree = "<group>"; };
@@ -109,6 +115,7 @@
 		0A7D121428E1FF7A009C2C4C /* TestableApp */ = {
 			isa = PBXGroup;
 			children = (
+				0A969DEE28EB12D800529B6B /* Extentions */,
 				0A7D124228E203DF009C2C4C /* Resources */,
 				0A7D122B28E20023009C2C4C /* Service */,
 				0A7D122A28E20018009C2C4C /* Model */,
@@ -247,11 +254,21 @@
 			path = Register;
 			sourceTree = "<group>";
 		};
+		0A969DEE28EB12D800529B6B /* Extentions */ = {
+			isa = PBXGroup;
+			children = (
+				0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */,
+			);
+			path = Extentions;
+			sourceTree = "<group>";
+		};
 		0ACB8F8128EA211000A17CC4 /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
 				0ACB8F8528EA2ED200A17CC4 /* PagingView */,
 				0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */,
+				0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */,
+				0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -403,11 +420,14 @@
 				0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */,
 				0ACB8F8828EA2EFD00A17CC4 /* WelcomePage3ViewController.swift in Sources */,
 				0A7D121828E1FF7A009C2C4C /* SceneDelegate.swift in Sources */,
+				0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */,
 				0A7D123228E2006C009C2C4C /* MainTabBarController.swift in Sources */,
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,
 				0A7D123E28E201C9009C2C4C /* QrViewController.swift in Sources */,
+				0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */,
 				0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */,
 				0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */,
+				0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */,
 				0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

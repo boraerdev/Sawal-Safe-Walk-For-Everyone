@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class WelcomePage3ViewController: UIViewController {
+final class WelcomePage1ViewController: UIViewController {
     
     
     //MARK: UI
@@ -32,21 +32,19 @@ final class WelcomePage3ViewController: UIViewController {
     
     private lazy var mainImage: UIImageView = {
        let img = UIImageView()
-        img.image = .init(systemName: "opticaldiscdrive")
+        img.image = .init(systemName: "info.bubble")
         img.tintColor = .systemBackground
         img.contentMode = .scaleAspectFit
         img.translatesAutoresizingMaskIntoConstraints = false
         return img
     }()
-
+    
     //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
-        view.clipsToBounds = true
-        
         prepareStacks()
     }
     
@@ -75,17 +73,18 @@ final class WelcomePage3ViewController: UIViewController {
 }
 
 //MARK: Extentions
-extension WelcomePage3ViewController {
+extension WelcomePage1ViewController {
     @objc func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
 }
 
-extension WelcomePage3ViewController {
+extension WelcomePage1ViewController {
     private func setGradientBackground() {
-        let colorTop =  UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0).cgColor
-        let colorBottom = UIColor(named: "main")?.cgColor
+        let colorTop =  UIColor(red: 255.0/255.0, green: 149.0/255.0, blue: 0.0/255.0, alpha: 1.0).cgColor
+        let colorBottom = UIColor(red: 255.0/255.0, green: 94.0/255.0, blue: 58.0/255.0, alpha: 1.0).cgColor
+                    
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colorTop, colorBottom]
         gradientLayer.locations = [0.0, 1.0]

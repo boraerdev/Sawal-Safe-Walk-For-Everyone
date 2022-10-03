@@ -84,13 +84,15 @@ final class RegisterViewController: UIViewController {
         return lbl
     }()
     
-    private lazy var signInButton: UIButton = {
+    private lazy var registerButton: UIButton = {
        let btn = UIButton()
         btn.setTitle("Register", for: .normal)
         btn.layer.cornerRadius = 8
         btn.backgroundColor = .systemBlue
         btn.setTitleColor(.systemBackground, for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.layer.masksToBounds = true
+        btn.clipsToBounds = true
         return btn
     }()
     
@@ -109,6 +111,9 @@ final class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+
         prepareStacks()
     }
     
@@ -119,7 +124,7 @@ final class RegisterViewController: UIViewController {
             fullNameField,
             signField,
             passField,
-            signInButton,
+            registerButton,
         ])
         signStack.axis = .vertical
         signStack.distribution = .fill
@@ -135,6 +140,12 @@ final class RegisterViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         signInAnimation.pause()
+    }
+    
+    private func handleButtonGradients(){
+        registerButton.applyGradient(colours: [
+            UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0),
+            UIColor(red: 106.0/255.0, green: 214.0/255.0, blue: 194.0/255.0, alpha: 1.0)])
     }
     
     override func viewDidLayoutSubviews() {
@@ -155,7 +166,7 @@ final class RegisterViewController: UIViewController {
             
             signField.heightAnchor.constraint(equalToConstant: 45),
             passField.heightAnchor.constraint(equalToConstant: 45),
-            signInButton.heightAnchor.constraint(equalToConstant: 45),
+            registerButton.heightAnchor.constraint(equalToConstant: 45),
             fullNameField.heightAnchor.constraint(equalToConstant: 45),
             
             signFieldText.leadingAnchor.constraint(equalTo: signField.leadingAnchor, constant: 20),
@@ -176,9 +187,15 @@ final class RegisterViewController: UIViewController {
             
             termsBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             termsBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
-            
         ])
-        
+        handleButtonGradients()
     }
     
+}
+
+extension RegisterViewController {
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
 }

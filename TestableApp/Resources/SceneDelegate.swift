@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.makeKeyAndVisible()
         
-        var vc = isStarted ? SignInViewController() : WelcomeViewController()
+        var vc = isStarted ? UINavigationController(rootViewController: SignInViewController()) : WelcomeViewController()
         window?.rootViewController = vc
     }
 

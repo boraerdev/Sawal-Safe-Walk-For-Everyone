@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class WelcomePage3ViewController: UIViewController {
+final class WelcomePage2ViewController: UIViewController {
     
     
     //MARK: UI
@@ -32,13 +32,13 @@ final class WelcomePage3ViewController: UIViewController {
     
     private lazy var mainImage: UIImageView = {
        let img = UIImageView()
-        img.image = .init(systemName: "opticaldiscdrive")
+        img.image = .init(systemName: "face.smiling")
         img.tintColor = .systemBackground
         img.contentMode = .scaleAspectFit
         img.translatesAutoresizingMaskIntoConstraints = false
         return img
     }()
-
+    
     //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,30 +62,32 @@ final class WelcomePage3ViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             textStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            textStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+            textStack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
             textStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             mainImage.widthAnchor.constraint(equalToConstant: 400),
             mainImage.heightAnchor.constraint(equalToConstant: 400),
             mainImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -80),
-            mainImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 80),
+            mainImage.topAnchor.constraint(equalTo: view.topAnchor, constant: -80),
             
         ])
     }
 }
 
 //MARK: Extentions
-extension WelcomePage3ViewController {
+extension WelcomePage2ViewController {
     @objc func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
 }
 
-extension WelcomePage3ViewController {
+
+extension WelcomePage2ViewController {
     private func setGradientBackground() {
-        let colorTop =  UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0).cgColor
-        let colorBottom = UIColor(named: "main")?.cgColor
+        let colorTop =  UIColor(red: 83.0/255.0, green: 28.0/255.0, blue: 117.0/255.0, alpha: 1.0).cgColor
+        let colorBottom = UIColor(red: 173.0/255.0, green: 106.0/255.0, blue: 214.0/255.0, alpha: 1.0).cgColor
+                    
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colorTop, colorBottom]
         gradientLayer.locations = [0.0, 1.0]
@@ -103,4 +105,3 @@ extension WelcomePage3ViewController {
         textStack.spacing = 10
     }
 }
-

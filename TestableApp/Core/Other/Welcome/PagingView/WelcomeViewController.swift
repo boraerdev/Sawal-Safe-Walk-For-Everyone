@@ -110,7 +110,7 @@ extension WelcomeViewController: UIScrollViewDelegate {
 //MARK: Objc
 extension WelcomeViewController {
     @objc func didTapStart(_ sender: UIButton) {
-        //rUserDefaults.standard.set(true, forKey: "isStarted")
+        UserDefaults.standard.set(true, forKey: "isStarted")
         let vc = UINavigationController(rootViewController: SignInViewController())
         vc.modalPresentationStyle = .fullScreen
         vc.modalTransitionStyle = .coverVertical

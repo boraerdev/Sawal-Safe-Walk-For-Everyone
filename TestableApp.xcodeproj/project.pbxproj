@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A1BE54928EB74D4000D9ADC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A1BE54828EB74D4000D9ADC /* GoogleService-Info.plist */; };
 		0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D155528E9EC09001E8240 /* SignInViewController.swift */; };
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
+		0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6DFAF828EC5AC4006C7B1C /* User.swift */; };
 		0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */; };
 		0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */; };
 		0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D121528E1FF7A009C2C4C /* AppDelegate.swift */; };
@@ -23,17 +23,22 @@
 		0A7D123E28E201C9009C2C4C /* QrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123D28E201C9009C2C4C /* QrViewController.swift */; };
 		0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D124028E201D4009C2C4C /* MapViewController.swift */; };
 		0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */; };
+		0A8FAF7728EB7EB60009E65A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A8FAF7628EB7EB50009E65A /* GoogleService-Info.plist */; };
 		0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */; };
+		0AB0BAFF28EC9EA200EEB48C /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB0BAFE28EC9EA200EEB48C /* UserService.swift */; };
 		0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */; };
 		0ACB8F8828EA2EFD00A17CC4 /* WelcomePage3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */; };
 		0AF910E528E42C9C004779EF /* HomeControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF910E428E42C9C004779EF /* HomeControllerViewModel.swift */; };
+		0AF9DCED28EC037500B2570F /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9DCEC28EC037500B2570F /* AuthManager.swift */; };
+		0AF9DCEF28EC03D300B2570F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9DCEE28EC03D300B2570F /* SignInViewModel.swift */; };
+		0AF9DCF128EC03FF00B2570F /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9DCF028EC03FF00B2570F /* RegisterViewModel.swift */; };
 		5F6856729A6D00D7421E7DB5 /* Pods_TestableApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99EEC335AC54C3B5F123483A /* Pods_TestableApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0A1BE54828EB74D4000D9ADC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0A2D155528E9EC09001E8240 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
+		0A6DFAF828EC5AC4006C7B1C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = TestableApp/Core/Other/Auth/Register/User.swift; sourceTree = SOURCE_ROOT; };
 		0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage2ViewController.swift; sourceTree = "<group>"; };
 		0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage1ViewController.swift; sourceTree = "<group>"; };
 		0A7D121228E1FF7A009C2C4C /* TestableApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestableApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,10 +54,15 @@
 		0A7D123D28E201C9009C2C4C /* QrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrViewController.swift; sourceTree = "<group>"; };
 		0A7D124028E201D4009C2C4C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		0A8FAF7628EB7EB50009E65A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extentions.swift"; sourceTree = "<group>"; };
+		0AB0BAFE28EC9EA200EEB48C /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserService.swift; path = TestableApp/Core/Other/Auth/Register/UserService.swift; sourceTree = SOURCE_ROOT; };
 		0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage3ViewController.swift; sourceTree = "<group>"; };
 		0AF910E428E42C9C004779EF /* HomeControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeControllerViewModel.swift; sourceTree = "<group>"; };
+		0AF9DCEC28EC037500B2570F /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		0AF9DCEE28EC03D300B2570F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		0AF9DCF028EC03FF00B2570F /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
 		0E1DD3B299AB6442D0ADF3F8 /* Pods-TestableApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestableApp.debug.xcconfig"; path = "Target Support Files/Pods-TestableApp/Pods-TestableApp.debug.xcconfig"; sourceTree = "<group>"; };
 		2119EEB945EC24C89819F90D /* Pods-TestableApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestableApp.release.xcconfig"; path = "Target Support Files/Pods-TestableApp/Pods-TestableApp.release.xcconfig"; sourceTree = "<group>"; };
 		99EEC335AC54C3B5F123483A /* Pods_TestableApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestableApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,6 +94,7 @@
 			children = (
 				0A856B2128EA07D600ABDD03 /* Register */,
 				0A2D155428E9EBF3001E8240 /* Sign In */,
+				0AF9DCEC28EC037500B2570F /* AuthManager.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -92,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				0A2D155528E9EC09001E8240 /* SignInViewController.swift */,
+				0AF9DCEE28EC03D300B2570F /* SignInViewModel.swift */,
 			);
 			path = "Sign In";
 			sourceTree = "<group>";
@@ -123,7 +135,7 @@
 				0A7D122A28E20018009C2C4C /* Model */,
 				0A7D122928E20013009C2C4C /* Core */,
 				0A7D122328E1FF7A009C2C4C /* Info.plist */,
-				0A1BE54828EB74D4000D9ADC /* GoogleService-Info.plist */,
+				0A8FAF7628EB7EB50009E65A /* GoogleService-Info.plist */,
 			);
 			path = TestableApp;
 			sourceTree = "<group>";
@@ -145,6 +157,7 @@
 		0A7D122A28E20018009C2C4C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0A6DFAF828EC5AC4006C7B1C /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -152,6 +165,7 @@
 		0A7D122B28E20023009C2C4C /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				0AB0BAFE28EC9EA200EEB48C /* UserService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -253,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */,
+				0AF9DCF028EC03FF00B2570F /* RegisterViewModel.swift */,
 			);
 			path = Register;
 			sourceTree = "<group>";
@@ -362,7 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A7D122228E1FF7A009C2C4C /* LaunchScreen.storyboard in Resources */,
-				0A1BE54928EB74D4000D9ADC /* GoogleService-Info.plist in Resources */,
+				0A8FAF7728EB7EB60009E65A /* GoogleService-Info.plist in Resources */,
 				0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */,
 				0A42A95628EA0D6200B0F380 /* login.json in Resources */,
 			);
@@ -424,12 +439,17 @@
 				0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */,
 				0ACB8F8828EA2EFD00A17CC4 /* WelcomePage3ViewController.swift in Sources */,
 				0A7D121828E1FF7A009C2C4C /* SceneDelegate.swift in Sources */,
+				0AF9DCED28EC037500B2570F /* AuthManager.swift in Sources */,
+				0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */,
+				0AF9DCF128EC03FF00B2570F /* RegisterViewModel.swift in Sources */,
 				0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */,
 				0A7D123228E2006C009C2C4C /* MainTabBarController.swift in Sources */,
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,
 				0A7D123E28E201C9009C2C4C /* QrViewController.swift in Sources */,
+				0AB0BAFF28EC9EA200EEB48C /* UserService.swift in Sources */,
 				0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */,
 				0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */,
+				0AF9DCEF28EC03D300B2570F /* SignInViewModel.swift in Sources */,
 				0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */,
 				0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */,
 				0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */,

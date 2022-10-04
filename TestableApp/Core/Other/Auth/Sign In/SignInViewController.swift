@@ -7,18 +7,41 @@
 
 import UIKit
 import Lottie
+import RxSwift
+import RxCocoa
 
-final class SignInViewController: UIViewController {
+protocol SignInViewControllerInterface: AnyObject {
+    
+}
+
+final class SignInViewController: UIViewController, SignInViewControllerInterface {
+    
+    //MARK: Def
+    let disposeBag = DisposeBag()
+    let viewModel = SignInViewModel()
 
     //MARK: UI
     private lazy var signInAnimation: AnimationView = {
         let ani = AnimationView()
         ani.animation = Animation.named("login")
         ani.loopMode = .playOnce
+        ani.tintColor = .label
         ani.translatesAutoresizingMaskIntoConstraints = false
         ani.contentMode = .scaleAspectFit
         
         return ani
+    }()
+    
+    private lazy var spinner: UIActivityIndicatorView = {
+        let ind = UIActivityIndicatorView(style: .large)
+        ind.frame = .init(x: 0, y: 0, width: 100, height: 100)
+        let bg = UIView()
+        bg.backgroundColor = .secondarySystemBackground
+        bg.layer.cornerRadius = 8
+        bg.frame = ind.bounds
+        ind.layer.insertSublayer(bg.layer, at: 0)
+        ind.center = view.center
+        return ind
     }()
     
     private lazy var signField: UITextField = {
@@ -99,11 +122,12 @@ final class SignInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        prepareStacks()
-        prepareButtons()
-        
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        viewModel.delegate = self
+        
+        prepareStacks()
+        prepareButtons()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -114,30 +138,6 @@ final class SignInViewController: UIViewController {
         signInAnimation.pause()
     }
     
-    private func prepareStacks() {
-        //MailField-PassField-Buttons Stack
-        signStack = .init(arrangedSubviews: [
-            signField,
-            passField,
-            signInButton,
-            registerInButton
-        ])
-        signStack.axis = .vertical
-        signStack.distribution = .fill
-        signStack.spacing = 10
-        signStack.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private func prepareButtons() {
-        registerInButton.addTarget(self, action: #selector(didTapRegister), for: .touchUpInside)
-    }
-    
-    private func handleButtonGradients(){
-        signInButton.applyGradient(colours: [
-            UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0),
-            UIColor(red: 106.0/255.0, green: 214.0/255.0, blue: 194.0/255.0, alpha: 1.0)])
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.addSubview(signInAnimation)
@@ -145,6 +145,7 @@ final class SignInViewController: UIViewController {
         view.addSubview(signFieldText)
         view.addSubview(passFieldText)
         view.addSubview(forgotBtn)
+        view.addSubview(spinner)
         
         
         NSLayoutConstraint.activate([
@@ -180,14 +181,69 @@ final class SignInViewController: UIViewController {
 
 //MARK: Objc
 extension SignInViewController {
-    @objc func didTapRegister() {
-        let vc = RegisterViewController()
-        vc.title = "Register"
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
+
     @objc func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
+    }
+    
+    private func prepareButtons() {
+        registerInButton.rx.tap.subscribe(onNext: { [unowned self] in
+            navigationController?.pushViewController(RegisterViewController(), animated: true)
+        }).disposed(by: disposeBag)
+        
+        signField.rx.text.orEmpty.bind(to: viewModel.email)
+        passField.rx.text.orEmpty.bind(to: viewModel.pass)
+        
+        signInButton.rx.tap.do( onNext: { [unowned self] in
+            self.signField.resignFirstResponder()
+            self.passField.resignFirstResponder()
+        }).subscribe(onNext: { [unowned self] in
+            
+            viewModel.signInUser(email: viewModel.email.value, pass: viewModel.pass.value) {result in
+                switch result {
+                case .success( _):
+                    let vc = MainTabBarController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true)
+                case .failure(let error):
+                    self.throwAlert(message: error.localizedDescription)
+                }
+            }
+            
+            viewModel.isLoading.subscribe { [weak self] result in
+                result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
+            }
+            .disposed(by: disposeBag)
+            
+        })
+        .disposed(by: disposeBag)
+        
+    }
+    
+    private func handleButtonGradients(){
+        signInButton.applyGradient(colours: [
+            UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0),
+            UIColor(red: 106.0/255.0, green: 214.0/255.0, blue: 194.0/255.0, alpha: 1.0)])
+    }
+    
+    private func throwAlert(message: String) {
+        let alert = UIAlertController(title: "Try Again", message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: "OK", style: .default))
+        self.present(alert, animated: true)
+    }
+    
+    private func prepareStacks() {
+        //MailField-PassField-Buttons Stack
+        signStack = .init(arrangedSubviews: [
+            signField,
+            passField,
+            signInButton,
+            registerInButton
+        ])
+        signStack.axis = .vertical
+        signStack.distribution = .fill
+        signStack.spacing = 10
+        signStack.translatesAutoresizingMaskIntoConstraints = false
     }
 }

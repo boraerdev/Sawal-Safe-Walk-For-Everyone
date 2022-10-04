@@ -8,5 +8,11 @@ target 'TestableApp' do
   # Pods for TestableApp
 pod 'lottie-ios'
 pod 'IQKeyboardManagerSwift'
+pod 'FirebaseAuth'
+pod 'RxSwift', '6.5.0'
+pod 'RxCocoa', '6.5.0'
+pod 'FirebaseFirestore', '~> 9.6'
+pod 'FirebaseFirestoreSwift', '~> 9.6'
+pod 'gRPC-Core', '~> 1.44'
 
 end

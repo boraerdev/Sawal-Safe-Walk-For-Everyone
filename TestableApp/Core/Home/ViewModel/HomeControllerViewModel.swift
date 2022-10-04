@@ -7,18 +7,11 @@
 
 import Foundation
 
-protocol HomeControllerViewModelDelegate: AnyObject{
-    var viewDelegate: HomeViewControllerDelegate? {get set}
-    func viewDidLoad()
-    
+protocol HomeViewModelInterface: AnyObject {
 }
 
-final class HomeControllerViewModel{
-    weak var viewDelegate: HomeViewControllerDelegate?
+final class HomeControllerViewModel {
 }
 
-extension HomeControllerViewModel: HomeControllerViewModelDelegate {
-    func viewDidLoad(){
-        
-    }
+extension HomeControllerViewModel: HomeViewModelInterface {
 }

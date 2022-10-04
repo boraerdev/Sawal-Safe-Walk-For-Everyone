@@ -7,8 +7,18 @@
 
 import UIKit
 import Lottie
+import RxSwift
+import RxCocoa
 
-final class RegisterViewController: UIViewController {
+protocol RegisterViewControllerInterface: AnyObject {
+    
+}
+
+final class RegisterViewController: UIViewController, RegisterViewControllerInterface {
+    
+    //MARK: Def
+    var viewModel = RegisterViewModel()
+    let disposeBag = DisposeBag()
 
     //MARK: UI
     private lazy var signInAnimation: AnimationView = {
@@ -30,6 +40,13 @@ final class RegisterViewController: UIViewController {
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
         //field.translatesAutoresizingMaskIntoConstraints = false
         return field
+    }()
+    
+    private lazy var spinner: UIActivityIndicatorView = {
+        let ind = UIActivityIndicatorView(style: .large)
+        ind.frame = .init(x: 0, y: 0, width: 100, height: 100)
+        ind.center = view.center
+        return ind
     }()
     
     private lazy var fullNameField: UITextField = {
@@ -113,25 +130,40 @@ final class RegisterViewController: UIViewController {
         view.backgroundColor = .systemBackground
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
-
+        viewModel.delegate = self
         prepareStacks()
+        bindFields()
     }
     
-    private func prepareStacks(){
+    private func bindFields() {
+        fullNameField.rx.text.orEmpty.bind(to: viewModel.fullName)
+        signField.rx.text.orEmpty.bind(to: viewModel.email)
+        passField.rx.text.orEmpty.bind(to: viewModel.pass)
         
-        //MailField-PassField-Buttons Stack
-        signStack = .init(arrangedSubviews: [
-            fullNameField,
-            signField,
-            passField,
-            registerButton,
-        ])
-        signStack.axis = .vertical
-        signStack.distribution = .fill
-        signStack.spacing = 10
-        signStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        
+        registerButton.rx.tap.do( onNext: { [unowned self] in
+            self.fullNameField.resignFirstResponder()
+            self.signField.resignFirstResponder()
+            self.passField.resignFirstResponder()
+        }).subscribe(onNext: { [unowned self] in
+            
+            viewModel.registerUser(fullName: viewModel.fullName.value, email: viewModel.email.value, pass: viewModel.pass.value) {result in
+                switch result {
+                case .success( _):
+                    let vc = MainTabBarController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true)
+                case .failure(let error):
+                    self.throwAlert(message: error.localizedDescription)
+                }
+            }
+            
+            viewModel.isLoading.subscribe { [weak self] result in
+                result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
+            }
+            .disposed(by: disposeBag)
+            
+        })
+        .disposed(by: disposeBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -142,12 +174,6 @@ final class RegisterViewController: UIViewController {
         signInAnimation.pause()
     }
     
-    private func handleButtonGradients(){
-        registerButton.applyGradient(colours: [
-            UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0),
-            UIColor(red: 106.0/255.0, green: 214.0/255.0, blue: 194.0/255.0, alpha: 1.0)])
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.addSubview(signInAnimation)
@@ -156,6 +182,7 @@ final class RegisterViewController: UIViewController {
         view.addSubview(passFieldText)
         view.addSubview(fullNameFieldText)
         view.addSubview(termsBtn)
+        view.addSubview(spinner)
         
         
         NSLayoutConstraint.activate([
@@ -190,12 +217,40 @@ final class RegisterViewController: UIViewController {
         ])
         handleButtonGradients()
     }
-    
 }
 
+//MARK: Funcs
 extension RegisterViewController {
+    
     @objc func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
+    
+    private func handleButtonGradients() {
+        registerButton.applyGradient(colours: [
+            UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0),
+            UIColor(red: 106.0/255.0, green: 214.0/255.0, blue: 194.0/255.0, alpha: 1.0)])
+    }
+    
+    private func prepareStacks() {
+        //MailField-PassField-Buttons Stack
+        signStack = .init(arrangedSubviews: [
+            fullNameField,
+            signField,
+            passField,
+            registerButton,
+        ])
+        signStack.axis = .vertical
+        signStack.distribution = .fill
+        signStack.spacing = 10
+        signStack.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func throwAlert(message: String) {
+        let alert = UIAlertController(title: "Try Again", message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: "OK", style: .default))
+        self.present(alert, animated: true)
+    }
+
 }
+

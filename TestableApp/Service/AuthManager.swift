@@ -15,9 +15,11 @@ final class AuthManager {
     var userSession: FirebaseAuth.User?
     var currentUser: User?
     
-    init() {}
+    init() {
+        fetchUser { _ in }
+    }
     
-    public func fetchUser(completion: @escaping (User)->()){
+    public func fetchUser(completion: @escaping (User)->()) {
             guard let user = userSession else { return }
             UserService.shared.getUser(uid: user.uid) { [weak self] returned in
                 self?.currentUser = returned

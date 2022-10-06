@@ -23,12 +23,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         var vc = isStarted ? UINavigationController(rootViewController: SignInViewController()) : WelcomeViewController()
         
         if let user = Auth.auth().currentUser {
-            vc = MainTabBarController()
+            UserService.shared.getUser(uid: user.uid) { [weak self] returned in
+                AuthManager.shared.currentUser = returned
+                self?.window?.rootViewController = MainTabBarController()
+            }
+        } else {
+            window?.rootViewController = vc
         }
-        
-        window?.rootViewController = vc
     }
-
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

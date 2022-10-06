@@ -8,6 +8,7 @@
 import UIKit
 import IQKeyboardManagerSwift
 import FirebaseCore
+import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         IQKeyboardManager.shared.enable = true
         UINavigationController().navigationBar.shadowImage = UIImage()
-        UIBarButtonItem.appearance().tintColor = .init(named: "main")
+        UIBarButtonItem.appearance().tintColor = UIColor.main3
         FirebaseApp.configure()
         return true
     }

@@ -9,20 +9,21 @@ import UIKit
 import FirebaseAuth
 
 class PersonViewController: UIViewController {
-    
-    private lazy var btn: UIButton = {
-        let btn = UIButton()
-        btn.setTitle("Çıkış", for: .normal)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        return btn
-    }()
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        btn.addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .systemBackground
+        title = AuthManager.shared.currentUser?.fullName
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: .init(systemName: "rectangle.portrait.and.arrow.right"), style: .done, target: self, action: #selector(didTapExit))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "gear"), style: .plain, target: self, action: #selector(didTapSettings))
+        tabBarItem.title = "Person"
     }
     
+    
+}
+
+extension PersonViewController {
     @objc func didTapExit() {
         do {
             try Auth.auth().signOut()
@@ -30,30 +31,9 @@ class PersonViewController: UIViewController {
             vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true)
         } catch let error {
-            
         }
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.addSubview(btn)
-        
-        NSLayoutConstraint.activate([
-            btn.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            btn.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+    @objc func didTapSettings() {
         
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

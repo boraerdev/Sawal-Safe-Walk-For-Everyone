@@ -49,6 +49,8 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         field.layer.cornerRadius = 8
         field.backgroundColor = .systemBackground
         field.layer.borderWidth = 1
+        field.autocorrectionType = .no
+        field.autocapitalizationType = .none
         field.layer.borderColor = UIColor.secondarySystemBackground.cgColor
         field.leftViewMode = .always
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
@@ -70,6 +72,8 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         field.layer.cornerRadius = 8
         field.backgroundColor = .systemBackground
         field.leftViewMode = .always
+        field.autocorrectionType = .no
+        field.autocapitalizationType = .none
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
         //field.translatesAutoresizingMaskIntoConstraints = false
         field.layer.borderWidth = 1
@@ -101,7 +105,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
     private lazy var registerInButton: UIButton = {
        let btn = UIButton()
         btn.setTitle("Register", for: .normal)
-        btn.setTitleColor(.init(named: "main"), for: .normal)
+        btn.setTitleColor(UIColor.main3, for: .normal)
         btn.layer.cornerRadius = 8
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
@@ -223,8 +227,8 @@ extension SignInViewController {
     
     private func handleButtonGradients(){
         signInButton.applyGradient(colours: [
-            UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0),
-            UIColor(red: 106.0/255.0, green: 214.0/255.0, blue: 194.0/255.0, alpha: 1.0)])
+            UIColor.main3,
+            UIColor.main3Light])
     }
     
     private func throwAlert(message: String) {

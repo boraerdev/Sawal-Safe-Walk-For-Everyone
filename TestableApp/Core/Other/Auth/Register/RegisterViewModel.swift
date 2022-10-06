@@ -22,7 +22,6 @@ final class RegisterViewModel {
 }
 
 extension RegisterViewModel: RegisterViewModelInterface {
-  
     func registerUser(fullName: String, email: String, pass: String, completion: @escaping (Result<Bool,Error>)->()) {
         isLoading.accept(true)
         AuthManager.shared.register(fullName: fullName, email: email, pass: pass) { [weak self] result in

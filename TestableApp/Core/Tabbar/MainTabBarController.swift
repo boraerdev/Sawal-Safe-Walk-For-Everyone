@@ -14,6 +14,7 @@ class MainTabBarController: UITabBarController {
         generateTabBar()
         tabBar.tintColor = .label
         tabBar.shadowImage = UIImage()
+        tabBar.backgroundColor = .systemBackground
     }
     
     private func generateTabBar() {
@@ -22,16 +23,6 @@ class MainTabBarController: UITabBarController {
                 viewController: HomeViewController(),
                 title: "Home",
                 image: UIImage(systemName: "house")
-            ),
-            generateVC(
-                viewController: SearchViewController(),
-                title: "Search",
-                image: UIImage(systemName: "magnifyingglass")
-            ),
-            generateVC(
-                viewController: QrViewController(),
-                title: "Scan",
-                image: UIImage(systemName: "qrcode")
             ),
             generateVC(
                 viewController: MapViewController(),
@@ -47,10 +38,10 @@ class MainTabBarController: UITabBarController {
         ]
     }
     
-    private func generateVC(viewController: UIViewController, title: String, image: UIImage?) -> UIViewController {
+    private func generateVC(viewController: UIViewController, title: String, image: UIImage?) -> UINavigationController {
         viewController.tabBarItem.title = title
         viewController.tabBarItem.image = image
-        return viewController
+        return UINavigationController(rootViewController: viewController)
     }
     
 }

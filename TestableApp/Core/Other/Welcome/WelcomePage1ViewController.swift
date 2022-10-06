@@ -82,8 +82,8 @@ extension WelcomePage1ViewController {
 
 extension WelcomePage1ViewController {
     private func setGradientBackground() {
-        let colorTop =  UIColor(red: 255.0/255.0, green: 149.0/255.0, blue: 0.0/255.0, alpha: 1.0).cgColor
-        let colorBottom = UIColor(red: 255.0/255.0, green: 94.0/255.0, blue: 58.0/255.0, alpha: 1.0).cgColor
+        let colorTop =  UIColor.main1.cgColor
+        let colorBottom = UIColor.main1Light.cgColor
                     
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colorTop, colorBottom]
@@ -95,7 +95,7 @@ extension WelcomePage1ViewController {
         self.view.layer.insertSublayer(gradientLayer, at:0)
     }
     
-    private func prepareStacks(){
+    private func prepareStacks() {
         textStack = .init(arrangedSubviews: [titleLabel,descLabel])
         textStack.translatesAutoresizingMaskIntoConstraints = false
         textStack.axis = .vertical

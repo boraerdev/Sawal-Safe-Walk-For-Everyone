@@ -84,19 +84,18 @@ extension WelcomePage3ViewController {
 
 extension WelcomePage3ViewController {
     private func setGradientBackground() {
-        let colorTop =  UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0).cgColor
-        let colorBottom = UIColor(red: 106/255, green: 214/255, blue: 194/255, alpha: 1).cgColor
+        let colorTop =  UIColor.main3.cgColor
+        let colorBottom = UIColor.main3Light.cgColor
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colorTop, colorBottom]
         gradientLayer.locations = [0.0, 1.0]
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 1.0)
         gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.0)
         gradientLayer.frame = self.view.bounds
-                
         self.view.layer.insertSublayer(gradientLayer, at:0)
     }
     
-    private func prepareStacks(){
+    private func prepareStacks() {
         textStack = .init(arrangedSubviews: [titleLabel,descLabel])
         textStack.translatesAutoresizingMaskIntoConstraints = false
         textStack.axis = .vertical

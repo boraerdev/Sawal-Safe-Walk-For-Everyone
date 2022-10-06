@@ -35,6 +35,8 @@ final class RegisterViewController: UIViewController, RegisterViewControllerInte
         field.layer.cornerRadius = 8
         field.backgroundColor = .systemBackground
         field.layer.borderWidth = 1
+        field.autocorrectionType = .no
+        field.autocapitalizationType = .none
         field.layer.borderColor = UIColor.secondarySystemBackground.cgColor
         field.leftViewMode = .always
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
@@ -54,6 +56,8 @@ final class RegisterViewController: UIViewController, RegisterViewControllerInte
         field.layer.cornerRadius = 8
         field.backgroundColor = .systemBackground
         field.layer.borderWidth = 1
+        field.autocorrectionType = .no
+        field.autocapitalizationType = .none
         field.layer.borderColor = UIColor.secondarySystemBackground.cgColor
         field.leftViewMode = .always
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
@@ -84,6 +88,8 @@ final class RegisterViewController: UIViewController, RegisterViewControllerInte
         field.layer.cornerRadius = 8
         field.backgroundColor = .systemBackground
         field.leftViewMode = .always
+        field.autocorrectionType = .no
+        field.autocapitalizationType = .none
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
         //field.translatesAutoresizingMaskIntoConstraints = false
         field.layer.borderWidth = 1
@@ -228,8 +234,8 @@ extension RegisterViewController {
     
     private func handleButtonGradients() {
         registerButton.applyGradient(colours: [
-            UIColor(red: 38.0/255.0, green: 139.0/255.0, blue: 121.0/255.0, alpha: 1.0),
-            UIColor(red: 106.0/255.0, green: 214.0/255.0, blue: 194.0/255.0, alpha: 1.0)])
+            UIColor.main3,
+            UIColor.main3Light])
     }
     
     private func prepareStacks() {

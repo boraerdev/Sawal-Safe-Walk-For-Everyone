@@ -13,7 +13,7 @@ final class WelcomePage1ViewController: UIViewController {
     //MARK: UI
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "Placeholder"
+        lbl.text = "Go Map"
         lbl.textColor = .systemBackground
         lbl.font = .systemFont(ofSize: 34, weight: .bold)
         return lbl

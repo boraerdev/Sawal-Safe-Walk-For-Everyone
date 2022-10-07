@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D155528E9EC09001E8240 /* SignInViewController.swift */; };
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
+		0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613028F04A3500019BC4 /* CustomCameraController.swift */; };
+		0A67613328F04AF000019BC4 /* PhotoPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613228F04AF000019BC4 /* PhotoPreviewView.swift */; };
 		0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6DFAF828EC5AC4006C7B1C /* User.swift */; };
 		0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */; };
 		0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */; };
@@ -39,6 +41,8 @@
 /* Begin PBXFileReference section */
 		0A2D155528E9EC09001E8240 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
+		0A67613028F04A3500019BC4 /* CustomCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCameraController.swift; sourceTree = "<group>"; };
+		0A67613228F04AF000019BC4 /* PhotoPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewView.swift; sourceTree = "<group>"; };
 		0A6DFAF828EC5AC4006C7B1C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = TestableApp/Core/Other/Auth/Register/User.swift; sourceTree = SOURCE_ROOT; };
 		0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage2ViewController.swift; sourceTree = "<group>"; };
 		0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage1ViewController.swift; sourceTree = "<group>"; };
@@ -174,8 +178,8 @@
 		0A7D122C28E2002B009C2C4C /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				0A7D122E28E20034009C2C4C /* ViewModel */,
 				0A7D122D28E20030009C2C4C /* View */,
+				0A7D122E28E20034009C2C4C /* ViewModel */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -225,6 +229,8 @@
 			isa = PBXGroup;
 			children = (
 				0A7D123D28E201C9009C2C4C /* ShareViewController.swift */,
+				0A67613028F04A3500019BC4 /* CustomCameraController.swift */,
+				0A67613228F04AF000019BC4 /* PhotoPreviewView.swift */,
 			);
 			path = Share;
 			sourceTree = "<group>";
@@ -428,6 +434,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */,
+				0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */,
 				0A7D123728E20161009C2C4C /* PersonViewController.swift in Sources */,
 				0AF910E528E42C9C004779EF /* HomeControllerViewModel.swift in Sources */,
 				0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */,
@@ -442,6 +449,7 @@
 				0A7D123228E2006C009C2C4C /* MainTabBarController.swift in Sources */,
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,
 				0A7D123E28E201C9009C2C4C /* ShareViewController.swift in Sources */,
+				0A67613328F04AF000019BC4 /* PhotoPreviewView.swift in Sources */,
 				0AB0BAFF28EC9EA200EEB48C /* UserService.swift in Sources */,
 				0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */,
 				0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */,
@@ -591,6 +599,7 @@
 				DEVELOPMENT_TEAM = HJ3CX8Z5MV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TestableApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to make sure you can take pictures.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to look at risk factors.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -623,6 +632,7 @@
 				DEVELOPMENT_TEAM = HJ3CX8Z5MV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TestableApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to make sure you can take pictures.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to look at risk factors.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

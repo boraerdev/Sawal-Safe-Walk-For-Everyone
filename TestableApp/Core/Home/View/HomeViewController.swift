@@ -17,6 +17,7 @@ final class HomeViewController: UIViewController {
     
     //MARK: Def
     let viewModel = HomeControllerViewModel()
+    let disposeBag = DisposeBag()
     
     //MARK: UI
     private lazy var goMapBtn: UIButton = {
@@ -129,10 +130,14 @@ final class HomeViewController: UIViewController {
         goMapBtn.rx.tap.subscribe(onNext: { [unowned self] in
             navigationController?.tabBarController?.selectedIndex = 1
         })
+        .disposed(by: disposeBag)
         
         addRiskBtn.rx.tap.subscribe(onNext: {[unowned self] in
-            navigationController?.pushViewController(ShareViewController(), animated: true)
+            //TODO
+            let simulator = true
+            simulator ? navigationController?.pushViewController(ShareViewController(), animated: true) : navigationController?.pushViewController(CustomCameraController(), animated: true)
         })
+        .disposed(by: disposeBag)
     }
     
 }

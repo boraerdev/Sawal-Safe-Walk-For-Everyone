@@ -23,7 +23,7 @@ class MapViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     //MARK: UI
-    private lazy var mapKit : MKMapView = {
+    lazy var mapKit : MKMapView = {
        let mv = MKMapView()
         mv.translatesAutoresizingMaskIntoConstraints = false
         return mv

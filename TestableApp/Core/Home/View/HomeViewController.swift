@@ -52,7 +52,7 @@ final class HomeViewController: UIViewController {
     private lazy var addRiskBtn: UIButton = {
         let btn = UIButton()
         btn.layer.cornerRadius = 8
-        btn.setTitle("Share Risk", for: .normal)
+        btn.setTitle("Share a Risk", for: .normal)
         btn.setTitleColor(.secondarySystemBackground, for: .selected)
         let bgImg = UIImageView(image: .init(systemName: "square.and.arrow.up.trianglebadge.exclamationmark")!)
         bgImg.frame = .init(x: -20, y: 20, width: 100, height: 100)
@@ -89,6 +89,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         navigationItem.titleView = welcomeStack
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(didTapMenu))
         prepareStack()
         performButtons()
     }
@@ -111,6 +112,14 @@ final class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    
+}
+
+extension HomeViewController {
+    @objc func didTapMenu() {
+        //
     }
     
     private func prepareStack() {
@@ -139,7 +148,7 @@ final class HomeViewController: UIViewController {
         })
         .disposed(by: disposeBag)
     }
-    
+
 }
 
 

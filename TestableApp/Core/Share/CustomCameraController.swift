@@ -139,7 +139,7 @@ class CustomCameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 extension CustomCameraController: CustomCameraControllerInterFace {
     func continueWithPhoto(img: UIImage) {
         let vc = ShareViewController()
-        vc.annotationImage = img
+        vc.annotationImage.accept(img)
         navigationController?.pushViewController(vc, animated: true)
     }
     

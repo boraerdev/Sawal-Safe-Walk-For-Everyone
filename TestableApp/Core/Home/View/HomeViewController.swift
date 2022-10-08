@@ -80,7 +80,6 @@ final class HomeViewController: UIViewController {
     }()
     
     private var btnHStack: UIStackView!
-    
     private var btnVStack: UIStackView!
     
     
@@ -97,12 +96,8 @@ final class HomeViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.addSubview(btnVStack)
-        NSLayoutConstraint.activate([
-            btnVStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            btnVStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            btnVStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            btnVStack.heightAnchor.constraint(equalToConstant: 250)
-        ])
+        
+        btnVStack.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.leadingAnchor, right: view.trailingAnchor, bottom: nil, topMargin: 0, leftMargin: 20, rightMargin: 20, bottomMargin: 0, width: 0, height: 250)
         
         goMapBtn.applyGradient(colours: [.main1,.main1Light])
         addRiskBtn.applyGradient(colours: [.main2,.main2Light])
@@ -145,6 +140,11 @@ extension HomeViewController {
             //TODO
             let simulator = true
             simulator ? navigationController?.pushViewController(ShareViewController(), animated: true) : navigationController?.pushViewController(CustomCameraController(), animated: true)
+        })
+        .disposed(by: disposeBag)
+        
+        planTrpBtn.rx.tap.subscribe(onNext: { [unowned self] in
+            navigationController?.pushViewController(PlanATripViewController(), animated: true)
         })
         .disposed(by: disposeBag)
     }

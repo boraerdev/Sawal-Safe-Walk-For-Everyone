@@ -15,5 +15,6 @@ pod 'FirebaseFirestore', '~> 9.6'
 pod 'FirebaseFirestoreSwift', '~> 9.6'
 pod 'gRPC-Core', '~> 1.44'
 pod 'FirebaseStorage', '~> 9.6'
+pod 'LBTATools', '~> 1.0'
 
 end

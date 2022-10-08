@@ -15,6 +15,8 @@
 		0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6DFAF828EC5AC4006C7B1C /* User.swift */; };
 		0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */; };
 		0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */; };
+		0A7B570828F1CBC900146147 /* success.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A7B570728F1CBC900146147 /* success.json */; };
+		0A7B570B28F1D0BC00146147 /* PlanATripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */; };
 		0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D121528E1FF7A009C2C4C /* AppDelegate.swift */; };
 		0A7D121828E1FF7A009C2C4C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D121728E1FF7A009C2C4C /* SceneDelegate.swift */; };
 		0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A7D121E28E1FF7A009C2C4C /* Assets.xcassets */; };
@@ -52,6 +54,8 @@
 		0A6DFAF828EC5AC4006C7B1C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = TestableApp/Core/Other/Auth/Register/User.swift; sourceTree = SOURCE_ROOT; };
 		0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage2ViewController.swift; sourceTree = "<group>"; };
 		0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage1ViewController.swift; sourceTree = "<group>"; };
+		0A7B570728F1CBC900146147 /* success.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = success.json; sourceTree = "<group>"; };
+		0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanATripViewController.swift; sourceTree = "<group>"; };
 		0A7D121228E1FF7A009C2C4C /* TestableApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestableApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7D121528E1FF7A009C2C4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0A7D121728E1FF7A009C2C4C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -99,6 +103,7 @@
 		0A2D155228E9EBE8001E8240 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				0A7B570928F1D0A900146147 /* PlanATrip */,
 				0ACB8F8128EA211000A17CC4 /* Welcome */,
 				0A2D155328E9EBED001E8240 /* Auth */,
 			);
@@ -121,6 +126,14 @@
 				0AF9DCEE28EC03D300B2570F /* SignInViewModel.swift */,
 			);
 			path = "Sign In";
+			sourceTree = "<group>";
+		};
+		0A7B570928F1D0A900146147 /* PlanATrip */ = {
+			isa = PBXGroup;
+			children = (
+				0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */,
+			);
+			path = PlanATrip;
 			sourceTree = "<group>";
 		};
 		0A7D120928E1FF7A009C2C4C = {
@@ -273,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				0A42A95528EA0D6200B0F380 /* login.json */,
+				0A7B570728F1CBC900146147 /* success.json */,
 			);
 			path = Animation;
 			sourceTree = "<group>";
@@ -392,6 +406,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A7B570828F1CBC900146147 /* success.json in Resources */,
 				0A7D122228E1FF7A009C2C4C /* LaunchScreen.storyboard in Resources */,
 				0A8FAF7728EB7EB60009E65A /* GoogleService-Info.plist in Resources */,
 				0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */,
@@ -474,6 +489,7 @@
 				0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */,
 				0AF9DCEF28EC03D300B2570F /* SignInViewModel.swift in Sources */,
 				0AA7F07D28F0CF21000ED5D3 /* ShareViewModel.swift in Sources */,
+				0A7B570B28F1D0BC00146147 /* PlanATripViewController.swift in Sources */,
 				0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */,
 				0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */,
 				0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */,

@@ -21,12 +21,7 @@ class PlanATripViewController: UIViewController {
     let locationManager = CLLocationManager()
     
     //MARK: UI
-    private lazy var fieldsBG: UIView = {
-        let view = UIView()
-        view.backgroundColor = .main3
-        view.dropShadow()
-        return view
-    }()
+    private lazy var fieldsBG = UIView(backgroundColor: .main3)
     
     private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10, cornerRadius: 8, backgroundColor: .white.withAlphaComponent(0.3))
     
@@ -34,9 +29,28 @@ class PlanATripViewController: UIViewController {
     
     private lazy var startIcon = UIImageView(image: .init(systemName: "circle.circle"))
     
-    private lazy var finishIcon = UIImageView(image: .init(systemName: "map"))
+    private lazy var exitBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(.init(systemName: "xmark"), for: .normal)
+        btn.tintColor = .white
+        btn.backgroundColor = .main3
+        btn.addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
+        return btn
+    }()
     
-    //Stacks
+    private lazy var startBtn: UIButton = {
+        let btn = UIButton()
+        btn.setTitle(" Go", for: .normal)
+        btn.setTitleColor(.main3, for: .normal)
+        btn.setImage(.init(systemName: "arrowtriangle.right"), for: .normal)
+        btn.tintColor = .main3
+        btn.backgroundColor = .white
+        btn.layer.cornerRadius = 8
+        btn.addTarget(self, action: #selector(didTapStart), for: .touchUpInside)
+        return btn
+    }()
+    
+    private lazy var finishIcon = UIImageView(image: .init(systemName: "pin"))
     
     //MARK: Core
     override func viewDidLoad() {
@@ -45,39 +59,66 @@ class PlanATripViewController: UIViewController {
         prepareMapView()
         prepareFields()
     }
+    
     override func viewDidLayoutSubviews() {
-        view.stack(vc.mapKit,fieldsBG)
+        view.stack(vc.view,fieldsBG)
+        view.addSubview(exitBtn)
+
         
         fieldsBG.withHeight(250)
         startIcon.withWidth(25)
         finishIcon.withWidth(25)
+        
+        exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 20, bottom: 0, right: 0), size: .init(width: 50, height: 50))
+        
+        setupSomeUI()
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.isHidden = false
     }
 }
 
 //MARK: Funcs
 extension PlanATripViewController {
+    
+    @objc func didTapExit() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func didTapStart() {
+    }
+    
+    private func setupSomeUI() {
+        exitBtn.layer.cornerRadius = exitBtn.frame.height / 2
+        exitBtn.dropShadow()
+        fieldsBG.applyGradient(colours: [.main3, .main3Light])
+    }
+    
     private func prepareMainView() {
         vc.mapKit.delegate = self
     }
     
     private func prepareFields() {
-        lazy var containerView = UIView(backgroundColor: .red)
-        containerView.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 10, left: 20, bottom: 10, right: 20))
-
         
+        lazy var containerView = UIView()
         fieldsBG.addSubview(containerView)
-            
-        
+        containerView.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 30, left: 20, bottom: 30, right: 20))
         
         [startField, finishField].forEach { field in
             field.withHeight(45)
+            field.textColor = .white
         }
+                
+        startField.attributedPlaceholder = .init(string: "Start", attributes: [.foregroundColor: UIColor.white.withAlphaComponent(0.7)])
+        
+        finishField.attributedPlaceholder = .init(string: "Finish", attributes: [.foregroundColor: UIColor.white.withAlphaComponent(0.7)])
         
         [startIcon, finishIcon].forEach { icon in
             icon.contentMode = .scaleAspectFit
@@ -87,8 +128,9 @@ extension PlanATripViewController {
         containerView.stack(
             containerView.hstack(startIcon,startField, spacing: 12),
             containerView.hstack(finishIcon,finishField, spacing: 12),
-            spacing: 20,
-            distribution: .equalSpacing
+            startBtn,
+            spacing: 10,
+            distribution: .fillEqually
         )
     }
     
@@ -146,7 +188,7 @@ extension PlanATripViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
            let polylineRenderer = MKPolylineRenderer(overlay: overlay)
-        polylineRenderer.strokeColor = .main3
+        polylineRenderer.strokeColor = .main3Light
            polylineRenderer.lineWidth = 5
            return polylineRenderer
        }

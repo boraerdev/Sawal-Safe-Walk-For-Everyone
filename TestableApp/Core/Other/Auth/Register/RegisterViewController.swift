@@ -142,9 +142,9 @@ final class RegisterViewController: UIViewController, RegisterViewControllerInte
     }
     
     private func bindFields() {
-        fullNameField.rx.text.orEmpty.bind(to: viewModel.fullName)
-        signField.rx.text.orEmpty.bind(to: viewModel.email)
-        passField.rx.text.orEmpty.bind(to: viewModel.pass)
+        fullNameField.rx.text.orEmpty.bind(to: viewModel.fullName).disposed(by: disposeBag)
+        signField.rx.text.orEmpty.bind(to: viewModel.email).disposed(by: disposeBag)
+        passField.rx.text.orEmpty.bind(to: viewModel.pass).disposed(by: disposeBag)
         
         registerButton.rx.tap.do( onNext: { [unowned self] in
             self.fullNameField.resignFirstResponder()

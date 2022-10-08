@@ -196,8 +196,8 @@ extension SignInViewController {
             navigationController?.pushViewController(RegisterViewController(), animated: true)
         }).disposed(by: disposeBag)
         
-        signField.rx.text.orEmpty.bind(to: viewModel.email)
-        passField.rx.text.orEmpty.bind(to: viewModel.pass)
+        signField.rx.text.orEmpty.bind(to: viewModel.email).disposed(by: disposeBag)
+        passField.rx.text.orEmpty.bind(to: viewModel.pass).disposed(by: disposeBag)
         
         signInButton.rx.tap.do( onNext: { [unowned self] in
             self.signField.resignFirstResponder()

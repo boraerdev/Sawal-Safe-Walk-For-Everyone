@@ -17,9 +17,10 @@ class PlanATripViewController: UIViewController {
     //MARK: Def
     let vc = MapViewController()
     let currentLocation: BehaviorRelay<CLLocation?> = .init(value: nil)
+    let finishLocation: BehaviorRelay<CLLocation?> = .init(value: nil)
     let disposeBag = DisposeBag()
     let locationManager = CLLocationManager()
-    
+
     //MARK: UI
     private lazy var fieldsBG = UIView(backgroundColor: .main3)
     
@@ -58,16 +59,13 @@ class PlanATripViewController: UIViewController {
         prepareMainView()
         prepareMapView()
         prepareFields()
+        addTargets()
     }
     
     override func viewDidLayoutSubviews() {
         view.stack(vc.view,fieldsBG)
         view.addSubview(exitBtn)
-
-        
         fieldsBG.withHeight(250)
-        startIcon.withWidth(25)
-        finishIcon.withWidth(25)
         
         exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 20, bottom: 0, right: 0), size: .init(width: 50, height: 50))
         
@@ -101,6 +99,32 @@ extension PlanATripViewController {
         fieldsBG.applyGradient(colours: [.main3, .main3Light])
     }
     
+    @objc private func didTapChangeStart() {
+        let vc = MapSearchViewController()
+        vc.selectionHandler = { [weak self] item in
+            self?.startField.text = item.name
+            self?.navigationController?.popViewController(animated: true)
+        }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func didTapChangeFinish() {
+        let vc = MapSearchViewController()
+        vc.selectionHandler = { [weak self] item in
+            self?.finishField.text = item.name
+            self?.navigationController?.popViewController(animated: true)
+        }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+    
+    private func addTargets() {
+        startField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeStart)))
+        
+        finishField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeFinish)))
+    }
+    
     private func prepareMainView() {
         vc.mapKit.delegate = self
     }
@@ -126,8 +150,16 @@ extension PlanATripViewController {
         }
         
         containerView.stack(
-            containerView.hstack(startIcon,startField, spacing: 12),
-            containerView.hstack(finishIcon,finishField, spacing: 12),
+            containerView.hstack(
+                startIcon.withWidth(25)
+                ,startField,
+                spacing: 12,
+                alignment: .center),
+            containerView.hstack(
+                finishIcon.withWidth(25)
+                ,finishField,
+                spacing: 12,
+                alignment: .center),
             startBtn,
             spacing: 10,
             distribution: .fillEqually
@@ -147,12 +179,12 @@ extension PlanATripViewController {
         }.disposed(by: disposeBag)
         request.source = .init(placemark: startingPlacemark!)
         
-        let andAnnotationView = MKPointAnnotation()
-        andAnnotationView.coordinate = .init(latitude: 41.00981375699895, longitude: 28.657054364790238)
+        var endingPlacemark: MKPlacemark?
+        finishLocation.subscribe { [unowned self] location in
+            endingPlacemark = .init(coordinate: (location.element!?.coordinate ?? self.currentLocation.value?.coordinate)!)
+        }.disposed(by: disposeBag)
         
-        let endingPlacemark = MKPlacemark(coordinate: .init(latitude: 41.00981375699895, longitude: 28.657054364790238))
-        
-        request.destination = .init(placemark: endingPlacemark)
+        request.destination = .init(placemark: endingPlacemark!)
         request.requestsAlternateRoutes = true
         request.transportType = .walking
         
@@ -174,7 +206,6 @@ extension PlanATripViewController {
                     self?.vc.mapKit.addOverlay(route.polyline)
                 }
             })
-            self.vc.mapKit.addAnnotation(andAnnotationView)
         }
     }
 }

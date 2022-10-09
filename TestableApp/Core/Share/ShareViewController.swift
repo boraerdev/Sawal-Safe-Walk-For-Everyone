@@ -12,6 +12,7 @@ import RxCocoa
 import MapKit
 import PhotosUI
 import Lottie
+import LBTATools
 
 protocol ShareViewControllerInterface: AnyObject {
 }
@@ -67,12 +68,7 @@ final class ShareViewController: UIViewController {
         return view
     }()
     
-    private lazy var headerLocation: UILabel = {
-        let lbl = UILabel()
-        lbl.font = .systemFont(ofSize: 11)
-        lbl.textColor = .secondaryLabel
-        return lbl
-    }()
+    private lazy var headerLocation = UILabel(font: .systemFont(ofSize: 11), textColor: .secondaryLabel)
     
     private lazy var countLbl: UILabel = {
        let lbl = UILabel()
@@ -123,11 +119,6 @@ final class ShareViewController: UIViewController {
         return field
     }()
     
-    //Stacks
-    private var viewStack: UIStackView!
-    private var headerStack: UIStackView!
-    private var imagesStack: UIStackView!
-
     //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,23 +137,11 @@ final class ShareViewController: UIViewController {
         self.tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.backgroundColor = .clear
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.addSubviews(viewStack, countLbl, spinner,successAnimation)
-        
-        viewStack.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.leadingAnchor, right: view.trailingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, topMargin: 10, leftMargin: 20, rightMargin: 20, bottomMargin: 0, width: 0, height: 0)
-        
-        countLbl.makeConstraints(top: nil, left: nil, right: viewStack.trailingAnchor, bottom: imagesStack.topAnchor, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 5, width: 0, height: 0)
-        
-        mapview.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        imagesStack.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        postField.heightAnchor.constraint(equalToConstant: 350).isActive = true
-    }
 }
 
 //MARK: Funcs
 extension ShareViewController {
+    
     private func prepareMainView() {
         viewModel.view = self
         view.backgroundColor = .systemBackground
@@ -171,6 +150,7 @@ extension ShareViewController {
             result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
         }.disposed(by: disposeBag)
         handleBind()
+        view.addSubviews(spinner,successAnimation)
     }
     
     private func setupSomeUI() {
@@ -218,19 +198,14 @@ extension ShareViewController {
     }
     
     private func prepareStack() {
-        headerStack = .init(arrangedSubviews: [headerLocation, currentDateLabel])
-        headerStack.axis = .horizontal
-        headerStack.distribution = .equalCentering
-        
-        imagesStack = .init(arrangedSubviews: [postImage, addImageBtn])
-        imagesStack.axis = .horizontal
-        imagesStack.distribution = .fillEqually
-        imagesStack.spacing = 5
-
-        viewStack = .init(arrangedSubviews: [headerStack, mapview,postField, imagesStack])
-        viewStack.axis = .vertical
-        viewStack.distribution = .equalSpacing
-        viewStack.spacing = 5
+        view.stack(view.hstack(headerLocation, currentDateLabel),
+                   mapview.withHeight(200),
+                   postField,
+                   UIView(),
+                   view.hstack(UIView(),countLbl),
+                   view.hstack(postImage,addImageBtn, distribution: .fillEqually).withHeight(100),
+        spacing: 5)
+        .withMargins(.init(top: 10, left: 20, bottom: 0, right: 20))
     }
     
     private func fetchLocationInfo(for location: CLLocation?) {
@@ -245,7 +220,6 @@ extension ShareViewController {
         postField.rx.text.orEmpty.bind(to: viewModel.description).disposed(by: disposeBag)
         annotationImage.bind(to: viewModel.postImage).disposed(by: disposeBag)
         currentLocation.bind(to: viewModel.location).disposed(by: disposeBag)
-        
     }
     
     private func handleMapView() {
@@ -264,28 +238,6 @@ extension ShareViewController {
         let phPickerVC = PHPickerViewController(configuration: phPickerConfig)
         phPickerVC.delegate = self
         present(phPickerVC, animated: true)
-    }
-}
-
-extension ShareViewController: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "Explain this situation..."
-            textView.textColor = UIColor.lightGray
-        }
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        textCount.accept(newText.count)
-        return newText.count < 140
     }
 }
 
@@ -331,6 +283,26 @@ extension ShareViewController: PHPickerViewControllerDelegate {
     }
 }
 
+extension ShareViewController: ShareViewControllerInterface {}
 
-extension ShareViewController: ShareViewControllerInterface {
+extension ShareViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
+            textView.text = nil
+            textView.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "Explain this situation..."
+            textView.textColor = UIColor.lightGray
+        }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        textCount.accept(newText.count)
+        return newText.count < 140
+    }
 }

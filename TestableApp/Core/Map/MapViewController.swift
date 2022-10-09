@@ -37,6 +37,9 @@ class MapViewController: UIViewController {
         viewModel.view = self
         clManager.delegate = self
         handleUserLocation()
+        viewModel.viewDidLoad()
+        mapKit.removeAnnotations(mapKit.annotations)
+        handleSharedAnnotations()
         
     }
     
@@ -50,13 +53,30 @@ class MapViewController: UIViewController {
             mapKit.topAnchor.constraint(equalTo: view.topAnchor)
         ])
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.fetchSharedLocations()
+    }
 }
 
 extension MapViewController {
-    func handleUserLocation() {
+    private func handleUserLocation() {
         clManager.requestWhenInUseAuthorization()
         clManager.startUpdatingLocation()
         clManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+    }
+    
+    private func handleSharedAnnotations() {
+        viewModel.posts.subscribe { [weak self] posts in
+            posts.element?.forEach({ post in
+                let ano = MKPointAnnotation()
+                ano.coordinate = .init(latitude: post.location.latitude, longitude: post.location.longitude)
+                self?.mapKit.addAnnotation(ano)
+            })
+            
+        }.disposed(by: disposeBag)
+        mapKit.showAnnotations(mapKit.annotations, animated: false)
     }
 }
 
@@ -78,6 +98,4 @@ extension MapViewController: CLLocationManagerDelegate {
     }
 }
 
-extension MapViewController: MapViewControllerInterface {
-    
-}
+extension MapViewController: MapViewControllerInterface {}

@@ -22,12 +22,13 @@ class ShareViewModel {
     let postImage: BehaviorRelay<UIImage?> = .init(value: nil)
     let location: BehaviorRelay<CLLocation?> = .init(value: nil)
     let isLoading: BehaviorRelay<Bool> = .init(value: false)
+    let riskDegree: BehaviorRelay<Int> = .init(value: 0)
 }
 
 extension ShareViewModel: ShareViewModelInterFace {
     func uploadPost(completion: @escaping (Result<Bool, Error>) -> ()) {
         isLoading.accept(true)
-        PostService.shared.uploadPost(desc: description.value, img: postImage.value ?? .init(), location: location.value ?? .init()) { [weak self] result in
+        PostService.shared.uploadPost(desc: description.value, img: postImage.value ?? .init(), location: location.value ?? .init(), riskDegree: riskDegree.value) { [weak self] result in
             switch result {
             case .success(_):
                 completion(.success(true))

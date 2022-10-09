@@ -15,4 +15,5 @@ struct Post: Codable {
     let description: String
     let imageURL: String?
     let location: GeoPoint
+    let riskDegree: Int
 }

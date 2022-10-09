@@ -16,12 +16,19 @@ class PlanATripViewController: UIViewController {
 
     //MARK: Def
     let vc = MapViewController()
-    let currentLocation: BehaviorRelay<CLLocation?> = .init(value: nil)
-    let finishLocation: BehaviorRelay<CLLocation?> = .init(value: nil)
+    let currentLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
+    let startLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
+    let finishLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
     let disposeBag = DisposeBag()
     let locationManager = CLLocationManager()
+    var tripAnnotations = [MKAnnotation]()
 
     //MARK: UI
+    
+    let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
+    
+    let directionsTimeLbl = UILabel(text: "", font: .systemFont(ofSize: 13), textColor: .label)
+    
     private lazy var fieldsBG = UIView(backgroundColor: .main3)
     
     private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10, cornerRadius: 8, backgroundColor: .white.withAlphaComponent(0.3))
@@ -33,11 +40,13 @@ class PlanATripViewController: UIViewController {
     private lazy var exitBtn: UIButton = {
         let btn = UIButton()
         btn.setImage(.init(systemName: "xmark"), for: .normal)
-        btn.tintColor = .white
-        btn.backgroundColor = .main3
+        btn.tintColor = .main3
+        btn.backgroundColor = .white
         btn.addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
         return btn
     }()
+    
+    let header = UIView(backgroundColor: .systemBackground)
     
     private lazy var startBtn: UIButton = {
         let btn = UIButton()
@@ -63,12 +72,18 @@ class PlanATripViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        view.stack(vc.view,fieldsBG)
-        view.addSubview(exitBtn)
+        
+        view.stack(header, vc.view,fieldsBG)
+
+        header.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor,padding: .init(top: 0, left: 0, bottom: -55, right: 0))
+        
+        let container = UIView(backgroundColor: .clear)
+        header.addSubview(container)
+        container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
+        container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)
+        
+
         fieldsBG.withHeight(250)
-        
-        exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 20, bottom: 0, right: 0), size: .init(width: 50, height: 50))
-        
         setupSomeUI()
     }
     
@@ -94,34 +109,65 @@ extension PlanATripViewController {
     }
     
     private func setupSomeUI() {
-        exitBtn.layer.cornerRadius = exitBtn.frame.height / 2
-        exitBtn.dropShadow()
+        exitBtn.layer.cornerRadius = 8
+        header.applyGradient(colours: [.main3,.main3Light])
         fieldsBG.applyGradient(colours: [.main3, .main3Light])
+        directionsView.layer.cornerRadius = 8
     }
     
     @objc private func didTapChangeStart() {
         let vc = MapSearchViewController()
-        vc.selectionHandler = { [weak self] item in
-            self?.startField.text = item.name
-            self?.navigationController?.popViewController(animated: true)
+        vc.selectionHandler = { [unowned self] item in
+            self.startField.text = item.name
+            self.navigationController?.popViewController(animated: true)
+            let anoTitle = "Start"
+            updateMap(item, title: anoTitle) { [weak self] in
+                removeAno(title: anoTitle)
+                self?.startLocation.accept(item.placemark.coordinate)
+            }
         }
         navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func didTapChangeFinish() {
         let vc = MapSearchViewController()
-        vc.selectionHandler = { [weak self] item in
-            self?.finishField.text = item.name
-            self?.navigationController?.popViewController(animated: true)
+        vc.selectionHandler = { [unowned self] item in
+            self.finishField.text = item.name
+            self.navigationController?.popViewController(animated: true)
+            let anoTitle = "Finish"
+            updateMap(item, title: anoTitle) { [weak self] in
+                removeAno(title: anoTitle)
+                self?.finishLocation.accept(item.placemark.coordinate)
+            }
         }
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    private func removeAno(title: String) {
+        if self.vc.mapKit.annotations.count > 2 {
+            let ano = self.vc.mapKit.annotations.first(where: {$0.title == title})
+            if let ano = ano {
+                tripAnnotations.removeAll { ano in
+                    ano.title == title
+                }
+                self.vc.mapKit.removeAnnotation(ano)
+            }
+        }
+    }
     
+    private func updateMap(_ item: MKMapItem, title: String, updateVars: ()->()) {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = item.placemark.coordinate
+        updateVars()
+        annotation.title = title
+        self.vc.mapKit.addAnnotation(annotation)
+        tripAnnotations.append(annotation)
+        requestForDirections()
+        self.vc.mapKit.showAnnotations(tripAnnotations, animated: true)
+    }
     
     private func addTargets() {
         startField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeStart)))
-        
         finishField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeFinish)))
     }
     
@@ -172,22 +218,25 @@ extension PlanATripViewController {
     }
     
     private func requestForDirections() {
+        
+        guard startLocation.value != nil, finishLocation.value != nil else {return}
+        
         let request = MKDirections.Request()
         var startingPlacemark: MKPlacemark?
-        currentLocation.subscribe { location in
-            startingPlacemark = .init(coordinate: location.element!!.coordinate)
+        startLocation.subscribe { result in
+            startingPlacemark = .init(coordinate: result.element!!)
         }.disposed(by: disposeBag)
+        
         request.source = .init(placemark: startingPlacemark!)
         
         var endingPlacemark: MKPlacemark?
-        finishLocation.subscribe { [unowned self] location in
-            endingPlacemark = .init(coordinate: (location.element!?.coordinate ?? self.currentLocation.value?.coordinate)!)
+        finishLocation.subscribe { result in
+            endingPlacemark = .init(coordinate: result.element!!)
         }.disposed(by: disposeBag)
         
         request.destination = .init(placemark: endingPlacemark!)
-        request.requestsAlternateRoutes = true
-        request.transportType = .walking
-        
+        request.requestsAlternateRoutes = false
+        request.transportType = .any
         
         let directions = MKDirections(request: request)
         directions.calculate { [unowned self] (resp, err) in
@@ -199,27 +248,37 @@ extension PlanATripViewController {
             // success
             print("Found my directions/routing....")
             guard let route = resp?.routes.first else { return }
-            print(route.expectedTravelTime / 60 / 60)
-
+            
+            let mpak = CLLocation(latitude: 41.05285834919655, longitude: 28.695940298728843)
+            route.steps.forEach { step in
+                let metr = step.polyline.coordinate.distance(to: mpak.coordinate)
+                if metr < 500 {
+                    print("çalışıyor")
+                }
+                
+            }
+            
             resp?.routes.forEach({ [weak self] (route) in
+                
                 DispatchQueue.main.async {
+                    self?.vc.mapKit.removeOverlays(self?.vc.mapKit.overlays ?? [])
                     self?.vc.mapKit.addOverlay(route.polyline)
                 }
+                self?.directionsTimeLbl.text = String(route.expectedTravelTime)
             })
         }
     }
 }
 
 extension PlanATripViewController: MKMapViewDelegate {
+    
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        print("çalıştı")
-        currentLocation.accept(userLocation.location)
-        requestForDirections()
+        currentLocation.accept(userLocation.coordinate)
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
            let polylineRenderer = MKPolylineRenderer(overlay: overlay)
-        polylineRenderer.strokeColor = .main3Light
+        polylineRenderer.strokeColor = .systemRed
            polylineRenderer.lineWidth = 5
            return polylineRenderer
        }

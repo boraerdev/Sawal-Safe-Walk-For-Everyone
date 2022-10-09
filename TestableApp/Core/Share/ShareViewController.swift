@@ -14,6 +14,12 @@ import PhotosUI
 import Lottie
 import LBTATools
 
+enum RiskDegree: Int {
+    case low
+    case medium
+    case high
+}
+
 protocol ShareViewControllerInterface: AnyObject {
 }
 
@@ -67,6 +73,10 @@ final class ShareViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private lazy var lowBtn = UIButton(title: "Low", titleColor: .systemGreen, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    private lazy var medBtn = UIButton(title: "Medium", titleColor: .systemRed, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    private lazy var highBtn = UIButton(title: "High", titleColor: .main2, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     
     private lazy var headerLocation = UILabel(font: .systemFont(ofSize: 11), textColor: .secondaryLabel)
     
@@ -145,20 +155,32 @@ extension ShareViewController {
     private func prepareMainView() {
         viewModel.view = self
         view.backgroundColor = .systemBackground
+        navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(didTapShare))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didtapCancel))
+        
         viewModel.isLoading.subscribe { [weak self] result in
             result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
         }.disposed(by: disposeBag)
         handleBind()
-        view.addSubviews(spinner,successAnimation)
     }
     
     private func setupSomeUI() {
+        
         annotationImage.subscribe { [weak self] returned in
             self?.postImage.image = returned
         }.disposed(by: disposeBag)
+        
         let inf = "\(locationInfo?.name ?? ""), \(locationInfo?.administrativeArea ?? "")"
         headerLocation.text = inf
+        
+        [lowBtn, medBtn, highBtn].enumerated().forEach { i, btn in
+            btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
+            btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
+            btn.layer.borderWidth = 2
+            btn.layer.cornerRadius = 4
+            btn.tag = RiskDegree(rawValue: i)?.rawValue ?? 0
+        }
     }
     
     @objc func didTapShare() {
@@ -184,6 +206,28 @@ extension ShareViewController {
         }
     }
     
+    @objc func didtapCancel(){
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func didTapRiskBtn(_ sender: UIButton) {
+        [lowBtn, medBtn, highBtn].forEach { btn in
+            if btn != sender {
+                btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
+                btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
+                btn.layer.borderWidth = 2
+                btn.layer.cornerRadius = 4
+            } else {
+                btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
+                btn.layer.borderColor = btn.titleLabel?.textColor.cgColor
+                btn.layer.borderWidth = 2
+                btn.layer.cornerRadius = 4
+            }
+            
+        }
+        viewModel.riskDegree.accept(sender.tag)
+    }
+    
     private func throwAlert(title: String, message: String,cancel: Bool = false, handler: (()->())? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         if cancel {
@@ -202,10 +246,13 @@ extension ShareViewController {
                    mapview.withHeight(200),
                    postField,
                    UIView(),
-                   view.hstack(UIView(),countLbl),
-                   view.hstack(postImage,addImageBtn, distribution: .fillEqually).withHeight(100),
+                   view.hstack( view.hstack(UILabel(text:"Risk:",font: .systemFont(ofSize: 15), textColor: .secondaryLabel),lowBtn,medBtn,highBtn, spacing: 5)
+                    ,UIView(),
+                                countLbl).padBottom(10),
+                   view.hstack(postImage,addImageBtn,spacing: 5, distribution: .fillEqually).withHeight(100),
         spacing: 5)
         .withMargins(.init(top: 10, left: 20, bottom: 0, right: 20))
+        view.addSubviews(spinner,successAnimation)
     }
     
     private func fetchLocationInfo(for location: CLLocation?) {
@@ -229,6 +276,7 @@ extension ShareViewController {
         vc.didMove(toParent: self)
         mapview.addSubview(vc.view)
         vc.view.frame = mapview.bounds
+        vc.mapKit.removeAnnotations(vc.mapKit.annotations)
     }
     
     @objc private func openPHPicker() {
@@ -263,7 +311,11 @@ extension ShareViewController: MKMapViewDelegate {
         
         annotationView?.makeConstraints(top: nil, left: nil, right: nil, bottom: nil, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 0, width: 70, height: 70)
         
-        return annotationView
+        if annotation.coordinate.latitude == mapView.userLocation.coordinate.latitude {
+            return annotationView
+        }else {
+            return nil
+        }
     }
 }
 

@@ -9,10 +9,12 @@ import UIKit
 import FirebaseAuth
 import RxSwift
 import RxCocoa
+import LBTATools
 
 protocol HomeViewControllerInterface: AnyObject {
 }
 
+//MARK: Def, UI
 final class HomeViewController: UIViewController {
     
     //MARK: Def
@@ -79,55 +81,45 @@ final class HomeViewController: UIViewController {
         return btn
     }()
     
-    private var btnHStack: UIStackView!
-    private var btnVStack: UIStackView!
-    
-    
-    //MARK: Core
+}
+
+//MARK: Core
+extension HomeViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        navigationItem.titleView = welcomeStack
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(didTapMenu))
+        prepareMainView()
         prepareStack()
         performButtons()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.addSubview(btnVStack)
-        
-        btnVStack.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.leadingAnchor, right: view.trailingAnchor, bottom: nil, topMargin: 0, leftMargin: 20, rightMargin: 20, bottomMargin: 0, width: 0, height: 250)
-        
-        goMapBtn.applyGradient(colours: [.main1,.main1Light])
-        addRiskBtn.applyGradient(colours: [.main2,.main2Light])
-        planTrpBtn.applyGradient(colours: [.main3,.main3Light])
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    
 }
 
+//MARK: Funcs
 extension HomeViewController {
-    @objc func didTapMenu() {
-        //
+    
+    private func prepareMainView() {
+        view.backgroundColor = .systemBackground
+        navigationItem.titleView = welcomeStack
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(didTapMenu))
     }
     
     private func prepareStack() {
-        btnHStack = .init(arrangedSubviews: [goMapBtn, addRiskBtn])
-        btnHStack.axis = .horizontal
-        btnHStack.distribution = .fillEqually
-        btnHStack.spacing = 10
+        let container = UIView()
+        container.withHeight(250)
+        view.stack(container, UIView()).withMargins(.allSides(20))
         
-        btnVStack = .init(arrangedSubviews: [btnHStack,planTrpBtn])
-        btnVStack.translatesAutoresizingMaskIntoConstraints = false
-        btnVStack.axis = .vertical
-        btnVStack.distribution = .fillEqually
-        btnVStack.spacing = 10
+        container.stack(
+            container.hstack(goMapBtn, addRiskBtn, spacing: 10, distribution: .fillEqually),
+            planTrpBtn,
+            spacing: 10,
+            distribution: .fillEqually
+        )
+        
+        DispatchQueue.main.async {
+            self.goMapBtn.applyGradient(colours: [.main1,.main1Light])
+            self.addRiskBtn.applyGradient(colours: [.main2,.main2Light])
+            self.planTrpBtn.applyGradient(colours: [.main3,.main3Light])
+        }
+        
     }
     
     private func performButtons() {
@@ -151,4 +143,8 @@ extension HomeViewController {
 
 }
 
-
+//MARK: Objc
+extension HomeViewController {
+    @objc func didTapMenu() {
+    }
+}

@@ -171,6 +171,7 @@ extension ShareViewController {
             result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
         }.disposed(by: disposeBag)
         handleBind()
+        
     }
     
     private func handleMapView() {

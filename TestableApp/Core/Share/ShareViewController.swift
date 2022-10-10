@@ -293,6 +293,7 @@ extension ShareViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         fetchLocationInfo(for: mapView.userLocation.location)
         currentLocation.accept(mapView.userLocation.location)
+        
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotation")
         if annotationView == nil {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "annotation")

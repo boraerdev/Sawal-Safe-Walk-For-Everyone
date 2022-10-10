@@ -56,7 +56,7 @@ class MapViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.fetchSharedLocations()
+        
     }
 }
 
@@ -74,7 +74,6 @@ extension MapViewController {
                 ano.coordinate = .init(latitude: post.location.latitude, longitude: post.location.longitude)
                 self?.mapKit.addAnnotation(ano)
             })
-            
         }.disposed(by: disposeBag)
         mapKit.showAnnotations(mapKit.annotations, animated: false)
     }

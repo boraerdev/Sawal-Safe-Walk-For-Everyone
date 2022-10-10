@@ -22,6 +22,8 @@ class PlanATripViewController: UIViewController {
     let disposeBag = DisposeBag()
     let locationManager = CLLocationManager()
     var tripAnnotations = [MKAnnotation]()
+    let startAno: MKAnnotation? = nil
+    let finishAno: MKAnnotation? = nil
 
     //MARK: UI
     
@@ -82,7 +84,6 @@ class PlanATripViewController: UIViewController {
         container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
         container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)
         
-
         fieldsBG.withHeight(250)
         setupSomeUI()
     }
@@ -160,6 +161,7 @@ extension PlanATripViewController {
         annotation.coordinate = item.placemark.coordinate
         updateVars()
         annotation.title = title
+        
         self.vc.mapKit.addAnnotation(annotation)
         tripAnnotations.append(annotation)
         requestForDirections()
@@ -271,6 +273,36 @@ extension PlanATripViewController {
 }
 
 extension PlanATripViewController: MKMapViewDelegate {
+    
+    func handleStartFinishAno() {
+        guard startAno != nil, finishAno != nil else { return }
+        mapView(vc.mapKit, viewFor: vc.mapKit.annotations.first(where: {$0.title == "Start"})!)
+        mapView(vc.mapKit, viewFor: vc.mapKit.annotations.first(where: {$0.title == "Finish"})!)
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotationStartFinish")
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "annotationStartFinish")
+        }
+        if let title = annotation.title {
+            if annotation.coordinate.latitude != mapView.userLocation.coordinate.latitude{
+                if title == "Start" {
+                    annotationView?.image = .init(named: "StartPin")
+                    return annotationView
+                } else if title == "Finish" {
+                    annotationView?.image = .init(named: "FinishPin")
+                    return annotationView
+                } else {
+                    return annotationView
+                }
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         currentLocation.accept(userLocation.coordinate)

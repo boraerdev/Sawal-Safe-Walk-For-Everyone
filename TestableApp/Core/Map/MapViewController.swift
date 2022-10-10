@@ -203,10 +203,7 @@ extension MapViewController: MKMapViewDelegate {
         customCallout.withHeight(150)
         
         
-        customCallout.stack(
-            bgImage,
-            customCallout.hstack(titleLbl.withHeight(20), alignment: .center).withMargins(.allSides(2))
-        )
+        customCallout.stack(bgImage)
         hudView.stack(titleLbl, alignment: .center).withMargins(.allSides(12))
 
         

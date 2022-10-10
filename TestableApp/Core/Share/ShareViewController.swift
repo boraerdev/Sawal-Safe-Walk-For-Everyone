@@ -37,6 +37,8 @@ final class ShareViewController: UIViewController {
 
     
     //MARK: UI
+    private lazy var mapView = MKMapView()
+    
     private lazy var successAnimation: AnimationView = {
         let ani = AnimationView()
         ani.animation = .named("success")
@@ -67,7 +69,7 @@ final class ShareViewController: UIViewController {
         return ind
     }()
     
-    private lazy var mapview: UIView = {
+    private lazy var mapViewContainer: UIView = {
        let view = UIView()
         view.layer.cornerRadius = 8
         view.layer.masksToBounds = true
@@ -171,6 +173,38 @@ extension ShareViewController {
         handleBind()
     }
     
+    private func handleMapView() {
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+        mapView.isUserInteractionEnabled = false
+    }
+
+    private func prepareStack() {
+        view.stack(view.hstack(headerLocation, currentDateLabel),
+                   mapView.withHeight(250),
+                   postField,
+                   UIView(),
+                   view.hstack(
+                    view.hstack(
+                        UILabel(
+                            text:"Risk:",font: .systemFont(ofSize: 15), textColor: .secondaryLabel),
+                        lowBtn,
+                        medBtn,
+                        highBtn,
+                        spacing: 5)
+                    ,UIView(),
+                    countLbl).padBottom(10),
+                   view.hstack(
+                    postImage,
+                    addImageBtn,
+                    spacing: 5,
+                    distribution: .fillEqually)
+                    .withHeight(100),
+                   spacing: 5)
+        .withMargins(.init(top: 10, left: 20, bottom: 0, right: 20))
+        view.addSubviews(spinner,successAnimation)
+    }
+
     private func setupSomeUI() {
         
         annotationImage.subscribe { [weak self] returned in
@@ -187,51 +221,9 @@ extension ShareViewController {
             btn.layer.cornerRadius = 4
             btn.tag = RiskDegree(rawValue: i)?.rawValue ?? 0
         }
-    }
-    
-    @objc func didTapShare() {
-        guard postField.text != "Explain this situation...", postField.text.count > 20 else {
-            throwAlert(title: "Ttr Again", message: "Description must be greater than 20 characters.",cancel: false)
-            return
-        }
-        throwAlert(title: "Share this report", message: "Are you sure you want to share this report?", cancel: true) { [weak self] in
-            self?.viewModel.uploadPost { [weak self] result in
-                switch result {
-                case .success(_):
-                    self?.successAnimation.isHidden = false
-                    self?.successAnimation.play { myRes in
-                        if myRes {
-                            self?.navigationController?.popViewController(animated: true)
-                            self?.successAnimation.removeFromSuperview()
-                        }
-                    }
-                case .failure(let error):
-                    self?.throwAlert(title: "Try Again", message: error.localizedDescription,cancel: false, handler: nil)
-                }
-            }
-        }
-    }
-    
-    @objc func didtapCancel(){
-        navigationController?.popViewController(animated: true)
-    }
-    
-    @objc func didTapRiskBtn(_ sender: UIButton) {
-        [lowBtn, medBtn, highBtn].forEach { btn in
-            if btn != sender {
-                btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
-                btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
-                btn.layer.borderWidth = 2
-                btn.layer.cornerRadius = 4
-            } else {
-                btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
-                btn.layer.borderColor = btn.titleLabel?.textColor.cgColor
-                btn.layer.borderWidth = 2
-                btn.layer.cornerRadius = 4
-            }
-            
-        }
-        viewModel.riskDegree.accept(sender.tag)
+        
+        mapView.layer.cornerRadius = 8
+        
     }
     
     private func throwAlert(title: String, message: String,cancel: Bool = false, handler: (()->())? = nil) {
@@ -245,20 +237,6 @@ extension ShareViewController {
             }
         }))
         self.present(alert, animated: true)
-    }
-    
-    private func prepareStack() {
-        view.stack(view.hstack(headerLocation, currentDateLabel),
-                   mapview.withHeight(200),
-                   postField,
-                   UIView(),
-                   view.hstack( view.hstack(UILabel(text:"Risk:",font: .systemFont(ofSize: 15), textColor: .secondaryLabel),lowBtn,medBtn,highBtn, spacing: 5)
-                    ,UIView(),
-                                countLbl).padBottom(10),
-                   view.hstack(postImage,addImageBtn,spacing: 5, distribution: .fillEqually).withHeight(100),
-        spacing: 5)
-        .withMargins(.init(top: 10, left: 20, bottom: 0, right: 20))
-        view.addSubviews(spinner,successAnimation)
     }
     
     private func fetchLocationInfo(for location: CLLocation?) {
@@ -275,24 +253,6 @@ extension ShareViewController {
         currentLocation.bind(to: viewModel.location).disposed(by: disposeBag)
     }
     
-    private func handleMapView() {
-        let vc = MapViewController()
-        addChild(vc)
-        vc.mapKit.delegate = self
-        vc.didMove(toParent: self)
-        mapview.addSubview(vc.view)
-        vc.view.frame = mapview.bounds
-        vc.mapKit.removeAnnotations(vc.mapKit.annotations)
-    }
-    
-    @objc private func openPHPicker() {
-        var phPickerConfig = PHPickerConfiguration(photoLibrary: .shared())
-        phPickerConfig.selectionLimit = 1
-        phPickerConfig.filter = PHPickerFilter.any(of: [.images, .livePhotos])
-        let phPickerVC = PHPickerViewController(configuration: phPickerConfig)
-        phPickerVC.delegate = self
-        present(phPickerVC, animated: true)
-    }
 }
 
 //MARK: MapView Delegate
@@ -324,6 +284,13 @@ extension ShareViewController: MKMapViewDelegate {
         }else {
             return nil
         }
+    }
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let center: CLLocationCoordinate2D = .init(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
+        let region: MKCoordinateRegion = .init(center: center, span: span)
+        mapView.setRegion(region, animated: false)
     }
 }
 
@@ -368,4 +335,63 @@ extension ShareViewController: UITextViewDelegate {
         textCount.accept(newText.count)
         return newText.count < 140
     }
+}
+
+//MARK: Objc
+extension ShareViewController {
+    
+    @objc private func openPHPicker() {
+        var phPickerConfig = PHPickerConfiguration(photoLibrary: .shared())
+        phPickerConfig.selectionLimit = 1
+        phPickerConfig.filter = PHPickerFilter.any(of: [.images, .livePhotos])
+        let phPickerVC = PHPickerViewController(configuration: phPickerConfig)
+        phPickerVC.delegate = self
+        present(phPickerVC, animated: true)
+    }
+    
+    @objc func didtapCancel(){
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func didTapRiskBtn(_ sender: UIButton) {
+        [lowBtn, medBtn, highBtn].forEach { btn in
+            if btn != sender {
+                btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
+                btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
+                btn.layer.borderWidth = 2
+                btn.layer.cornerRadius = 4
+            } else {
+                btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
+                btn.layer.borderColor = btn.titleLabel?.textColor.cgColor
+                btn.layer.borderWidth = 2
+                btn.layer.cornerRadius = 4
+            }
+            
+        }
+        viewModel.riskDegree.accept(sender.tag)
+    }
+
+    @objc func didTapShare() {
+        guard postField.text != "Explain this situation...", postField.text.count > 20 else {
+            throwAlert(title: "Ttr Again", message: "Description must be greater than 20 characters.",cancel: false)
+            return
+        }
+        throwAlert(title: "Share this report", message: "Are you sure you want to share this report?", cancel: true) { [weak self] in
+            self?.viewModel.uploadPost { [weak self] result in
+                switch result {
+                case .success(_):
+                    self?.successAnimation.isHidden = false
+                    self?.successAnimation.play { myRes in
+                        if myRes {
+                            self?.navigationController?.popViewController(animated: true)
+                            self?.successAnimation.removeFromSuperview()
+                        }
+                    }
+                case .failure(let error):
+                    self?.throwAlert(title: "Try Again", message: error.localizedDescription,cancel: false, handler: nil)
+                }
+            }
+        }
+    }
+
 }

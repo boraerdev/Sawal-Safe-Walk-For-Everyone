@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "RedPin@1x.png",
+      "filename" : "HighPin.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "RedPin@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "RedPin@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

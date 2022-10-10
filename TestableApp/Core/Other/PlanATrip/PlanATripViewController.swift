@@ -12,6 +12,13 @@ import RxCocoa
 import CoreLocation
 import LBTATools
 
+class DirectionEndPoint: MKPointAnnotation {
+    var type: String
+    init(type: String) {
+        self.type = type
+    }
+}
+
 //MARK: Def, UI
 class PlanATripViewController: UIViewController {
 
@@ -171,7 +178,7 @@ extension PlanATripViewController {
     }
     
     private func updateMap(_ item: MKMapItem, title: String, updateVars: ()->()) {
-        let annotation = MKPointAnnotation()
+        let annotation = DirectionEndPoint(type: title)
         annotation.coordinate = item.placemark.coordinate
         updateVars()
         annotation.title = title
@@ -246,27 +253,20 @@ extension PlanATripViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotationStartFinish")
-        if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "annotationStartFinish")
-        }
-        if let title = annotation.title {
-            if annotation.coordinate.latitude != mapView.userLocation.coordinate.latitude{
-                if title == "Start" {
-                    annotationView?.image = .init(named: "StartPin")
-                    return annotationView
-                } else if title == "Finish" {
-                    annotationView?.image = .init(named: "FinishPin")
-                    return annotationView
-                } else {
-                    return annotationView
-                }
-            } else {
-                return nil
+        if !(annotation is DirectionEndPoint) {return nil}
+        
+        var annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id")
+        
+        if let customAnnotation = annotation as? DirectionEndPoint {
+            if customAnnotation.type == "Start" {
+                annotationView.image = .init(named: "StartPin")
+            } else if customAnnotation.type == "Finish" {
+                annotationView.image = .init(named: "FinishPin")
             }
         } else {
             return nil
         }
+        return annotationView
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {

@@ -1,12 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "StartPin@1x.png",
+      "filename" : "StartPin.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "StartPin@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

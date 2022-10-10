@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "PurplePin@1x.png",
+      "filename" : "MedPin.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "PurplePin@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "PurplePin@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

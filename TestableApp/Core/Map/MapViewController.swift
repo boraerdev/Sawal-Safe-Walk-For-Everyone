@@ -15,6 +15,7 @@ protocol MapViewControllerInterface: AnyObject {
     
 }
 
+//MARK: Def, UI
 class MapViewController: UIViewController {
     
     //MARK: Def
@@ -28,19 +29,15 @@ class MapViewController: UIViewController {
         mv.translatesAutoresizingMaskIntoConstraints = false
         return mv
     }()
+}
+
+//MARK: Core
+extension MapViewController {
     
-    //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        mapKit.showsUserLocation = true
-        viewModel.view = self
-        clManager.delegate = self
-        handleUserLocation()
-        viewModel.viewDidLoad()
-        mapKit.removeAnnotations(mapKit.annotations)
+        prepareMainView()
         handleSharedAnnotations()
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -56,11 +53,24 @@ class MapViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
     }
+
 }
 
+//MARK: Funcs
 extension MapViewController {
+    
+    private func prepareMainView() {
+        view.backgroundColor = .systemBackground
+        mapKit.showsUserLocation = true
+        viewModel.view = self
+        clManager.delegate = self
+        mapKit.delegate = self
+        handleUserLocation()
+        viewModel.viewDidLoad()
+        mapKit.removeAnnotations(mapKit.annotations)
+    }
+    
     private func handleUserLocation() {
         clManager.requestWhenInUseAuthorization()
         clManager.startUpdatingLocation()
@@ -77,8 +87,10 @@ extension MapViewController {
         }.disposed(by: disposeBag)
         mapKit.showAnnotations(mapKit.annotations, animated: false)
     }
+    
 }
 
+//MARK: CLLocation Delegate
 extension MapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else {fatalError()}
@@ -94,6 +106,13 @@ extension MapViewController: CLLocationManagerDelegate {
         default:
             print("ok")
         }
+    }
+}
+
+//MARK: MKMapView Delegate
+extension MapViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        return nil
     }
 }
 

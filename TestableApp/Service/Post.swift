@@ -11,6 +11,7 @@ import FirebaseFirestore
 
 struct Post: Codable {
     @DocumentID var id: String?
+    let authorUID: String
     let date: Date
     let description: String
     let imageURL: String?

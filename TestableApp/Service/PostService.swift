@@ -14,7 +14,7 @@ final class PostService {
     
     func uploadPost(desc: String, img: UIImage, location: CLLocation,riskDegree: Int, completion: @escaping (Result<Bool, Error>) -> ()) {
         ImageService.shared.downloadImageURL(image: img) { rtURL in
-            let data = ["date": Date(), "description": desc, "imageURL": rtURL, "location": GeoPoint(latitude: location.coordinate.latitude.magnitude, longitude: location.coordinate.longitude.magnitude), "riskDegree": riskDegree ] as [String: Any]
+            let data = ["date": Date(), "description": desc, "imageURL": rtURL, "location": GeoPoint(latitude: location.coordinate.latitude.magnitude, longitude: location.coordinate.longitude.magnitude), "riskDegree": riskDegree, "authorUID": AuthManager.shared.currentUser?.id ] as [String: Any]
             let id = UUID().uuidString
             Firestore.firestore().collection("posts").document(id).setData(data) { err in
                 guard err == nil else {

@@ -25,11 +25,6 @@ class MainTabBarController: UITabBarController {
                 image: UIImage(systemName: "house")
             ),
             generateVC(
-                viewController: MapViewController(),
-                title: "Map",
-                image: UIImage(systemName: "map")
-            ),
-            generateVC(
                 viewController: PersonViewController(),
                 title: "Person",
                 image: UIImage(systemName: "person")

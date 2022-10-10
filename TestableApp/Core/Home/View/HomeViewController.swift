@@ -132,7 +132,7 @@ extension HomeViewController {
     
     private func performButtons() {
         goMapBtn.rx.tap.subscribe(onNext: { [unowned self] in
-            navigationController?.tabBarController?.selectedIndex = 1
+            navigationController?.pushViewController(MapViewController(), animated: true)
         })
         .disposed(by: disposeBag)
         

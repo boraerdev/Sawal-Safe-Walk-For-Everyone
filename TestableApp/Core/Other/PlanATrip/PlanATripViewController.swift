@@ -201,7 +201,7 @@ extension PlanATripViewController {
         
         request.destination = .init(placemark: endingPlacemark!)
         request.requestsAlternateRoutes = false
-        request.transportType = .any
+        request.transportType = .walking
         
         let directions = MKDirections(request: request)
         directions.calculate { [unowned self] (resp, err) in
@@ -217,9 +217,7 @@ extension PlanATripViewController {
             let mpak = CLLocation(latitude: 41.05285834919655, longitude: 28.695940298728843)
             route.steps.forEach { step in
                 let metr = step.polyline.coordinate.distance(to: mpak.coordinate)
-                if metr < 500 {
-                    print("çalışıyor")
-                }
+                print(step.instructions)
                 
             }
             

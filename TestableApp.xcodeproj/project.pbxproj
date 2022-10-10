@@ -114,7 +114,6 @@
 				0A7B570928F1D0A900146147 /* PlanATrip */,
 				0ACB8F8128EA211000A17CC4 /* Welcome */,
 				0A2D155328E9EBED001E8240 /* Auth */,
-				0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -141,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */,
+				0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */,
 			);
 			path = PlanATrip;
 			sourceTree = "<group>";

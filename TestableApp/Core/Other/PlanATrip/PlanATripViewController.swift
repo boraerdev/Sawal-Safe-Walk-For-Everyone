@@ -12,13 +12,6 @@ import RxCocoa
 import CoreLocation
 import LBTATools
 
-class DirectionEndPoint: MKPointAnnotation {
-    var type: String
-    init(type: String) {
-        self.type = type
-    }
-}
-
 //MARK: Def, UI
 class PlanATripViewController: UIViewController {
 

@@ -77,7 +77,7 @@ final class ShareViewController: UIViewController {
         return view
     }()
     
-    private lazy var lowBtn = UIButton(title: "Low", titleColor: .systemGreen, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    private lazy var lowBtn = UIButton(title: "Low", titleColor: .systemOrange, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     
     private lazy var medBtn = UIButton(title: "Medium", titleColor: .systemRed, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     

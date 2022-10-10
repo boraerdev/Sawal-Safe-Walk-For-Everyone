@@ -23,6 +23,7 @@ enum RiskDegree: Int {
 protocol ShareViewControllerInterface: AnyObject {
 }
 
+//MARK: Def, UI
 final class ShareViewController: UIViewController {
     
     //MARK: Def
@@ -75,7 +76,9 @@ final class ShareViewController: UIViewController {
     }()
     
     private lazy var lowBtn = UIButton(title: "Low", titleColor: .systemGreen, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    
     private lazy var medBtn = UIButton(title: "Medium", titleColor: .systemRed, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    
     private lazy var highBtn = UIButton(title: "High", titleColor: .main2, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     
     private lazy var headerLocation = UILabel(font: .systemFont(ofSize: 11), textColor: .secondaryLabel)
@@ -129,7 +132,10 @@ final class ShareViewController: UIViewController {
         return field
     }()
     
-    //MARK: Core
+}
+
+//MARK: Core
+extension ShareViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareMainView()
@@ -289,6 +295,7 @@ extension ShareViewController {
     }
 }
 
+//MARK: MapView Delegate
 extension ShareViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         fetchLocationInfo(for: mapView.userLocation.location)
@@ -320,6 +327,7 @@ extension ShareViewController: MKMapViewDelegate {
     }
 }
 
+//MARK: PHPicker Delegate
 extension ShareViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true, completion: .none)
@@ -336,8 +344,10 @@ extension ShareViewController: PHPickerViewControllerDelegate {
     }
 }
 
+//MARK: Interface Delegate
 extension ShareViewController: ShareViewControllerInterface {}
 
+//MARK: TextView Delegate
 extension ShareViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {

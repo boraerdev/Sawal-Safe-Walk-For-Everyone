@@ -101,7 +101,6 @@ extension MapViewController {
                     self?.mapKit.addAnnotation(ano)
                 }
             })
-            self?.detectRisk()
         }.disposed(by: disposeBag)
         print(mapKit.annotations.count)
         //mapKit.showAnnotations(mapKit.annotations, animated: false)
@@ -117,19 +116,7 @@ extension MapViewController {
         btn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 20, bottom: 0, right: 0), size: .init(width: 45, height: 45))
     }
     
-    private func detectRisk() {
-        var postCoor: CLLocationCoordinate2D = .init(latitude: 0, longitude: 0)
-        var distance: Double?
-        viewModel.currentCoordinate.subscribe { [weak self] result in
-            self?.viewModel.posts.value.forEach { post in
-                postCoor = .init(latitude: post.location.latitude, longitude: post.location.longitude)
-                distance = result.element?.distance(to: postCoor)
-                if distance ?? 0 < 25 {
-                    print("\(post.riskDegree) // alana girdi. aradaki mesafe: \(distance)")
-                }
-            }
-        }.disposed(by: disposeBag)
-    }
+    
 }
 
 //MARK: CLLocation Delegate

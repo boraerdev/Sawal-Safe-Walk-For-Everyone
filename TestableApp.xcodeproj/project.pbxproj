@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */; };
 		0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */; };
 		0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D155528E9EC09001E8240 /* SignInViewController.swift */; };
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
@@ -50,6 +51,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanATripViewModel.swift; sourceTree = "<group>"; };
 		0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewController.swift; sourceTree = "<group>"; };
 		0A2D155528E9EC09001E8240 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */,
+				0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */,
 				0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */,
 			);
 			path = PlanATrip;
@@ -499,6 +502,7 @@
 				0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */,
 				0A7D123228E2006C009C2C4C /* MainTabBarController.swift in Sources */,
 				0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */,
+				0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */,
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,
 				0AA7F08328F0D2D2000ED5D3 /* ImageService.swift in Sources */,
 				0AA7F07F28F0CFC5000ED5D3 /* PostService.swift in Sources */,

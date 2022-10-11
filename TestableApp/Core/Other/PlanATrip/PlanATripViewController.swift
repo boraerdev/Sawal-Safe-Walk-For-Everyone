@@ -12,20 +12,22 @@ import RxCocoa
 import CoreLocation
 import LBTATools
 
+protocol PlanATripViewControllerInterFace: AnyObject {
+    
+}
+
 //MARK: Def, UI
-class PlanATripViewController: UIViewController {
+class PlanATripViewController: UIViewController, PlanATripViewControllerInterFace {
 
     //MARK: Def
     let map = MapViewController()
-    let currentLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
-    let startLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
-    let finishLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
     let disposeBag = DisposeBag()
     var tripAnnotations = [MKAnnotation]()
     let startAno: MKAnnotation? = nil
     let finishAno: MKAnnotation? = nil
     let mapView = MKMapView()
     let manager = CLLocationManager()
+    let viewModel = PlanATripViewModel()
 
     //MARK: UI
     let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
@@ -65,7 +67,6 @@ class PlanATripViewController: UIViewController {
     
     private lazy var finishIcon = UIImageView(image: .init(systemName: "pin"))
     
-    //Core
 }
 
 //MARK: Core
@@ -76,7 +77,6 @@ extension PlanATripViewController {
         prepareMainView()
         prepareFields()
         addTargets()
-        setRegion()
     }
     
     override func viewDidLayoutSubviews() {
@@ -94,28 +94,28 @@ extension PlanATripViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
+        viewModel.fetchSharedLocations()
+        handleSharedAnnotations()
         navigationController?.navigationBar.isHidden = true
+        viewModel.viewDidLoad()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = false
+        mapView.removeAnnotations(mapView.annotations)
     }
 }
 
 //MARK: Funcs
 extension PlanATripViewController {
-    
-    private func setRegion() {
-        currentLocation.subscribe { [weak self] result in
-        }.disposed(by: disposeBag)
-    }
-    
+
     private func prepareMainView() {
         manager.delegate = self
         manager.startUpdatingLocation()
         mapView.delegate = self
         mapView.showsUserLocation = true
+        viewModel.view = self
     }
     
     private func prepareFields() {
@@ -193,18 +193,18 @@ extension PlanATripViewController {
 
     private func requestForDirections() {
         
-        guard startLocation.value != nil, finishLocation.value != nil else {return}
+        guard viewModel.startLocation.value != nil, viewModel.finishLocation.value != nil else {return}
         
         let request = MKDirections.Request()
         var startingPlacemark: MKPlacemark?
-        startLocation.subscribe { result in
+        viewModel.startLocation.subscribe { result in
             startingPlacemark = .init(coordinate: result.element!!)
         }.disposed(by: disposeBag)
         
         request.source = .init(placemark: startingPlacemark!)
         
         var endingPlacemark: MKPlacemark?
-        finishLocation.subscribe { result in
+        viewModel.finishLocation.subscribe { result in
             endingPlacemark = .init(coordinate: result.element!!)
         }.disposed(by: disposeBag)
         
@@ -224,14 +224,13 @@ extension PlanATripViewController {
             guard let route = resp?.routes.first else { return }
             
             let mpak = CLLocation(latitude: 41.05285834919655, longitude: 28.695940298728843)
+            
             route.steps.forEach { step in
                 let metr = step.polyline.coordinate.distance(to: mpak.coordinate)
                 print(step.instructions)
-                
             }
             
             resp?.routes.forEach({ [weak self] (route) in
-                
                 DispatchQueue.main.async {
                     self?.mapView.removeOverlays(self?.mapView.overlays ?? [])
                     self?.mapView.addOverlay(route.polyline)
@@ -239,6 +238,24 @@ extension PlanATripViewController {
                 self?.directionsTimeLbl.text = String(route.expectedTravelTime)
             })
         }
+    }
+    
+    private func handleSharedAnnotations() {
+        viewModel.posts.subscribe { [weak self] posts in
+            posts.element?.forEach({ post in
+                let ano = RiskColoredAnnotations(post: post)
+                ano.coordinate = .init(latitude: post.location.latitude, longitude: post.location.longitude)
+                DispatchQueue.main.async {
+                    self?.mapView.addAnnotation(ano)
+                }
+            })
+        }.disposed(by: disposeBag)
+        self.detectRisk()
+        //mapKit.showAnnotations(mapKit.annotations, animated: false)
+    }
+    
+    private func detectRisk() {
+        viewModel.detectRisk()
     }
     
 }
@@ -266,7 +283,7 @@ extension PlanATripViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if !(annotation is DirectionEndPoint) {return nil}
+        if !(annotation is DirectionEndPoint || annotation is RiskColoredAnnotations) {return nil}
         
         var annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id")
         
@@ -277,22 +294,24 @@ extension PlanATripViewController: MKMapViewDelegate {
                 annotationView.image = .init(named: "FinishPin")
             }
         } else {
-            return nil
+            annotationView.canShowCallout = true
+            if let customPin = annotation as? RiskColoredAnnotations {
+                if customPin.post.riskDegree == 0 {
+                    annotationView.image = .init(named: "LowPin")
+                }else if customPin.post.riskDegree == 1 {
+                    annotationView.image = .init(named: "MedPin")
+                }else if customPin.post.riskDegree == 2 {
+                    annotationView.image = .init(named: "HighPin")
+                }
+            }
         }
         return annotationView
     }
     
-//    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-//        currentLocation.accept(userLocation.coordinate)
-//        manager.stopUpdatingLocation()
-//
-//        let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
-//        let center: CLLocationCoordinate2D = .init(latitude: self.currentLocation.value?.latitude ?? 0, longitude: self.currentLocation.value?.longitude ?? 0)
-//        let region: MKCoordinateRegion = .init(center: center, span: span)
-//        self.mapView.setRegion(region, animated: false)
-//
-//    }
-    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        viewModel.currentLocation.accept(userLocation.coordinate)
+    }
+
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
            let polylineRenderer = MKPolylineRenderer(overlay: overlay)
         polylineRenderer.strokeColor = .systemRed
@@ -309,6 +328,8 @@ extension PlanATripViewController {
     }
     
     @objc func didTapStart() {
+        guard startField.text != "", finishField.text != "" else {return}
+        print("GOOOO")
     }
 
     @objc private func didTapChangeStart() {
@@ -319,7 +340,7 @@ extension PlanATripViewController {
             let anoTitle = "Start"
             updateMap(item, title: anoTitle) { [weak self] in
                 removeAno(title: anoTitle)
-                self?.startLocation.accept(item.placemark.coordinate)
+                self?.viewModel.startLocation.accept(item.placemark.coordinate)
             }
         }
         navigationController?.pushViewController(vc, animated: true)
@@ -333,7 +354,7 @@ extension PlanATripViewController {
             let anoTitle = "Finish"
             updateMap(item, title: anoTitle) { [weak self] in
                 removeAno(title: anoTitle)
-                self?.finishLocation.accept(item.placemark.coordinate)
+                self?.viewModel.finishLocation.accept(item.placemark.coordinate)
             }
         }
         navigationController?.pushViewController(vc, animated: true)

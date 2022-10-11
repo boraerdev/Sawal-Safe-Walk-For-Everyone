@@ -15,7 +15,7 @@ class ImageService {
     func downloadImageURL(image : UIImage, completion: @escaping (String)-> Void ) {
         let uuid = UUID().uuidString
         guard let imageData = image.jpegData(compressionQuality: 0.2) else {fatalError()}
-        var ref = Storage.storage().reference(withPath: "/image/\(uuid)")
+        let ref = Storage.storage().reference(withPath: "/image/\(uuid)")
         ref.putData(imageData) { _, error in
             guard error == nil else {
                 print("image has not translated")
@@ -26,7 +26,7 @@ class ImageService {
                     print("image has not downloaded")
                     return
                 }
-                var urlString = url.absoluteString
+                let urlString = url.absoluteString
                 completion(urlString)
             }
         }

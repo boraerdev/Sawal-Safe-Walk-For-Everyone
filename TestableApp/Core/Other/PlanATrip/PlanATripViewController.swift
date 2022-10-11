@@ -28,6 +28,8 @@ class PlanATripViewController: UIViewController, PlanATripViewControllerInterFac
     let mapView = MKMapView()
     let manager = CLLocationManager()
     let viewModel = PlanATripViewModel()
+    var startItem: MKMapItem? = nil
+    var finishItem: MKMapItem? = nil
 
     //MARK: UI
     let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
@@ -167,77 +169,48 @@ extension PlanATripViewController {
         directionsView.layer.cornerRadius = 8
     }
     
-    private func removeAno(title: String) {
-        if self.mapView.annotations.count > 2 {
-            let ano = self.mapView.annotations.first(where: {$0.title == title})
-            if let ano = ano {
-                tripAnnotations.removeAll { ano in
-                    ano.title == title
-                }
-                self.mapView.removeAnnotation(ano)
-            }
-        }
-    }
-    
-    private func updateMap(_ item: MKMapItem, title: String, updateVars: ()->()) {
+    private func addAnnotation(title: String, item: MKMapItem) {
         let annotation = DirectionEndPoint(type: title)
         annotation.coordinate = item.placemark.coordinate
-        updateVars()
         annotation.title = title
-        
-        self.mapView.addAnnotation(annotation)
-        tripAnnotations.append(annotation)
-        requestForDirections()
-        self.mapView.showAnnotations(tripAnnotations, animated: true)
-    }
-
-    private func requestForDirections() {
-        
-        guard viewModel.startLocation.value != nil, viewModel.finishLocation.value != nil else {return}
-        
-        let request = MKDirections.Request()
-        var startingPlacemark: MKPlacemark?
-        viewModel.startLocation.subscribe { result in
-            startingPlacemark = .init(coordinate: result.element!!)
-        }.disposed(by: disposeBag)
-        
-        request.source = .init(placemark: startingPlacemark!)
-        
-        var endingPlacemark: MKPlacemark?
-        viewModel.finishLocation.subscribe { result in
-            endingPlacemark = .init(coordinate: result.element!!)
-        }.disposed(by: disposeBag)
-        
-        request.destination = .init(placemark: endingPlacemark!)
-        request.requestsAlternateRoutes = false
-        request.transportType = .walking
-        
-        let directions = MKDirections(request: request)
-        directions.calculate { [unowned self] (resp, err) in
-            if let err = err {
-                print("Failed to find routing info:", err)
-                return
-            }
-            
-            // success
-            print("Found my directions/routing....")
-            guard let route = resp?.routes.first else { return }
-            
-            let mpak = CLLocation(latitude: 41.05285834919655, longitude: 28.695940298728843)
-            
-            route.steps.forEach { step in
-                let metr = step.polyline.coordinate.distance(to: mpak.coordinate)
-                print(step.instructions)
-            }
-            
-            resp?.routes.forEach({ [weak self] (route) in
-                DispatchQueue.main.async {
-                    self?.mapView.removeOverlays(self?.mapView.overlays ?? [])
-                    self?.mapView.addOverlay(route.polyline)
-                }
-                self?.directionsTimeLbl.text = String(route.expectedTravelTime)
-            })
+        DispatchQueue.main.async {
+            self.mapView.addAnnotation(annotation)
         }
+        self.tripAnnotations.append(annotation)
+    }
+    
+    private func updateStartFinishAnnotations() {
+        
+        if let _ = startItem {
+            if let ano = mapView.annotations.first(where: {$0.title == "Start"}) {
+                mapView.removeAnnotation(ano)
+                tripAnnotations.removeAll(where: {$0.title == "Start" || $0.title == "Finish"})
+            }
+            addAnnotation(title: "Start", item: startItem!)
+        }
+        
+        if let _ = finishItem {
+            if let ano = mapView.annotations.first(where: {$0.title == "Finish"}) {
+                mapView.removeAnnotation(ano)
+                tripAnnotations.removeAll(where: {$0.title == "Start" || $0.title == "Finish"})
+            }
+            addAnnotation(title: "Finish", item: finishItem!)
+        }
+        
+        requestForDirections()
+        mapView.showAnnotations(tripAnnotations, animated: false)
+    }
+    
+    private func requestForDirections() {
+        viewModel.requestForDirections { [weak self] route in
+            DispatchQueue.main.async {
+                self?.tripAnnotations.removeAll(keepingCapacity: false)
+                self?.mapView.removeOverlays(self?.mapView.overlays ?? [])
+                self?.mapView.addOverlay(route.polyline)
+            }
+        }
+        self.mapView.showAnnotations(tripAnnotations , animated: true)
+
     }
     
     private func handleSharedAnnotations() {
@@ -276,16 +249,10 @@ extension PlanATripViewController: CLLocationManagerDelegate {
 //MARK: MapView Delegate
 extension PlanATripViewController: MKMapViewDelegate {
     
-    func handleStartFinishAno() {
-        guard startAno != nil, finishAno != nil else { return }
-        mapView(mapView, viewFor: mapView.annotations.first(where: {$0.title == "Start"})!)
-        mapView(mapView, viewFor: mapView.annotations.first(where: {$0.title == "Finish"})!)
-    }
-    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is DirectionEndPoint || annotation is RiskColoredAnnotations) {return nil}
         
-        var annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id")
+        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id")
         
         if let customAnnotation = annotation as? DirectionEndPoint {
             if customAnnotation.type == "Start" {
@@ -337,11 +304,9 @@ extension PlanATripViewController {
         vc.selectionHandler = { [unowned self] item in
             self.startField.text = item.name
             self.navigationController?.popViewController(animated: true)
-            let anoTitle = "Start"
-            updateMap(item, title: anoTitle) { [weak self] in
-                removeAno(title: anoTitle)
-                self?.viewModel.startLocation.accept(item.placemark.coordinate)
-            }
+            self.viewModel.startLocation.accept(item.placemark.coordinate)
+            self.startItem = item
+            updateStartFinishAnnotations()
         }
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -351,11 +316,9 @@ extension PlanATripViewController {
         vc.selectionHandler = { [unowned self] item in
             self.finishField.text = item.name
             self.navigationController?.popViewController(animated: true)
-            let anoTitle = "Finish"
-            updateMap(item, title: anoTitle) { [weak self] in
-                removeAno(title: anoTitle)
-                self?.viewModel.finishLocation.accept(item.placemark.coordinate)
-            }
+            self.viewModel.finishLocation.accept(item.placemark.coordinate)
+            self.finishItem = item
+            updateStartFinishAnnotations()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

@@ -55,10 +55,10 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
             self?.posts.value.forEach { post in
                 postCoor = .init(latitude: post.location.latitude, longitude: post.location.longitude)
                 distance = result?.distance(to: postCoor)
-                if distance ?? 100 <= 21, distance ?? 100 >= 20 {
+                if distance ?? 100 <= 22, distance ?? 100 >= 20 {
                     self?.yakinlas.accept(true)
                 }
-                if distance ?? 100 <= 0.5{
+                if distance ?? 100 <= 1.5{
                    self?.yakinlas.accept(false)
                }
                 if distance ?? 100 <= 20 {
@@ -70,5 +70,43 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
                 }
             }
         }.disposed(by: disposeBag)
+    }
+    
+    func requestForDirections(completion: @escaping (MKRoute)->() ) {
+        guard startLocation.value != nil, finishLocation.value != nil else {return}
+        
+        let request = MKDirections.Request()
+        var startingPlacemark: MKPlacemark?
+        startLocation.subscribe { result in
+            startingPlacemark = .init(coordinate: result.element!!)
+        }.disposed(by: disposeBag)
+        
+        request.source = .init(placemark: startingPlacemark!)
+        
+        var endingPlacemark: MKPlacemark?
+        finishLocation.subscribe { result in
+            endingPlacemark = .init(coordinate: result.element!!)
+        }.disposed(by: disposeBag)
+        
+        request.destination = .init(placemark: endingPlacemark!)
+        request.requestsAlternateRoutes = true
+        request.transportType = .walking
+        
+        let directions = MKDirections(request: request)
+        directions.calculate { [unowned self] (resp, err) in
+            if let err = err {
+                print("Failed to find routing info:", err)
+                return
+            }
+            
+            // success
+            print("Found my directions/routing....")
+            var newList = resp?.routes.sorted(by: {$0.distance<$1.distance})
+            guard let route =  newList?.first else {return}
+            completion(route)
+            
+            
+            
+        }
     }
 }

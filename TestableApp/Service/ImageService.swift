@@ -17,9 +17,15 @@ class ImageService {
         guard let imageData = image.jpegData(compressionQuality: 0.2) else {fatalError()}
         var ref = Storage.storage().reference(withPath: "/image/\(uuid)")
         ref.putData(imageData) { _, error in
-            guard error == nil else {fatalError()}
+            guard error == nil else {
+                print("image has not translated")
+                return
+            }
             ref.downloadURL { url, error in
-                guard let url = url else {fatalError()}
+                guard let url = url else {
+                    print("image has not downloaded")
+                    return
+                }
                 var urlString = url.absoluteString
                 completion(urlString)
             }

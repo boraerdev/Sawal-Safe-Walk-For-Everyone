@@ -25,6 +25,7 @@ class PlanATripViewController: UIViewController {
     let startAno: MKAnnotation? = nil
     let finishAno: MKAnnotation? = nil
     let mapView = MKMapView()
+    let manager = CLLocationManager()
 
     //MARK: UI
     let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
@@ -75,6 +76,7 @@ extension PlanATripViewController {
         prepareMainView()
         prepareFields()
         addTargets()
+        setRegion()
     }
     
     override func viewDidLayoutSubviews() {
@@ -104,7 +106,14 @@ extension PlanATripViewController {
 //MARK: Funcs
 extension PlanATripViewController {
     
+    private func setRegion() {
+        currentLocation.subscribe { [weak self] result in
+        }.disposed(by: disposeBag)
+    }
+    
     private func prepareMainView() {
+        manager.delegate = self
+        manager.startUpdatingLocation()
         mapView.delegate = self
         mapView.showsUserLocation = true
     }
@@ -234,6 +243,19 @@ extension PlanATripViewController {
     
 }
 
+//MARK: CLMANAGERDelegate
+extension PlanATripViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let loca = locations.first {
+            let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            let center: CLLocationCoordinate2D = .init(latitude: loca.coordinate.latitude, longitude: loca.coordinate.longitude)
+            let region: MKCoordinateRegion = .init(center: center, span: span)
+            self.mapView.setRegion(region, animated: false)
+        }
+        manager.stopUpdatingLocation()
+    }
+}
+
 //MARK: MapView Delegate
 extension PlanATripViewController: MKMapViewDelegate {
     
@@ -260,13 +282,16 @@ extension PlanATripViewController: MKMapViewDelegate {
         return annotationView
     }
     
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        currentLocation.accept(userLocation.coordinate)
-        let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
-        let center: CLLocationCoordinate2D = .init(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
-        let region: MKCoordinateRegion = .init(center: center, span: span)
-        mapView.setRegion(region, animated: false)
-    }
+//    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+//        currentLocation.accept(userLocation.coordinate)
+//        manager.stopUpdatingLocation()
+//
+//        let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+//        let center: CLLocationCoordinate2D = .init(latitude: self.currentLocation.value?.latitude ?? 0, longitude: self.currentLocation.value?.longitude ?? 0)
+//        let region: MKCoordinateRegion = .init(center: center, span: span)
+//        self.mapView.setRegion(region, animated: false)
+//
+//    }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
            let polylineRenderer = MKPolylineRenderer(overlay: overlay)

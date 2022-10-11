@@ -104,7 +104,7 @@ class CustomCameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             let cameraLayer = AVCaptureVideoPreviewLayer(session: captureSession)
             cameraLayer.frame = self.view.frame
             cameraLayer.videoGravity = .resizeAspectFill
-            self.view.layer.addSublayer(cameraLayer)
+            self.view.layer.insertSublayer(cameraLayer, at: 0)
             
             captureSession.startRunning()
             self.setupUI()

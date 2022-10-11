@@ -49,13 +49,16 @@ extension MapViewController {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.isHidden = true
+        viewModel.fetchSharedLocations()
         handleSharedAnnotations()
+        viewModel.viewDidLoad()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         mapKit.removeAnnotations(mapKit.annotations)
         navigationController?.navigationBar.isHidden = false
         tabBarController?.tabBar.isHidden = false
+        mapKit.removeAnnotations(mapKit.annotations)
     }
 
 }
@@ -70,8 +73,6 @@ extension MapViewController {
         clManager.delegate = self
         mapKit.delegate = self
         handleUserLocation()
-        viewModel.viewDidLoad()
-        mapKit.removeAnnotations(mapKit.annotations)
         
     }
     
@@ -80,7 +81,6 @@ extension MapViewController {
         mapKit.addGestureRecognizer(gesture)
         
     }
-    
     private func handleUserLocation() {
         clManager.requestWhenInUseAuthorization()
         clManager.startUpdatingLocation()
@@ -97,13 +97,17 @@ extension MapViewController {
             posts.element?.forEach({ post in
                 let ano = RiskColoredAnnotations(post: post)
                 ano.coordinate = .init(latitude: post.location.latitude, longitude: post.location.longitude)
-                self?.mapKit.addAnnotation(ano)
+                DispatchQueue.main.async {
+                    self?.mapKit.addAnnotation(ano)
+                }
             })
+            self?.detectRisk()
         }.disposed(by: disposeBag)
-        mapKit.showAnnotations(mapKit.annotations, animated: false)
+        print(mapKit.annotations.count)
+        //mapKit.showAnnotations(mapKit.annotations, animated: false)
     }
     
-    func handleBackBtn() {
+    private func handleBackBtn() {
         let btn = UIButton(image: .init(systemName: "xmark")!, tintColor: .main3, target: self, action: #selector(didTapBack))
         btn.backgroundColor = .systemBackground
         btn.clipsToBounds = false
@@ -113,15 +117,37 @@ extension MapViewController {
         btn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 20, bottom: 0, right: 0), size: .init(width: 45, height: 45))
     }
     
+    private func detectRisk() {
+        var postCoor: CLLocationCoordinate2D = .init(latitude: 0, longitude: 0)
+        var distance: Double?
+        viewModel.currentCoordinate.subscribe { [weak self] result in
+            self?.viewModel.posts.value.forEach { post in
+                postCoor = .init(latitude: post.location.latitude, longitude: post.location.longitude)
+                distance = result.element?.distance(to: postCoor)
+                if distance ?? 0 < 25 {
+                    print("\(post.riskDegree) // alana girdi. aradaki mesafe: \(distance)")
+                }
+            }
+        }.disposed(by: disposeBag)
+    }
 }
 
 //MARK: CLLocation Delegate
 extension MapViewController: CLLocationManagerDelegate {
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.first else {fatalError()}
-        mapKit.setRegion(.init(center: location.coordinate, span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)), animated: false)
-        viewModel.currentCoordinate.accept(location.coordinate)
+        guard let loca = locations.first else {
+            print("location has not received")
+            return
+        }
+        let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let center: CLLocationCoordinate2D = .init(latitude: loca.coordinate.latitude, longitude: loca.coordinate.longitude)
+        let region: MKCoordinateRegion = .init(center: center, span: span)
+        self.mapKit.setRegion(region, animated: false)
+        manager.stopUpdatingLocation()
+        
     }
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .denied:
@@ -136,6 +162,10 @@ extension MapViewController: CLLocationManagerDelegate {
 
 //MARK: MKMapView Delegate
 extension MapViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        viewModel.currentCoordinate.accept(userLocation.coordinate)
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is RiskColoredAnnotations) {return nil}

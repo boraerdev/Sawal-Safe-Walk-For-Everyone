@@ -177,7 +177,6 @@ extension ShareViewController {
     private func handleMapView() {
         mapView.delegate = self
         mapView.showsUserLocation = true
-        mapView.isUserInteractionEnabled = false
     }
 
     private func prepareStack() {
@@ -288,6 +287,7 @@ extension ShareViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        viewModel.location.accept(userLocation.location)
         let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
         let center: CLLocationCoordinate2D = .init(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
         let region: MKCoordinateRegion = .init(center: center, span: span)

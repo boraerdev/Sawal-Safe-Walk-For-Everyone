@@ -104,7 +104,7 @@ class CustomCameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             let cameraLayer = AVCaptureVideoPreviewLayer(session: captureSession)
             cameraLayer.frame = self.view.frame
             cameraLayer.videoGravity = .resizeAspectFill
-            self.view.layer.insertSublayer(cameraLayer, at: 0)
+            self.view.layer.addSublayer(cameraLayer)
             
             captureSession.startRunning()
             self.setupUI()
@@ -140,7 +140,8 @@ extension CustomCameraController: CustomCameraControllerInterFace {
     func continueWithPhoto(img: UIImage) {
         let vc = ShareViewController()
         vc.annotationImage.accept(img)
-        navigationController?.pushViewController(vc, animated: true)
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
     
 }

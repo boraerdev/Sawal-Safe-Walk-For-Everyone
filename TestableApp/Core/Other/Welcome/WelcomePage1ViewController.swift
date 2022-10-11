@@ -32,7 +32,7 @@ final class WelcomePage1ViewController: UIViewController {
     
     private lazy var mainImage: UIImageView = {
        let img = UIImageView()
-        img.image = .init(systemName: "info.bubble")
+        img.image = .init(systemName: "map")
         img.tintColor = .systemBackground
         img.contentMode = .scaleAspectFit
         img.translatesAutoresizingMaskIntoConstraints = false

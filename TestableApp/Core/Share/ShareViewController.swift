@@ -295,48 +295,8 @@ extension ShareViewController: MKMapViewDelegate {
     }
 }
 
-//MARK: PHPicker Delegate
-extension ShareViewController: PHPickerViewControllerDelegate {
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true, completion: .none)
-        results.forEach { result in
-            result.itemProvider.loadObject(ofClass: UIImage.self) { reading, error in
-                guard let image = reading as? UIImage, error == nil else { return }
-                DispatchQueue.main.async {
-                    self.annotationImage.accept(image)
-                }
-                result.itemProvider.loadFileRepresentation(forTypeIdentifier: "public.image") { url, _ in
-                }
-            }
-        }
-    }
-}
-
 //MARK: Interface Delegate
 extension ShareViewController: ShareViewControllerInterface {}
-
-//MARK: TextView Delegate
-extension ShareViewController: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "Explain this situation..."
-            textView.textColor = UIColor.lightGray
-        }
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        textCount.accept(newText.count)
-        return newText.count < 140
-    }
-}
 
 //MARK: Objc
 extension ShareViewController {
@@ -395,4 +355,44 @@ extension ShareViewController {
         }
     }
 
+}
+
+//MARK: TextView Delegate
+extension ShareViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
+            textView.text = nil
+            textView.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "Explain this situation..."
+            textView.textColor = UIColor.lightGray
+        }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        textCount.accept(newText.count)
+        return newText.count < 140
+    }
+}
+
+//MARK: PHPicker Delegate
+extension ShareViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true, completion: .none)
+        results.forEach { result in
+            result.itemProvider.loadObject(ofClass: UIImage.self) { reading, error in
+                guard let image = reading as? UIImage, error == nil else { return }
+                DispatchQueue.main.async {
+                    self.annotationImage.accept(image)
+                }
+                result.itemProvider.loadFileRepresentation(forTypeIdentifier: "public.image") { url, _ in
+                }
+            }
+        }
+    }
 }

@@ -13,7 +13,6 @@ import CoreLocation
 import LBTATools
 
 protocol PlanATripViewControllerInterFace: AnyObject {
-    
 }
 
 //MARK: Def, UI

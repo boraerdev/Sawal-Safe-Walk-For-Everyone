@@ -88,18 +88,25 @@ extension PlanATripViewController {
         container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
         
         let lbl = RiskView()
-        view.addSubview(lbl)
-        lbl.fillSuperview()
-
+        addChild(lbl)
+        lbl.didMove(toParent: self)
+        view.addSubview(lbl.view)
+        lbl.view.fillSuperview()
+        lbl.playSound()
+        
         PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
             if result.element == .inAreaCloser || result.element == .inAreaAway {
-                lbl.isHidden = false
-                
+                lbl.view.isHidden = false
+                if lbl.player?.isPlaying != nil, lbl.player?.isPlaying == false {
+                    lbl.player?.play()
+                }
             } else {
-                lbl.isHidden = true
+                lbl.view.isHidden = true
                 lbl.player?.stop()
             }
         }
+        
+        
         
         
         container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)

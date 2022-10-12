@@ -15,6 +15,12 @@ protocol PlanATripViewModelInterFace: AnyObject {
     func detectRisk()
 }
 
+enum CurrentRiskMode {
+    case inAreaCloser
+    case inAreaAway
+    case outArea
+}
+
 class PlanATripViewModel {
     weak var view: PlanATripViewControllerInterFace?
     let currentLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
@@ -22,17 +28,20 @@ class PlanATripViewModel {
     let finishLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
     var posts: BehaviorRelay<[Post]> = .init(value: [])
     let disposeBag = DisposeBag()
-    let yakinlas: BehaviorRelay<Bool> = .init(value: true)
+    let riskMode: BehaviorRelay<CurrentRiskMode> = .init(value: .outArea)
+    let distance: BehaviorRelay<Double?> = .init(value: nil)
 }
 
 extension PlanATripViewModel: PlanATripViewModelInterFace {
+    
+    
     func viewDidLoad() {
         fetchSharedLocations()
         bindAreaInfo()
     }
     
     func bindAreaInfo() {
-        self.yakinlas.subscribe { result in
+        self.riskMode.subscribe { result in
             print(result)
         }.disposed(by: disposeBag)
     }
@@ -55,16 +64,29 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
             self?.posts.value.forEach { post in
                 postCoor = .init(latitude: post.location.latitude, longitude: post.location.longitude)
                 distance = result?.distance(to: postCoor)
-                if distance ?? 100 <= 22, distance ?? 100 >= 20 {
-                    self?.yakinlas.accept(true)
+                if distance ?? 100 <= 21, distance ?? 100 >= 19 {
+                    if self?.riskMode.value == .outArea {
+                       self?.riskMode.accept(.inAreaCloser)
+                    } else if self?.riskMode.value == .inAreaAway {
+                        self?.riskMode.accept(.outArea)
+                    } else if self?.riskMode.value == .inAreaCloser {
+                        self?.riskMode.accept(.outArea)
+                        
+                    }
+                    else if self?.riskMode.value == nil {
+                        self?.riskMode.accept(.inAreaCloser)
+                    }
                 }
-                if distance ?? 100 <= 1.5{
-                   self?.yakinlas.accept(false)
-               }
+                
+                if distance ?? 100 <= 0.5{
+                   self?.riskMode.accept(.inAreaAway)
+                }
+                
                 if distance ?? 100 <= 20 {
-                    if self?.yakinlas.value == true {
+                    self?.distance.accept(distance)
+                    if self?.riskMode.value == .inAreaCloser {
                         print("Riskli alana \(String(format: "%.1f", distance!))m kaldı.")
-                    } else {
+                    } else if self?.riskMode.value == .inAreaAway {
                         print("Riskli alandan \(String(format: "%.1f", distance!))m uzaklaştınız.")
                     }
                 }

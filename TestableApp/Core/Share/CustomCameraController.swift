@@ -143,5 +143,4 @@ extension CustomCameraController: CustomCameraControllerInterFace {
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }
-    
 }

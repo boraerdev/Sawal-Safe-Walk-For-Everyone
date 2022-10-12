@@ -17,24 +17,23 @@ protocol PlanATripViewControllerInterFace: AnyObject {
 
 //MARK: Def, UI
 class PlanATripViewController: UIViewController, PlanATripViewControllerInterFace {
-
+    
+    
     //MARK: Def
-    let map = MapViewController()
     let disposeBag = DisposeBag()
     var tripAnnotations = [MKAnnotation]()
     let startAno: MKAnnotation? = nil
     let finishAno: MKAnnotation? = nil
-    let mapView = MKMapView()
+    var mapView = MKMapView()
     let manager = CLLocationManager()
-    let viewModel = PlanATripViewModel()
+    static let viewModel = PlanATripViewModel()
     var startItem: MKMapItem? = nil
     var finishItem: MKMapItem? = nil
 
     //MARK: UI
+    
     let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
-    
-    let directionsTimeLbl = UILabel(text: "", font: .systemFont(ofSize: 13), textColor: .label)
-    
+        
     private lazy var fieldsBG = UIView(backgroundColor: .main3)
     
     private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10, cornerRadius: 8, backgroundColor: .white.withAlphaComponent(0.3))
@@ -87,18 +86,37 @@ extension PlanATripViewController {
         let container = UIView(backgroundColor: .clear)
         header.addSubview(container)
         container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
+        
+        let lbl = RiskView()
+        view.addSubview(lbl)
+        lbl.fillSuperview()
+
+        PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
+            if result.element == .inAreaCloser || result.element == .inAreaAway {
+                lbl.isHidden = false
+                
+            } else {
+                lbl.isHidden = true
+                lbl.player?.stop()
+            }
+        }
+        
+        
         container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)
+        
         
         fieldsBG.withHeight(250)
         setupSomeUI()
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
-        viewModel.fetchSharedLocations()
+        PlanATripViewController.viewModel.fetchSharedLocations()
         handleSharedAnnotations()
         navigationController?.navigationBar.isHidden = true
-        viewModel.viewDidLoad()
+        PlanATripViewController.viewModel.viewDidLoad()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -116,7 +134,7 @@ extension PlanATripViewController {
         manager.startUpdatingLocation()
         mapView.delegate = self
         mapView.showsUserLocation = true
-        viewModel.view = self
+        PlanATripViewController.viewModel.view = self
     }
     
     private func prepareFields() {
@@ -201,7 +219,7 @@ extension PlanATripViewController {
     }
     
     private func requestForDirections() {
-        viewModel.requestForDirections { [weak self] route in
+        PlanATripViewController.viewModel.requestForDirections { [weak self] route in
             DispatchQueue.main.async {
                 self?.tripAnnotations.removeAll(keepingCapacity: false)
                 self?.mapView.removeOverlays(self?.mapView.overlays ?? [])
@@ -213,7 +231,7 @@ extension PlanATripViewController {
     }
     
     private func handleSharedAnnotations() {
-        viewModel.posts.subscribe { [weak self] posts in
+        PlanATripViewController.viewModel.posts.subscribe { [weak self] posts in
             posts.element?.forEach({ post in
                 let ano = RiskColoredAnnotations(post: post)
                 ano.coordinate = .init(latitude: post.location.latitude, longitude: post.location.longitude)
@@ -227,9 +245,8 @@ extension PlanATripViewController {
     }
     
     private func detectRisk() {
-        viewModel.detectRisk()
+        PlanATripViewController.viewModel.detectRisk()
     }
-    
 }
 
 //MARK: CLMANAGERDelegate
@@ -247,6 +264,7 @@ extension PlanATripViewController: CLLocationManagerDelegate {
 
 //MARK: MapView Delegate
 extension PlanATripViewController: MKMapViewDelegate {
+    
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is DirectionEndPoint || annotation is RiskColoredAnnotations) {return nil}
@@ -275,7 +293,7 @@ extension PlanATripViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        viewModel.currentLocation.accept(userLocation.coordinate)
+        PlanATripViewController.viewModel.currentLocation.accept(userLocation.coordinate)
     }
 
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -303,7 +321,7 @@ extension PlanATripViewController {
         vc.selectionHandler = { [unowned self] item in
             self.startField.text = item.name
             self.navigationController?.popViewController(animated: true)
-            self.viewModel.startLocation.accept(item.placemark.coordinate)
+            PlanATripViewController.viewModel.startLocation.accept(item.placemark.coordinate)
             self.startItem = item
             updateStartFinishAnnotations()
         }
@@ -315,7 +333,7 @@ extension PlanATripViewController {
         vc.selectionHandler = { [unowned self] item in
             self.finishField.text = item.name
             self.navigationController?.popViewController(animated: true)
-            self.viewModel.finishLocation.accept(item.placemark.coordinate)
+            PlanATripViewController.viewModel.finishLocation.accept(item.placemark.coordinate)
             self.finishItem = item
             updateStartFinishAnnotations()
         }

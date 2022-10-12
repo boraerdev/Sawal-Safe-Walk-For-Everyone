@@ -30,6 +30,8 @@
 		0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D124028E201D4009C2C4C /* MapViewController.swift */; };
 		0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */; };
 		0A89F85628F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A89F85528F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift */; };
+		0A8C947328F70D630053AEAB /* RiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8C947228F70D630053AEAB /* RiskViewController.swift */; };
+		0A8C947628F75F350053AEAB /* warning.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A8C947528F75F350053AEAB /* warning.mp3 */; };
 		0A8FAF7728EB7EB60009E65A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A8FAF7628EB7EB50009E65A /* GoogleService-Info.plist */; };
 		0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */; };
 		0AA7F07D28F0CF21000ED5D3 /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7F07C28F0CF21000ED5D3 /* ShareViewModel.swift */; };
@@ -76,6 +78,8 @@
 		0A7D124028E201D4009C2C4C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		0A89F85528F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extentions.swift"; sourceTree = "<group>"; };
+		0A8C947228F70D630053AEAB /* RiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskViewController.swift; sourceTree = "<group>"; };
+		0A8C947528F75F350053AEAB /* warning.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = warning.mp3; sourceTree = "<group>"; };
 		0A8FAF7628EB7EB50009E65A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extentions.swift"; sourceTree = "<group>"; };
 		0AA7F07C28F0CF21000ED5D3 /* ShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
@@ -144,6 +148,7 @@
 				0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */,
 				0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */,
 				0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */,
+				0A8C947228F70D630053AEAB /* RiskViewController.swift */,
 			);
 			path = PlanATrip;
 			sourceTree = "<group>";
@@ -290,6 +295,7 @@
 		0A856B1D28E9EEA700ABDD03 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				0A8C947428F75F2A0053AEAB /* Sound */,
 				0A856B1E28E9EEB600ABDD03 /* Animation */,
 			);
 			path = Assets;
@@ -311,6 +317,14 @@
 				0AF9DCF028EC03FF00B2570F /* RegisterViewModel.swift */,
 			);
 			path = Register;
+			sourceTree = "<group>";
+		};
+		0A8C947428F75F2A0053AEAB /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				0A8C947528F75F350053AEAB /* warning.mp3 */,
+			);
+			path = Sound;
 			sourceTree = "<group>";
 		};
 		0A969DEE28EB12D800529B6B /* Extentions */ = {
@@ -432,6 +446,7 @@
 				0A7B570828F1CBC900146147 /* success.json in Resources */,
 				0A7D122228E1FF7A009C2C4C /* LaunchScreen.storyboard in Resources */,
 				0A8FAF7728EB7EB60009E65A /* GoogleService-Info.plist in Resources */,
+				0A8C947628F75F350053AEAB /* warning.mp3 in Resources */,
 				0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */,
 				0A42A95628EA0D6200B0F380 /* login.json in Resources */,
 			);
@@ -501,6 +516,7 @@
 				0AF9DCF128EC03FF00B2570F /* RegisterViewModel.swift in Sources */,
 				0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */,
 				0A7D123228E2006C009C2C4C /* MainTabBarController.swift in Sources */,
+				0A8C947328F70D630053AEAB /* RiskViewController.swift in Sources */,
 				0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */,
 				0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */,
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,

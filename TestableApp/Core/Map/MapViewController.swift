@@ -81,6 +81,7 @@ extension MapViewController {
         mapKit.addGestureRecognizer(gesture)
         
     }
+    
     private func handleUserLocation() {
         clManager.requestWhenInUseAuthorization()
         clManager.startUpdatingLocation()

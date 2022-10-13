@@ -284,9 +284,6 @@ extension ShareViewController: MKMapViewDelegate {
         annotationView?.clipsToBounds = true
         annotationView?.layer.masksToBounds = true
         
-//        ShareViewController.annotationImage.subscribe { [weak self] returned in
-//            self?.annotationView?.image = returned
-//        }.disposed(by: disposeBag)
         bindMapViewImage()
         
         annotationView?.makeConstraints(top: nil, left: nil, right: nil, bottom: nil, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 0, width: 70, height: 70)

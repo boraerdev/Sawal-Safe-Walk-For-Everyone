@@ -15,7 +15,7 @@ protocol ShareViewModelInterFace: AnyObject {
     func uploadPost(completion: @escaping (Result<Bool, Error>)->())
 }
 
-class ShareViewModel {
+final class ShareViewModel {
     static let shared = ShareViewModel()
     weak var view: ShareViewControllerInterface?
     let description: BehaviorRelay<String> = .init(value: "")

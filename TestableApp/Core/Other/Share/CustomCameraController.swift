@@ -3,7 +3,7 @@ import AVFoundation
 import RxSwift
 import RxCocoa
 
-class CameraView: UIViewController {
+final class CameraView: UIViewController {
     //MARK:- Vars
     var captureSession : AVCaptureSession!
     let disposeBag = DisposeBag()

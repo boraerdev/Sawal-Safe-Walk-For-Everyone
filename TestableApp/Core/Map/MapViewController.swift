@@ -17,7 +17,7 @@ protocol MapViewControllerInterface: AnyObject {
 }
 
 //MARK: Def, UI
-class MapViewController: UIViewController {
+final class MapViewController: UIViewController {
     
     //MARK: Def
     let clManager = CLLocationManager()

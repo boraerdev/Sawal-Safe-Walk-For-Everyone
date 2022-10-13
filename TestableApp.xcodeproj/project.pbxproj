@@ -117,6 +117,7 @@
 		0A2D155228E9EBE8001E8240 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				0A7D123C28E201AA009C2C4C /* Share */,
 				0A7B570928F1D0A900146147 /* PlanATrip */,
 				0ACB8F8128EA211000A17CC4 /* Welcome */,
 				0A2D155328E9EBED001E8240 /* Auth */,
@@ -189,12 +190,11 @@
 		0A7D122928E20013009C2C4C /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				0A7D123028E2004F009C2C4C /* Tabbar */,
 				0A2D155228E9EBE8001E8240 /* Other */,
-				0A7D123C28E201AA009C2C4C /* Share */,
 				0A7D123B28E201A6009C2C4C /* Map */,
 				0A7D123528E20154009C2C4C /* Person */,
 				0A7D122C28E2002B009C2C4C /* Home */,
+				0A7D123028E2004F009C2C4C /* Tabbar */,
 			);
 			path = Core;
 			sourceTree = "<group>";

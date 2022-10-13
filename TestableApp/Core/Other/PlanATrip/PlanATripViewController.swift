@@ -16,7 +16,7 @@ protocol PlanATripViewControllerInterFace: AnyObject {
 }
 
 //MARK: Def, UI
-class PlanATripViewController: UIViewController, PlanATripViewControllerInterFace {
+final class PlanATripViewController: UIViewController, PlanATripViewControllerInterFace {
     
     
     //MARK: Def
@@ -93,21 +93,16 @@ extension PlanATripViewController {
         view.addSubview(lbl.view)
         lbl.view.fillSuperview()
         lbl.playSound()
+        lbl.player?.stop()
         
-        PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
+        
+        PlanATripViewController.viewModel.riskMode.subscribe { result in
             if result.element == .inAreaCloser || result.element == .inAreaAway {
                 lbl.view.isHidden = false
-                if lbl.player?.isPlaying != nil, lbl.player?.isPlaying == false {
-                    lbl.player?.play()
-                }
             } else {
                 lbl.view.isHidden = true
-                lbl.player?.stop()
             }
-        }
-        
-        
-        
+        }.disposed(by: disposeBag)
         
         container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)
         
@@ -247,13 +242,13 @@ extension PlanATripViewController {
                 }
             })
         }.disposed(by: disposeBag)
-        self.detectRisk()
+        //self.detectRisk()
         //mapKit.showAnnotations(mapKit.annotations, animated: false)
     }
     
-    private func detectRisk() {
-        PlanATripViewController.viewModel.detectRisk()
-    }
+//    private func detectRisk() {
+//        PlanATripViewController.viewModel.detectRisk()
+//    }
 }
 
 //MARK: CLMANAGERDelegate
@@ -320,7 +315,9 @@ extension PlanATripViewController {
     
     @objc func didTapStart() {
         guard startField.text != "", finishField.text != "" else {return}
-        print("GOOOO")
+        PlanATripViewController.viewModel.filterAndDetect { list in
+            PlanATripViewController.viewModel.detectRisk(postList: list)
+        }
     }
 
     @objc private func didTapChangeStart() {

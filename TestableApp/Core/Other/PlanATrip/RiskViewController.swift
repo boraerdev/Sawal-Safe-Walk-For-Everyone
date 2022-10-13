@@ -12,7 +12,8 @@ import LBTATools
 import AVFoundation
 
 
-class RiskView: UIViewController {
+final class RiskView: UIViewController {
+    
     
     var player: AVAudioPlayer?
     private lazy var meter = UILabel(text: "Test",font: .systemFont(ofSize: 34), textColor: .secondaryLabel)
@@ -37,6 +38,8 @@ class RiskView: UIViewController {
         warningImage.withSize(.init(width: 200, height: 200))
         bindTitle()
         
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,10 +61,13 @@ class RiskView: UIViewController {
             try AVAudioSession.sharedInstance().setActive(true)
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
             guard let player = player else { return }
-            player.play()
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { (timer) in
-                player.stop()
-            }
+            //player.play()
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                if player.isPlaying == false {
+//                    player.play()
+//                }
+//            }
+            
 
         } catch let error {
             print(error.localizedDescription)
@@ -77,7 +83,6 @@ class RiskView: UIViewController {
             }
         }.disposed(by: disposeBag)
     }
-    
 }
 
 

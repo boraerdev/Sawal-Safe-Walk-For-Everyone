@@ -12,7 +12,7 @@ import RxCocoa
 
 protocol PlanATripViewModelInterFace: AnyObject {
     func viewDidLoad()
-    func detectRisk()
+    func detectRisk(postList: [Post])
 }
 
 enum CurrentRiskMode {
@@ -21,7 +21,7 @@ enum CurrentRiskMode {
     case outArea
 }
 
-class PlanATripViewModel {
+final class PlanATripViewModel {
     weak var view: PlanATripViewControllerInterFace?
     let currentLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
     let startLocation: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
@@ -30,6 +30,8 @@ class PlanATripViewModel {
     let disposeBag = DisposeBag()
     let riskMode: BehaviorRelay<CurrentRiskMode> = .init(value: .outArea)
     let distance: BehaviorRelay<Double?> = .init(value: nil)
+    let sharedRoute: BehaviorRelay<MKRoute?> = .init(value: nil)
+    var filteredPostsOnRoute: [Post] = []
 }
 
 extension PlanATripViewModel: PlanATripViewModelInterFace {
@@ -57,11 +59,29 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
         }
     }
     
-    func detectRisk() {
+    func filterAndDetect(completion: ([Post])->()) {
+        guard let route = sharedRoute.value, sharedRoute.value != nil else {return}
+        guard posts.value.count != 0 else {return}
+        filteredPostsOnRoute.removeAll(keepingCapacity: false)
+        route.steps.forEach { step in
+            posts.value.filter{ post in
+                if step.polyline.coordinate.distance(to: .init(latitude: post.location.latitude, longitude: post.location.longitude)) < 300 {
+                    if filteredPostsOnRoute.first(where: {$0.location.latitude == post.location.latitude }) == nil {
+                        filteredPostsOnRoute.append(post)
+                    }
+                }
+                return true
+            }
+        }
+        completion(filteredPostsOnRoute)
+        print(filteredPostsOnRoute.count)
+    }
+    
+    func detectRisk(postList: [Post]) {
         var postCoor: CLLocationCoordinate2D = .init(latitude: 0, longitude: 0)
         var distance: Double?
         currentLocation.subscribe { [weak self] result in
-            self?.posts.value.forEach { post in
+            postList.forEach { post in
                 postCoor = .init(latitude: post.location.latitude, longitude: post.location.longitude)
                 distance = result?.distance(to: postCoor)
                 if distance ?? 100 <= 21, distance ?? 100 >= 19 {
@@ -125,6 +145,10 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
             print("Found my directions/routing....")
             var newList = resp?.routes.sorted(by: {$0.distance<$1.distance})
             guard let route =  newList?.first else {return}
+            sharedRoute.accept(route)
+            filterAndDetect { post in
+                detectRisk(postList: post)
+            }
             completion(route)
             
             

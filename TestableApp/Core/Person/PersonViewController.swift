@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class PersonViewController: UIViewController {
+final class PersonViewController: UIViewController {
 
     
     override func viewDidLoad() {

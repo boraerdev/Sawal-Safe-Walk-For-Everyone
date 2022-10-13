@@ -12,7 +12,6 @@
 		0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D155528E9EC09001E8240 /* SignInViewController.swift */; };
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
 		0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613028F04A3500019BC4 /* CustomCameraController.swift */; };
-		0A67613328F04AF000019BC4 /* PhotoPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613228F04AF000019BC4 /* PhotoPreviewView.swift */; };
 		0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */; };
 		0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6DFAF828EC5AC4006C7B1C /* User.swift */; };
 		0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */; };
@@ -38,6 +37,7 @@
 		0AA7F07F28F0CFC5000ED5D3 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7F07E28F0CFC5000ED5D3 /* PostService.swift */; };
 		0AA7F08128F0CFE0000ED5D3 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7F08028F0CFE0000ED5D3 /* Post.swift */; };
 		0AA7F08328F0D2D2000ED5D3 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7F08228F0D2D2000ED5D3 /* ImageService.swift */; };
+		0AAD849428F825BD0050DA5D /* CapturedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAD849328F825BD0050DA5D /* CapturedImageView.swift */; };
 		0AB0BAFF28EC9EA200EEB48C /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB0BAFE28EC9EA200EEB48C /* UserService.swift */; };
 		0AC21DC028EF7C6D0078E382 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC21DBF28EF7C6D0078E382 /* MapViewModel.swift */; };
 		0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */; };
@@ -58,7 +58,6 @@
 		0A2D155528E9EC09001E8240 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
 		0A67613028F04A3500019BC4 /* CustomCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCameraController.swift; sourceTree = "<group>"; };
-		0A67613228F04AF000019BC4 /* PhotoPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewView.swift; sourceTree = "<group>"; };
 		0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extentions.swift"; sourceTree = "<group>"; };
 		0A6DFAF828EC5AC4006C7B1C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = TestableApp/Core/Other/Auth/Register/User.swift; sourceTree = SOURCE_ROOT; };
 		0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage2ViewController.swift; sourceTree = "<group>"; };
@@ -86,6 +85,7 @@
 		0AA7F07E28F0CFC5000ED5D3 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		0AA7F08028F0CFE0000ED5D3 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Post.swift; path = TestableApp/Service/Post.swift; sourceTree = SOURCE_ROOT; };
 		0AA7F08228F0D2D2000ED5D3 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		0AAD849328F825BD0050DA5D /* CapturedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImageView.swift; sourceTree = "<group>"; };
 		0AB0BAFE28EC9EA200EEB48C /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserService.swift; path = TestableApp/Core/Other/Auth/Register/UserService.swift; sourceTree = SOURCE_ROOT; };
 		0AC21DBF28EF7C6D0078E382 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
@@ -275,7 +275,6 @@
 				0A7D123D28E201C9009C2C4C /* ShareViewController.swift */,
 				0AA7F07C28F0CF21000ED5D3 /* ShareViewModel.swift */,
 				0A67613028F04A3500019BC4 /* CustomCameraController.swift */,
-				0A67613228F04AF000019BC4 /* PhotoPreviewView.swift */,
 			);
 			path = Share;
 			sourceTree = "<group>";
@@ -335,6 +334,7 @@
 				0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */,
 				0AF36E3C28F2441C00314F79 /* Extentions+MKMapItem.swift */,
 				0A89F85528F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift */,
+				0AAD849328F825BD0050DA5D /* CapturedImageView.swift */,
 			);
 			path = Extentions;
 			sourceTree = "<group>";
@@ -519,11 +519,11 @@
 				0A8C947328F70D630053AEAB /* RiskViewController.swift in Sources */,
 				0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */,
 				0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */,
+				0AAD849428F825BD0050DA5D /* CapturedImageView.swift in Sources */,
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,
 				0AA7F08328F0D2D2000ED5D3 /* ImageService.swift in Sources */,
 				0AA7F07F28F0CFC5000ED5D3 /* PostService.swift in Sources */,
 				0A7D123E28E201C9009C2C4C /* ShareViewController.swift in Sources */,
-				0A67613328F04AF000019BC4 /* PhotoPreviewView.swift in Sources */,
 				0AA7F08128F0CFE0000ED5D3 /* Post.swift in Sources */,
 				0AF36E3D28F2441C00314F79 /* Extentions+MKMapItem.swift in Sources */,
 				0AB0BAFF28EC9EA200EEB48C /* UserService.swift in Sources */,

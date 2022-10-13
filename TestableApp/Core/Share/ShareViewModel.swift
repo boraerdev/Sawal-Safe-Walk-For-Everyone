@@ -25,6 +25,7 @@ class ShareViewModel {
     let riskDegree: BehaviorRelay<Int> = .init(value: 0)
 }
 
+
 extension ShareViewModel: ShareViewModelInterFace {
     func uploadPost(completion: @escaping (Result<Bool, Error>) -> ()) {
         isLoading.accept(true)

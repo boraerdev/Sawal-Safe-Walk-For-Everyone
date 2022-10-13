@@ -65,3 +65,14 @@ extension UIView {
     }
 }
 
+//
+//  ViewController+Extras.swift
+//  CustomCamera
+//
+//  Created by Alex Barbulescu on 2020-05-23.
+//  Copyright © 2020 ca.alexs. All rights reserved.
+//
+
+import AVFoundation
+
+

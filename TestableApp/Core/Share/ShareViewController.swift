@@ -33,7 +33,8 @@ final class ShareViewController: UIViewController {
     private var locationInfo: CLPlacemark?
     private var textCount: BehaviorRelay<Int> = .init(value: 0)
     private var viewModel = ShareViewModel()
-    var annotationImage: BehaviorRelay<UIImage?> = BehaviorRelay(value: nil)
+    static var annotationImage: BehaviorRelay<UIImage?> = BehaviorRelay(value: nil)
+    var annotationView: MKAnnotationView?
 
     
     //MARK: UI
@@ -141,9 +142,10 @@ extension ShareViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareMainView()
-        annotationImage.accept(.init(named: "ist"))
+        ShareViewController.annotationImage.accept(.init(named: "ist"))
         handleMapView()
         prepareStack()
+        handleBind()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -170,7 +172,6 @@ extension ShareViewController {
         viewModel.isLoading.subscribe { [weak self] result in
             result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
         }.disposed(by: disposeBag)
-        handleBind()
         
     }
     
@@ -207,9 +208,9 @@ extension ShareViewController {
 
     private func setupSomeUI() {
         
-        annotationImage.subscribe { [weak self] returned in
-            self?.postImage.image = returned
-        }.disposed(by: disposeBag)
+//        ShareViewController.annotationImage.subscribe { [weak self] returned in
+//            self?.postImage.image = returned
+//        }.disposed(by: disposeBag)
         
         let inf = "\(locationInfo?.name ?? ""), \(locationInfo?.administrativeArea ?? "")"
         headerLocation.text = inf
@@ -249,11 +250,22 @@ extension ShareViewController {
     
     private func handleBind() {
         postField.rx.text.orEmpty.bind(to: viewModel.description).disposed(by: disposeBag)
-        annotationImage.bind(to: viewModel.postImage).disposed(by: disposeBag)
+        ShareViewController.annotationImage.bind(to: viewModel.postImage).disposed(by: disposeBag)
         currentLocation.bind(to: viewModel.location).disposed(by: disposeBag)
     }
     
+    private func bindMapViewImage() {
+        ShareViewController.annotationImage.subscribe { [weak self] result in
+            if let i = result.element {
+                if i != nil {
+                    self?.annotationView?.image = i
+                    self?.postImage.image = i
+                }
+            }
+        }.disposed(by: disposeBag)
+    }
 }
+
 
 //MARK: MapView Delegate
 extension ShareViewController: MKMapViewDelegate {
@@ -261,10 +273,8 @@ extension ShareViewController: MKMapViewDelegate {
         fetchLocationInfo(for: mapView.userLocation.location)
         currentLocation.accept(mapView.userLocation.location)
         
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotation")
-        if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
-        }
+        annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
+        
         annotationView?.layer.borderWidth = 4
         annotationView?.contentMode = .scaleAspectFill
         annotationView?.layer.borderColor = UIColor.white.cgColor
@@ -273,9 +283,11 @@ extension ShareViewController: MKMapViewDelegate {
         annotationView?.layer.shadowRadius = 40
         annotationView?.clipsToBounds = true
         annotationView?.layer.masksToBounds = true
-        annotationImage.subscribe { returned in
-            annotationView?.image = returned
-        }.disposed(by: disposeBag)
+        
+//        ShareViewController.annotationImage.subscribe { [weak self] returned in
+//            self?.annotationView?.image = returned
+//        }.disposed(by: disposeBag)
+        bindMapViewImage()
         
         annotationView?.makeConstraints(top: nil, left: nil, right: nil, bottom: nil, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 0, width: 70, height: 70)
         
@@ -388,7 +400,7 @@ extension ShareViewController: PHPickerViewControllerDelegate {
             result.itemProvider.loadObject(ofClass: UIImage.self) { reading, error in
                 guard let image = reading as? UIImage, error == nil else { return }
                 DispatchQueue.main.async {
-                    self.annotationImage.accept(image)
+                    ShareViewController.annotationImage.accept(image)
                 }
                 result.itemProvider.loadFileRepresentation(forTypeIdentifier: "public.image") { url, _ in
                 }

@@ -99,7 +99,16 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
                 }
                 
                 if distance ?? 100 <= 0.5{
-                   self?.riskMode.accept(.inAreaAway)
+                    switch self?.riskMode.value {
+                    case .inAreaCloser:
+                        self?.riskMode.accept(.inAreaAway)
+                    case .inAreaAway:
+                        self?.riskMode.accept(.inAreaCloser)
+                    case .outArea:
+                        self?.riskMode.accept(.inAreaAway)
+                    case .none:
+                        print("ok")
+                    }
                 }
                 
                 if distance ?? 100 <= 20 {

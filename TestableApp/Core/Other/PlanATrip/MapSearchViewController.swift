@@ -36,12 +36,21 @@ class MapSearchCell: LBTAListCell<MKMapItem> {
 class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem> {
     
     var selectionHandler: ((MKMapItem)->())?
+    var prepareCurrentLocationForSearch: (()->())?
     var navBarHeight: CGFloat = 45
     var searchText: BehaviorRelay<String> = .init(value: "")
     let disposeBag = DisposeBag()
     
     private lazy var searchField = IndentedTextField(placeholder: "Search...", padding: 10, cornerRadius: 8, backgroundColor: .secondarySystemBackground)
+    
+    private lazy var currentLocationBtn = UIButton(title: " Current Location", titleColor: .systemBackground, font: .systemFont(ofSize: 17), backgroundColor: .main3, target: self, action: #selector(didTapCur))
 
+    
+    @objc func didTapCur() {
+        prepareCurrentLocationForSearch?()
+        navigationController?.popViewController(animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         performLocalSearch()
@@ -65,6 +74,7 @@ class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem> {
 }
 
 extension MapSearchViewController {
+    
     private func performLocalSearch() {
         let request = MKLocalSearch.Request()
         var search: MKLocalSearch!
@@ -76,7 +86,6 @@ extension MapSearchViewController {
                 self?.items = resp?.mapItems ?? []
             }
         }.disposed(by: disposeBag)
-        
     }
     
     private func prepareNavBar() {
@@ -90,9 +99,22 @@ extension MapSearchViewController {
         containver.fillSuperviewSafeAreaLayoutGuide()
         
         let backBtn = UIButton(image: .init(systemName: "chevron.backward")!, tintColor: .main3, target: self, action: #selector(didTapBack))
-        
+        setupCurLocBtn()
         containver.hstack(backBtn.withWidth(25),searchField,spacing: 10).withMargins(.init(top: 0, left: 20, bottom: 0, right: 20))
         
+    }
+    
+    func setupCurLocBtn() {
+        guard prepareCurrentLocationForSearch != nil else {return}
+        currentLocationBtn.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(currentLocationBtn)
+        currentLocationBtn.setImage(.init(systemName: "circle.circle"), for: .normal)
+        currentLocationBtn.imageView?.contentMode = .scaleAspectFit
+        currentLocationBtn.contentEdgeInsets = .init(top: 10, left: 20, bottom: 10, right: 20)
+        currentLocationBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
+        currentLocationBtn.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        currentLocationBtn.layer.cornerRadius = 8
+        currentLocationBtn.tintColor = .systemBackground
     }
     
     @objc func didTapBack() {

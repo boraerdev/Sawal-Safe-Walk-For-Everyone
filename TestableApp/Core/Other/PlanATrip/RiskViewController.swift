@@ -36,7 +36,6 @@ final class RiskView: UIViewController {
                 alignment: .center),
             alignment: .center)
         warningImage.withSize(.init(width: 200, height: 200))
-        bindTitle()
         
         
         
@@ -61,12 +60,8 @@ final class RiskView: UIViewController {
             try AVAudioSession.sharedInstance().setActive(true)
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
             guard let player = player else { return }
+            bindTitle()
             //player.play()
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//                if player.isPlaying == false {
-//                    player.play()
-//                }
-//            }
             
 
         } catch let error {
@@ -75,10 +70,10 @@ final class RiskView: UIViewController {
     }
     
     func bindTitle() {
-        PlanATripViewController.viewModel.distance.subscribe { [weak self] result in
+        PlanATripViewController.viewModel.distance.subscribe { [unowned self] result in
             if let res = result.element {
                 if let r = res {
-                    self?.meter.text = String(format: "%.1f m", r)
+                    self.meter.text = String(format: "%.1f m", r)
                 }
             }
         }.disposed(by: disposeBag)

@@ -77,6 +77,7 @@ extension PlanATripViewController {
         prepareMainView()
         prepareFields()
         addTargets()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -87,6 +88,7 @@ extension PlanATripViewController {
         header.addSubview(container)
         container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
         
+        //Add RsikView
         let lbl = RiskView()
         addChild(lbl)
         lbl.didMove(toParent: self)
@@ -94,7 +96,6 @@ extension PlanATripViewController {
         lbl.view.fillSuperview()
         lbl.playSound()
         lbl.player?.stop()
-        
         
         PlanATripViewController.viewModel.riskMode.subscribe { result in
             if result.element == .inAreaCloser || result.element == .inAreaAway {
@@ -105,12 +106,8 @@ extension PlanATripViewController {
         }.disposed(by: disposeBag)
         
         container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)
-        
-        
         fieldsBG.withHeight(250)
         setupSomeUI()
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -242,13 +239,9 @@ extension PlanATripViewController {
                 }
             })
         }.disposed(by: disposeBag)
-        //self.detectRisk()
         //mapKit.showAnnotations(mapKit.annotations, animated: false)
     }
     
-//    private func detectRisk() {
-//        PlanATripViewController.viewModel.detectRisk()
-//    }
 }
 
 //MARK: CLMANAGERDelegate
@@ -322,6 +315,12 @@ extension PlanATripViewController {
 
     @objc private func didTapChangeStart() {
         let vc = MapSearchViewController()
+        vc.prepareCurrentLocationForSearch = { [weak self] in
+            self?.startField.text = "Current Location"
+            PlanATripViewController.viewModel.startLocation.accept(PlanATripViewController.viewModel.currentLocation.value)
+            let item: MKMapItem = .init(placemark: .init(coordinate: PlanATripViewController.viewModel.currentLocation.value!))
+            self?.addAnnotation(title: "Start", item: item)
+        }
         vc.selectionHandler = { [unowned self] item in
             self.startField.text = item.name
             self.navigationController?.popViewController(animated: true)

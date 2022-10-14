@@ -24,7 +24,6 @@
 		0A7D121828E1FF7A009C2C4C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D121728E1FF7A009C2C4C /* SceneDelegate.swift */; };
 		0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A7D121E28E1FF7A009C2C4C /* Assets.xcassets */; };
 		0A7D122228E1FF7A009C2C4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A7D122028E1FF7A009C2C4C /* LaunchScreen.storyboard */; };
-		0A7D123228E2006C009C2C4C /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123128E2006C009C2C4C /* MainTabBarController.swift */; };
 		0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123328E2013C009C2C4C /* HomeViewController.swift */; };
 		0A7D123728E20161009C2C4C /* PersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123628E20161009C2C4C /* PersonViewController.swift */; };
 		0A7D123E28E201C9009C2C4C /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123D28E201C9009C2C4C /* ShareViewController.swift */; };
@@ -74,7 +73,6 @@
 		0A7D121E28E1FF7A009C2C4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0A7D122128E1FF7A009C2C4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A7D122328E1FF7A009C2C4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0A7D123128E2006C009C2C4C /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		0A7D123328E2013C009C2C4C /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		0A7D123628E20161009C2C4C /* PersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewController.swift; sourceTree = "<group>"; };
 		0A7D123D28E201C9009C2C4C /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -198,7 +196,6 @@
 				0A7D123B28E201A6009C2C4C /* Map */,
 				0A7D123528E20154009C2C4C /* Person */,
 				0A7D122C28E2002B009C2C4C /* Home */,
-				0A7D123028E2004F009C2C4C /* Tabbar */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -247,14 +244,6 @@
 				0AF910E428E42C9C004779EF /* HomeControllerViewModel.swift */,
 			);
 			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		0A7D123028E2004F009C2C4C /* Tabbar */ = {
-			isa = PBXGroup;
-			children = (
-				0A7D123128E2006C009C2C4C /* MainTabBarController.swift */,
-			);
-			path = Tabbar;
 			sourceTree = "<group>";
 		};
 		0A7D123528E20154009C2C4C /* Person */ = {
@@ -521,7 +510,6 @@
 				0AC21DC028EF7C6D0078E382 /* MapViewModel.swift in Sources */,
 				0AF9DCF128EC03FF00B2570F /* RegisterViewModel.swift in Sources */,
 				0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */,
-				0A7D123228E2006C009C2C4C /* MainTabBarController.swift in Sources */,
 				0A8C947328F70D630053AEAB /* RiskViewController.swift in Sources */,
 				0A53BDA928F9B3A50042BB71 /* RiskDetailViewController.swift in Sources */,
 				0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */,

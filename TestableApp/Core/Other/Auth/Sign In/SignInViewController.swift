@@ -207,7 +207,7 @@ extension SignInViewController {
             viewModel.signInUser(email: viewModel.email.value, pass: viewModel.pass.value) {result in
                 switch result {
                 case .success( _):
-                    let vc = MainTabBarController()
+                    let vc = UINavigationController(rootViewController: HomeViewController())
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true)
                 case .failure(let error):

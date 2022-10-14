@@ -25,6 +25,8 @@ final class MapViewController: UIViewController {
     let disposeBag = DisposeBag()
     var currentSelectCallout: UIView?
     var tempHud: UIView?
+    var hudContainer = UIView(backgroundColor: .clear)
+    var selectedPost: Post?
     
     //MARK: UI
     lazy var mapKit : MKMapView = {
@@ -73,13 +75,14 @@ extension MapViewController {
         clManager.delegate = self
         mapKit.delegate = self
         handleUserLocation()
-        
+        hudContainer.layer.cornerRadius = 8
+        hudContainer.isHidden = true
     }
     
     private func addClearGesture() {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapClear))
         mapKit.addGestureRecognizer(gesture)
-        
+        hudContainer.isHidden = true
     }
     
     private func handleUserLocation() {
@@ -91,6 +94,10 @@ extension MapViewController {
     private func handleMapKit() {
         view.addSubview(mapKit)
         mapKit.fillSuperview()
+        view.addSubview(hudContainer)
+        
+        hudContainer.anchor(top: nil, leading: mapKit.leadingAnchor, bottom: mapKit.safeAreaLayoutGuide.bottomAnchor, trailing: mapKit.trailingAnchor, padding: .init(top: 0, left: 20, bottom: 0, right: 20))
+        hudContainer.withHeight(150)
     }
     
     private func handleSharedAnnotations() {
@@ -173,7 +180,7 @@ extension MapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        
+        hudContainer.isHidden = false
         currentSelectCallout?.removeFromSuperview()
         tempHud?.removeFromSuperview()
         if !(view.annotation is RiskColoredAnnotations) {return}
@@ -183,7 +190,10 @@ extension MapViewController: MKMapViewDelegate {
         let hudView = UIView(backgroundColor: .systemBackground)
         let post: Post!
         let bgImage = UIImageView(image: nil, contentMode: .scaleAspectFill)
-        let titleLbl = UILabel(text: "", font: .systemFont(ofSize: 13), textColor: .label, textAlignment: .center)
+        let adressLbl = UILabel(text: "", font: .systemFont(ofSize: 22), textColor: .label, numberOfLines: 1)
+        let riskDEgreeLbl = UILabel(text: "", font: .systemFont(ofSize: 13), numberOfLines: 1)
+        let descLbl = UILabel(text: "", font: .systemFont(ofSize: 13), textColor: .secondaryLabel, numberOfLines: 2)
+        let infoBtn = UIButton(image: .init(systemName: "info.circle.fill")!, tintColor: .label, target: self, action: #selector(didTapGoDetail))
         
         
         view.addSubview(customCallout)
@@ -191,43 +201,53 @@ extension MapViewController: MKMapViewDelegate {
         
         hudView.layer.cornerRadius = 8
         hudView.dropShadow()
-        titleLbl.backgroundColor = .systemBackground
+        adressLbl.backgroundColor = .systemBackground
 
         if let ano = view.annotation as? RiskColoredAnnotations {
             post = ano.post
+            selectedPost = ano.post
             bgImage.kf.setImage(with: URL(string: post.imageURL!), placeholder: UIImage(systemName: "wifi"))
-            
+            riskDEgreeLbl.text = post.riskDegree == 0 ? "Low Risk Area" : post.riskDegree == 1 ? "Medium Risk Area" : "High Risk Area"
+            riskDEgreeLbl.textColor = post.riskDegree == 0 ? .systemOrange : post.riskDegree == 1 ? .systemRed : .main2
+            descLbl.text = post.description
             let loc = CLLocation(latitude: post.location.latitude, longitude: post.location.longitude)
             loc.fetchLocationInfo { locationInfo, error in
-                titleLbl.text = locationInfo?.name
+                adressLbl.text = locationInfo?.name
+                
             }
         }
         
+        hudContainer.addSubview(hudView)
+        hudView.fillSuperview()
         
-        hudView.anchor(top: nil, leading: mapKit.leadingAnchor, bottom: mapKit.safeAreaLayoutGuide.bottomAnchor, trailing: mapKit.trailingAnchor, padding: .init(top: 0, left: 20, bottom: 0, right: 20))
-        hudView.withHeight(150)
+        configureCustomCallout(customCallout: customCallout, view: view)
         
+        customCallout.stack(bgImage)
+        //hudView.stack(adressLbl, alignment: .center).withMargins(.allSides(12))
+        hudView.hstack(hudView.stack(hudView.hstack(riskDEgreeLbl, infoBtn, alignment: .top),
+                                     UIView(),
+                                     adressLbl,
+                                     descLbl))
+        .withMargins(.allSides(12))
+        
+        
+        tempHud = hudView
+        currentSelectCallout = customCallout
+    }
+    
+    private func configureCustomCallout(customCallout: UIView, view: MKAnnotationView) {
         customCallout.layer.masksToBounds = true
         customCallout.clipsToBounds = true
         customCallout.layer.cornerRadius = 8
         customCallout.layer.borderWidth = 2
         customCallout.layer.borderColor = UIColor.black.cgColor
-        
-        
         customCallout.translatesAutoresizingMaskIntoConstraints = false
         customCallout.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         customCallout.bottomAnchor.constraint(equalTo: view.topAnchor, constant: -10).isActive = true
         customCallout.withWidth(100)
         customCallout.withHeight(150)
-        
-        
-        customCallout.stack(bgImage)
-        hudView.stack(titleLbl, alignment: .center).withMargins(.allSides(12))
-
-        
-        tempHud = hudView
-        currentSelectCallout = customCallout
     }
+    
 }
 
 //MARK: MapViewController Interface
@@ -236,9 +256,8 @@ extension MapViewController: MapViewControllerInterface {}
 //MARK: Objc
 extension MapViewController {
     @objc func didTapGoDetail() {
-        print("OK")
-        let vc = UIViewController()
-        vc.view.backgroundColor = .red
+        let vc = RiskDetailViewController()
+        vc.post = selectedPost
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -249,5 +268,6 @@ extension MapViewController {
     @objc func didTapClear() {
         currentSelectCallout?.removeFromSuperview()
         tempHud?.removeFromSuperview()
+        hudContainer.isHidden = true
     }
 }

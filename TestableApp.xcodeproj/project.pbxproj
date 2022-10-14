@@ -11,6 +11,8 @@
 		0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */; };
 		0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D155528E9EC09001E8240 /* SignInViewController.swift */; };
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
+		0A53BDA928F9B3A50042BB71 /* RiskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */; };
+		0A53BDAB28F9B6330042BB71 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */; };
 		0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613028F04A3500019BC4 /* CustomCameraController.swift */; };
 		0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */; };
 		0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6DFAF828EC5AC4006C7B1C /* User.swift */; };
@@ -57,6 +59,8 @@
 		0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewController.swift; sourceTree = "<group>"; };
 		0A2D155528E9EC09001E8240 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
+		0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskDetailViewController.swift; sourceTree = "<group>"; };
+		0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		0A67613028F04A3500019BC4 /* CustomCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCameraController.swift; sourceTree = "<group>"; };
 		0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extentions.swift"; sourceTree = "<group>"; };
 		0A6DFAF828EC5AC4006C7B1C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = TestableApp/Core/Other/Auth/Register/User.swift; sourceTree = SOURCE_ROOT; };
@@ -224,6 +228,7 @@
 			children = (
 				0A7D122D28E20030009C2C4C /* View */,
 				0A7D122E28E20034009C2C4C /* ViewModel */,
+				0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -265,6 +270,7 @@
 			children = (
 				0A7D124028E201D4009C2C4C /* MapViewController.swift */,
 				0AC21DBF28EF7C6D0078E382 /* MapViewModel.swift */,
+				0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -517,6 +523,7 @@
 				0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */,
 				0A7D123228E2006C009C2C4C /* MainTabBarController.swift in Sources */,
 				0A8C947328F70D630053AEAB /* RiskViewController.swift in Sources */,
+				0A53BDA928F9B3A50042BB71 /* RiskDetailViewController.swift in Sources */,
 				0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */,
 				0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */,
 				0AAD849428F825BD0050DA5D /* CapturedImageView.swift in Sources */,
@@ -536,6 +543,7 @@
 				0AF36F2C28F4710C00A986F0 /* AnnotationTypes.swift in Sources */,
 				0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */,
 				0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */,
+				0A53BDAB28F9B6330042BB71 /* SideMenuViewController.swift in Sources */,
 				0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,6 +20,9 @@ final class HomeViewController: UIViewController {
     //MARK: Def
     let viewModel = HomeControllerViewModel()
     let disposeBag = DisposeBag()
+    let sideMenu = SideMenuViewController()
+    let darkBgForSideMenu = UIView(backgroundColor: .black.withAlphaComponent(0.1))
+
     
     //MARK: UI
     private lazy var goMapBtn: UIButton = {
@@ -102,6 +105,17 @@ extension HomeViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(didTapMenu))
     }
     
+    private func prepareSideMenu() {
+        addChild(sideMenu)
+        sideMenu.didMove(toParent: self)
+        darkBgForSideMenu.isUserInteractionEnabled = true
+        view.addSubview(darkBgForSideMenu)
+        darkBgForSideMenu.fillSuperview()
+        view.addSubview(sideMenu.view)
+        sideMenu.view.frame = .init(x: -(view.frame.width * 0.8), y: 0, width: view.frame.width * 0.8, height: view.frame.height)
+        darkBgForSideMenu.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(closeMenu)))
+    }
+    
     private func prepareStack() {
         let container = UIView()
         container.withHeight(250)
@@ -129,7 +143,6 @@ extension HomeViewController {
         .disposed(by: disposeBag)
         
         addRiskBtn.rx.tap.subscribe(onNext: {[unowned self] in
-            //TODO
             let simulator = true
             simulator ? navigationController?.pushViewController(ShareViewController(), animated: true) :                     navigationController?.pushViewController(CameraView(), animated: true)
         })
@@ -146,5 +159,22 @@ extension HomeViewController {
 //MARK: Objc
 extension HomeViewController {
     @objc func didTapMenu() {
+        welcomeStack.isHidden = true
+        prepareSideMenu()
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            guard let self = self else {return}
+            self.sideMenu.view.frame = .init(x: 0, y: 0, width: self.view.frame.width * 0.8, height: self.view.frame.height)
+        }
+    }
+    
+    @objc func closeMenu() {
+        UIView.animate(withDuration: 0.2) { [unowned self] in
+            self.sideMenu.view.frame = .init(x: -(self.view.frame.width * 0.8), y: 0, width: self.view.frame.width * 0.8, height: self.view.frame.height)
+
+        } completion: { isFinish in
+            self.sideMenu.view.removeFromSuperview()
+            self.darkBgForSideMenu.removeFromSuperview()
+            self.welcomeStack.isHidden = false
+        }
     }
 }

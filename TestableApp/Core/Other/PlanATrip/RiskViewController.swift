@@ -32,6 +32,10 @@ final class RiskView: UIViewController {
         
         navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .close, target: self, action: #selector(didTapClose))
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         view.hstack(
             view.stack(
                 warningImage,
@@ -41,16 +45,15 @@ final class RiskView: UIViewController {
                 alignment: .center),
             alignment: .center)
         warningImage.withSize(.init(width: 200, height: 200))
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+
         playSound()
+        bindTitle()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         player?.stop()
+        meter.removeFromSuperview()
     }
     
 }
@@ -78,7 +81,7 @@ extension RiskView {
         PlanATripViewController.viewModel.distance.subscribe { [weak self] result in
             if let res = result.element {
                 if let r = res {
-//                    self?.meter.text = String(format: "%.1f m", r)
+                    self?.meter.text = String(format: "%.1f m", r)
                 }
             }
         }.disposed(by: disposeBag)

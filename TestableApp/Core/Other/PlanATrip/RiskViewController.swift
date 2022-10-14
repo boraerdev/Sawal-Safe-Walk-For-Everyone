@@ -20,11 +20,17 @@ final class RiskView: UIViewController {
     let warningImage = UIImageView(image: .init(systemName: "exclamationmark.triangle"), contentMode: .scaleAspectFit)
     let warnLbl = UILabel(text: "Please be careful, the distance between you and the risk:", font: .boldSystemFont(ofSize: 22),textColor: .black, textAlignment: .center, numberOfLines: 0)
     
+    
+    //Core
     override func viewDidLoad(){
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
         warnLbl.withWidth(300)
+        
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        
+        navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .close, target: self, action: #selector(didTapClose))
 
         view.hstack(
             view.stack(
@@ -35,14 +41,11 @@ final class RiskView: UIViewController {
                 alignment: .center),
             alignment: .center)
         warningImage.withSize(.init(width: 200, height: 200))
-        
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        playSound()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -50,6 +53,10 @@ final class RiskView: UIViewController {
         player?.stop()
     }
     
+}
+
+//MARK: Funcs
+extension RiskView {
     
     func playSound() {
         guard let url = Bundle.main.url(forResource: "warning", withExtension: "mp3") else { return }
@@ -60,9 +67,8 @@ final class RiskView: UIViewController {
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
             guard let player = player else { return }
             player.numberOfLoops = 10
-            //TODO ram managment
+            player.play()
             bindTitle()
-            //player.play()
         } catch let error {
             print(error.localizedDescription)
         }
@@ -75,9 +81,13 @@ final class RiskView: UIViewController {
 //                    self?.meter.text = String(format: "%.1f m", r)
                 }
             }
-            
         }.disposed(by: disposeBag)
     }
+    
+    @objc func didTapClose() {
+        navigationController?.popViewController(animated: true)
+    }
+
 }
 
 

@@ -20,6 +20,7 @@ protocol PlanATripViewControllerInterFace: AnyObject {
 final class PlanATripViewController: UIViewController, PlanATripViewControllerInterFace {
     
     //MARK: Def
+    var curRiskView: UIViewController?
     var isNowPlaying = false
     let disposeBag = DisposeBag()
     var tripAnnotations = [MKAnnotation]()
@@ -88,7 +89,17 @@ extension PlanATripViewController {
         container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
         
         //Add RsikView
-        showRiskView()
+        //showRiskView()
+        
+        PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
+            if result.element == .inAreaCloser || result.element == .inAreaAway {
+                self?.AddRiskView()
+                self?.isNowPlaying = true
+            } else {
+                self?.RemoveRiskView()
+                self?.isNowPlaying = false
+            }
+        }.disposed(by: disposeBag)
         
         container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)
         fieldsBG.withHeight(250)
@@ -113,32 +124,16 @@ extension PlanATripViewController {
 //MARK: Funcs
 extension PlanATripViewController {
     
-    private func showRiskView() {
-        let lbl = RiskView()
-        addChild(lbl)
-        lbl.didMove(toParent: self)
-        view.addSubview(lbl.view)
-        lbl.view.fillSuperview()
-        lbl.playSound()
-        lbl.player?.play()
-        PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
-            if result.element == .inAreaCloser || result.element == .inAreaAway {
-                lbl.view.isHidden = false
-                self?.handlePlay(lbl.player!)
-                self?.isNowPlaying = true
-            } else {
-                lbl.view.isHidden = true
-                //lbl.player?.volume = .zero
-                self?.isNowPlaying = false
-                lbl.player?.stop()
-            }
-        }.disposed(by: disposeBag)
-
+    private func AddRiskView() {
+        guard !isNowPlaying else {return}
+        let vc = RiskView()
+        navigationController?.pushViewController(vc, animated: true)
+        curRiskView = vc
     }
     
-    private func handlePlay(_ pl: AVAudioPlayer) {
-        guard !isNowPlaying else {return}
-        pl.play()
+    private func RemoveRiskView() {
+        guard isNowPlaying else {return}
+        curRiskView?.navigationController?.popViewController(animated: true)
     }
 
     private func prepareMainView() {

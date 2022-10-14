@@ -149,12 +149,10 @@ extension ShareViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backgroundColor = .systemBackground
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        self.tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.backgroundColor = .clear
     }
 }

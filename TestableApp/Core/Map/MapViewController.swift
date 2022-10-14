@@ -49,7 +49,6 @@ extension MapViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.isHidden = true
         viewModel.fetchSharedLocations()
         handleSharedAnnotations()
@@ -59,7 +58,6 @@ extension MapViewController {
     override func viewWillDisappear(_ animated: Bool) {
         mapKit.removeAnnotations(mapKit.annotations)
         navigationController?.navigationBar.isHidden = false
-        tabBarController?.tabBar.isHidden = false
         mapKit.removeAnnotations(mapKit.annotations)
     }
 

@@ -11,8 +11,8 @@ import MapKit
 import RxSwift
 import RxCocoa
 
-
-class MapSearchCell: LBTAListCell<MKMapItem> {
+//Cell
+final class MapSearchCell: LBTAListCell<MKMapItem> {
     
     override var item: MKMapItem! {
         didSet {
@@ -21,8 +21,8 @@ class MapSearchCell: LBTAListCell<MKMapItem> {
         }
     }
     
-    
     let nameLbl = UILabel()
+    
     let adressLbl = UILabel(text: "", font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .left, numberOfLines: 2)
     
     override func setupViews() {
@@ -33,47 +33,54 @@ class MapSearchCell: LBTAListCell<MKMapItem> {
     }
 }
 
-class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem> {
+final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem> {
     
+    //MARF: Def
     var selectionHandler: ((MKMapItem)->())?
     var prepareCurrentLocationForSearch: (()->())?
     var navBarHeight: CGFloat = 45
     var searchText: BehaviorRelay<String> = .init(value: "")
     let disposeBag = DisposeBag()
     
+    //MARK: UI
     private lazy var searchField = IndentedTextField(placeholder: "Search...", padding: 10, cornerRadius: 8, backgroundColor: .secondarySystemBackground)
     
     private lazy var currentLocationBtn = UIButton(title: " Current Location", titleColor: .systemBackground, font: .systemFont(ofSize: 17), backgroundColor: .main3, target: self, action: #selector(didTapCur))
 
-    
-    @objc func didTapCur() {
-        prepareCurrentLocationForSearch?()
-        navigationController?.popViewController(animated: true)
-    }
-    
+    //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
         performLocalSearch()
         prepareNavBar()
-        
-        collectionView.verticalScrollIndicatorInsets = .init(top: navBarHeight, left: 0, bottom: 0, right: 0)
-        collectionView.backgroundColor = .systemBackground
-        
-        searchField.rx.text.orEmpty
-            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
-            .bind(to: searchText)
-            .disposed(by: disposeBag)
-        
-        searchField.becomeFirstResponder()
+        prepareMainView()
         
     }
+    
     override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.isHidden = true
     }
 }
 
 extension MapSearchViewController {
+    
+    private func prepareMainView() {
+        collectionView.verticalScrollIndicatorInsets = .init(top: navBarHeight, left: 0, bottom: 0, right: 0)
+        collectionView.backgroundColor = .systemBackground
+        
+        if (prepareCurrentLocationForSearch == nil) {
+            searchField.becomeFirstResponder()
+        }
+        
+        searchField.rx.text.orEmpty
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
+            .bind(to: searchText)
+            .disposed(by: disposeBag)
+    }
+    
+    @objc func didTapCur() {
+        prepareCurrentLocationForSearch?()
+        navigationController?.popViewController(animated: true)
+    }
     
     private func performLocalSearch() {
         let request = MKLocalSearch.Request()
@@ -120,6 +127,7 @@ extension MapSearchViewController {
     @objc func didTapBack() {
         navigationController?.popViewController(animated: true)
     }
+    
 }
 
 

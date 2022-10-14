@@ -10,18 +10,29 @@ import RxSwift
 import RxCocoa
 import LBTATools
 import AVFoundation
-
+import Lottie
 
 final class RiskView: UIViewController {
     
+    //MARK: Def
     var player: AVAudioPlayer?
-    private lazy var meter = UILabel(text: "Test",font: .systemFont(ofSize: 34), textColor: .secondaryLabel)
     let disposeBag = DisposeBag()
-    let warningImage = UIImageView(image: .init(systemName: "exclamationmark.triangle"), contentMode: .scaleAspectFit)
-    let warnLbl = UILabel(text: "Please be careful, the distance between you and the risk:", font: .boldSystemFont(ofSize: 22),textColor: .black, textAlignment: .center, numberOfLines: 0)
     
+    //MARK: UI
+    private lazy var warningAnimation: AnimationView = {
+        let ani = AnimationView()
+        ani.animation = Animation.named("warning")
+        ani.loopMode = .loop
+        ani.translatesAutoresizingMaskIntoConstraints = false
+        ani.contentMode = .scaleAspectFit
+        return ani
+    }()
     
-    //Core
+    let warnLbl = UILabel(text: "Please be careful, the distance between you and the risk:", font: .boldSystemFont(ofSize: 22),textColor: .label, textAlignment: .center, numberOfLines: 0)
+    
+    private lazy var meter = UILabel(text: "Test",font: .systemFont(ofSize: 34), textColor: .secondaryLabel)
+
+    //MARK: Core
     override func viewDidLoad(){
         super.viewDidLoad()
         
@@ -38,14 +49,14 @@ final class RiskView: UIViewController {
         super.viewWillAppear(animated)
         view.hstack(
             view.stack(
-                warningImage,
+                warningAnimation,
                 warnLbl,
                 meter,
                 spacing: 10,
                 alignment: .center),
             alignment: .center)
-        warningImage.withSize(.init(width: 200, height: 200))
-
+        warningAnimation.withSize(.init(width: 250, height: 250))
+        warningAnimation.play()
         playSound()
         bindTitle()
     }
@@ -53,6 +64,7 @@ final class RiskView: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         player?.stop()
+        warningAnimation.stop()
         meter.removeFromSuperview()
     }
     

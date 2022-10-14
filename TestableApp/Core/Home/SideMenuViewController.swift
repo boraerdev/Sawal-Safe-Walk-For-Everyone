@@ -7,10 +7,10 @@
 
 import UIKit
 import FirebaseAuth
-
+//TODO
 final class SideMenuViewController: UIViewController {
     
-    let exitBtn = UIButton(title: "Log Out", titleColor: .systemRed, backgroundColor: .systemBackground, target: self, action: #selector(didTapExit))
+    let exitBtn = UIButton(title: " Log Out", titleColor: .systemRed, backgroundColor: .systemBackground, target: self, action: #selector(didTapExit))
 
     override func viewDidLoad() {
         super.viewDidLoad()

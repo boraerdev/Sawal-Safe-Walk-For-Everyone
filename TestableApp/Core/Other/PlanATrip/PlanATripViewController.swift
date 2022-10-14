@@ -107,7 +107,6 @@ extension PlanATripViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = true
         PlanATripViewController.viewModel.fetchSharedLocations()
         handleSharedAnnotations()
         navigationController?.navigationBar.isHidden = true
@@ -115,7 +114,6 @@ extension PlanATripViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = false
         mapView.removeAnnotations(mapView.annotations)
     }

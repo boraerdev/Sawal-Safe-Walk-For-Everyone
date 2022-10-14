@@ -13,6 +13,7 @@
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
 		0A53BDA928F9B3A50042BB71 /* RiskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */; };
 		0A53BDAB28F9B6330042BB71 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */; };
+		0A53BDAD28F9C91A0042BB71 /* warning.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A53BDAC28F9C91A0042BB71 /* warning.json */; };
 		0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613028F04A3500019BC4 /* CustomCameraController.swift */; };
 		0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */; };
 		0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6DFAF828EC5AC4006C7B1C /* User.swift */; };
@@ -60,6 +61,7 @@
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
 		0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskDetailViewController.swift; sourceTree = "<group>"; };
 		0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
+		0A53BDAC28F9C91A0042BB71 /* warning.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = warning.json; sourceTree = "<group>"; };
 		0A67613028F04A3500019BC4 /* CustomCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCameraController.swift; sourceTree = "<group>"; };
 		0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extentions.swift"; sourceTree = "<group>"; };
 		0A6DFAF828EC5AC4006C7B1C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = TestableApp/Core/Other/Auth/Register/User.swift; sourceTree = SOURCE_ROOT; };
@@ -298,6 +300,7 @@
 		0A856B1E28E9EEB600ABDD03 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
+				0A53BDAC28F9C91A0042BB71 /* warning.json */,
 				0A42A95528EA0D6200B0F380 /* login.json */,
 				0A7B570728F1CBC900146147 /* success.json */,
 			);
@@ -415,7 +418,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0A7D120D28E1FF7A009C2C4C /* Build configuration list for PBXProject "TestableApp" */;
+			buildConfigurationList = 0A7D120D28E1FF7A009C2C4C /* Build configuration list for PBXProject "Sawal" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -444,6 +447,7 @@
 				0A8C947628F75F350053AEAB /* warning.mp3 in Resources */,
 				0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */,
 				0A42A95628EA0D6200B0F380 /* login.json in Resources */,
+				0A53BDAD28F9C91A0042BB71 /* warning.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +679,8 @@
 				DEVELOPMENT_TEAM = HJ3CX8Z5MV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TestableApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Sawal;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to make sure you can take pictures.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to look at risk factors.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -709,6 +715,8 @@
 				DEVELOPMENT_TEAM = HJ3CX8Z5MV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TestableApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Sawal;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to make sure you can take pictures.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to look at risk factors.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -735,7 +743,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0A7D120D28E1FF7A009C2C4C /* Build configuration list for PBXProject "TestableApp" */ = {
+		0A7D120D28E1FF7A009C2C4C /* Build configuration list for PBXProject "Sawal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A7D122428E1FF7A009C2C4C /* Debug */,

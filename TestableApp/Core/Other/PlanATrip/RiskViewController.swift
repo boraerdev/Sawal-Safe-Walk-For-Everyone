@@ -59,6 +59,7 @@ final class RiskView: UIViewController {
             try AVAudioSession.sharedInstance().setActive(true)
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
             guard let player = player else { return }
+            player.numberOfLoops = 10
             //TODO ram managment
             bindTitle()
             //player.play()

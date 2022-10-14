@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 import CoreLocation
 import LBTATools
+import AVFAudio
 
 protocol PlanATripViewControllerInterFace: AnyObject {
 }
@@ -18,8 +19,8 @@ protocol PlanATripViewControllerInterFace: AnyObject {
 //MARK: Def, UI
 final class PlanATripViewController: UIViewController, PlanATripViewControllerInterFace {
     
-    
     //MARK: Def
+    var isNowPlaying = false
     let disposeBag = DisposeBag()
     var tripAnnotations = [MKAnnotation]()
     let startAno: MKAnnotation? = nil
@@ -31,7 +32,6 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     var finishItem: MKMapItem? = nil
 
     //MARK: UI
-    
     let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
         
     private lazy var fieldsBG = UIView(backgroundColor: .main3)
@@ -88,20 +88,7 @@ extension PlanATripViewController {
         container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
         
         //Add RsikView
-        let lbl = RiskView()
-        addChild(lbl)
-        lbl.didMove(toParent: self)
-        view.addSubview(lbl.view)
-        lbl.view.fillSuperview()
-        lbl.playSound()
-        //lbl.player?.play()
-        PlanATripViewController.viewModel.riskMode.subscribe { result in
-            if result.element == .inAreaCloser || result.element == .inAreaAway {
-                lbl.view.isHidden = false
-            } else {
-                lbl.view.isHidden = true
-            }
-        }.disposed(by: disposeBag)
+        showRiskView()
         
         container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)
         fieldsBG.withHeight(250)
@@ -125,6 +112,34 @@ extension PlanATripViewController {
 
 //MARK: Funcs
 extension PlanATripViewController {
+    
+    private func showRiskView() {
+        let lbl = RiskView()
+        addChild(lbl)
+        lbl.didMove(toParent: self)
+        view.addSubview(lbl.view)
+        lbl.view.fillSuperview()
+        lbl.playSound()
+        lbl.player?.play()
+        PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
+            if result.element == .inAreaCloser || result.element == .inAreaAway {
+                lbl.view.isHidden = false
+                self?.handlePlay(lbl.player!)
+                self?.isNowPlaying = true
+            } else {
+                lbl.view.isHidden = true
+                //lbl.player?.volume = .zero
+                self?.isNowPlaying = false
+                lbl.player?.stop()
+            }
+        }.disposed(by: disposeBag)
+
+    }
+    
+    private func handlePlay(_ pl: AVAudioPlayer) {
+        guard !isNowPlaying else {return}
+        pl.play()
+    }
 
     private func prepareMainView() {
         manager.delegate = self
@@ -257,7 +272,6 @@ extension PlanATripViewController: CLLocationManagerDelegate {
 
 //MARK: MapView Delegate
 extension PlanATripViewController: MKMapViewDelegate {
-    
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is DirectionEndPoint || annotation is RiskColoredAnnotations) {return nil}

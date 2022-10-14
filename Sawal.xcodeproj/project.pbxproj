@@ -10,13 +10,15 @@
 		0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */; };
 		0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */; };
 		0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D155528E9EC09001E8240 /* SignInViewController.swift */; };
+		0A2F2BCF28FA0424001C823D /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2F2BCE28FA0424001C823D /* UserService.swift */; };
+		0A2F2BD128FA042B001C823D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2F2BD028FA042B001C823D /* User.swift */; };
+		0A2F2BD428FA0447001C823D /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2F2BD328FA0447001C823D /* Post.swift */; };
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
 		0A53BDA928F9B3A50042BB71 /* RiskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */; };
 		0A53BDAB28F9B6330042BB71 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */; };
 		0A53BDAD28F9C91A0042BB71 /* warning.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A53BDAC28F9C91A0042BB71 /* warning.json */; };
 		0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613028F04A3500019BC4 /* CustomCameraController.swift */; };
 		0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */; };
-		0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6DFAF828EC5AC4006C7B1C /* User.swift */; };
 		0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */; };
 		0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */; };
 		0A7B570828F1CBC900146147 /* success.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A7B570728F1CBC900146147 /* success.json */; };
@@ -33,14 +35,11 @@
 		0A89F85628F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A89F85528F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift */; };
 		0A8C947328F70D630053AEAB /* RiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8C947228F70D630053AEAB /* RiskViewController.swift */; };
 		0A8C947628F75F350053AEAB /* warning.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A8C947528F75F350053AEAB /* warning.mp3 */; };
-		0A8FAF7728EB7EB60009E65A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A8FAF7628EB7EB50009E65A /* GoogleService-Info.plist */; };
 		0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */; };
 		0AA7F07D28F0CF21000ED5D3 /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7F07C28F0CF21000ED5D3 /* ShareViewModel.swift */; };
 		0AA7F07F28F0CFC5000ED5D3 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7F07E28F0CFC5000ED5D3 /* PostService.swift */; };
-		0AA7F08128F0CFE0000ED5D3 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7F08028F0CFE0000ED5D3 /* Post.swift */; };
 		0AA7F08328F0D2D2000ED5D3 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7F08228F0D2D2000ED5D3 /* ImageService.swift */; };
 		0AAD849428F825BD0050DA5D /* CapturedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAD849328F825BD0050DA5D /* CapturedImageView.swift */; };
-		0AB0BAFF28EC9EA200EEB48C /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB0BAFE28EC9EA200EEB48C /* UserService.swift */; };
 		0AC21DC028EF7C6D0078E382 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC21DBF28EF7C6D0078E382 /* MapViewModel.swift */; };
 		0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */; };
 		0ACB8F8828EA2EFD00A17CC4 /* WelcomePage3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */; };
@@ -51,25 +50,27 @@
 		0AF9DCED28EC037500B2570F /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9DCEC28EC037500B2570F /* AuthManager.swift */; };
 		0AF9DCEF28EC03D300B2570F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9DCEE28EC03D300B2570F /* SignInViewModel.swift */; };
 		0AF9DCF128EC03FF00B2570F /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9DCF028EC03FF00B2570F /* RegisterViewModel.swift */; };
-		5F6856729A6D00D7421E7DB5 /* Pods_TestableApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99EEC335AC54C3B5F123483A /* Pods_TestableApp.framework */; };
+		895DA1EEC6D149E294D85F69 /* Pods_Sawal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF8D95D57E142CAEB85DE600 /* Pods_Sawal.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanATripViewModel.swift; sourceTree = "<group>"; };
 		0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewController.swift; sourceTree = "<group>"; };
 		0A2D155528E9EC09001E8240 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		0A2F2BCE28FA0424001C823D /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		0A2F2BD028FA042B001C823D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = Sawal/Model/User.swift; sourceTree = SOURCE_ROOT; };
+		0A2F2BD328FA0447001C823D /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
 		0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskDetailViewController.swift; sourceTree = "<group>"; };
 		0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		0A53BDAC28F9C91A0042BB71 /* warning.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = warning.json; sourceTree = "<group>"; };
 		0A67613028F04A3500019BC4 /* CustomCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCameraController.swift; sourceTree = "<group>"; };
 		0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extentions.swift"; sourceTree = "<group>"; };
-		0A6DFAF828EC5AC4006C7B1C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = TestableApp/Core/Other/Auth/Register/User.swift; sourceTree = SOURCE_ROOT; };
 		0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage2ViewController.swift; sourceTree = "<group>"; };
 		0A70FC0F28EACED6006029D5 /* WelcomePage1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage1ViewController.swift; sourceTree = "<group>"; };
 		0A7B570728F1CBC900146147 /* success.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = success.json; sourceTree = "<group>"; };
 		0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanATripViewController.swift; sourceTree = "<group>"; };
-		0A7D121228E1FF7A009C2C4C /* TestableApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestableApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A7D121228E1FF7A009C2C4C /* Sawal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sawal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7D121528E1FF7A009C2C4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0A7D121728E1FF7A009C2C4C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0A7D121E28E1FF7A009C2C4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -83,14 +84,11 @@
 		0A89F85528F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extentions.swift"; sourceTree = "<group>"; };
 		0A8C947228F70D630053AEAB /* RiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskViewController.swift; sourceTree = "<group>"; };
 		0A8C947528F75F350053AEAB /* warning.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = warning.mp3; sourceTree = "<group>"; };
-		0A8FAF7628EB7EB50009E65A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0A969DEF28EB12EF00529B6B /* UIView+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extentions.swift"; sourceTree = "<group>"; };
 		0AA7F07C28F0CF21000ED5D3 /* ShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		0AA7F07E28F0CFC5000ED5D3 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
-		0AA7F08028F0CFE0000ED5D3 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Post.swift; path = TestableApp/Service/Post.swift; sourceTree = SOURCE_ROOT; };
 		0AA7F08228F0D2D2000ED5D3 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		0AAD849328F825BD0050DA5D /* CapturedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImageView.swift; sourceTree = "<group>"; };
-		0AB0BAFE28EC9EA200EEB48C /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserService.swift; path = TestableApp/Core/Other/Auth/Register/UserService.swift; sourceTree = SOURCE_ROOT; };
 		0AC21DBF28EF7C6D0078E382 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage3ViewController.swift; sourceTree = "<group>"; };
@@ -101,9 +99,9 @@
 		0AF9DCEC28EC037500B2570F /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		0AF9DCEE28EC03D300B2570F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		0AF9DCF028EC03FF00B2570F /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
-		0E1DD3B299AB6442D0ADF3F8 /* Pods-TestableApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestableApp.debug.xcconfig"; path = "Target Support Files/Pods-TestableApp/Pods-TestableApp.debug.xcconfig"; sourceTree = "<group>"; };
-		2119EEB945EC24C89819F90D /* Pods-TestableApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestableApp.release.xcconfig"; path = "Target Support Files/Pods-TestableApp/Pods-TestableApp.release.xcconfig"; sourceTree = "<group>"; };
-		99EEC335AC54C3B5F123483A /* Pods_TestableApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestableApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36810152434B1FB3312860D6 /* Pods-Sawal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sawal.release.xcconfig"; path = "Target Support Files/Pods-Sawal/Pods-Sawal.release.xcconfig"; sourceTree = "<group>"; };
+		3AA448B648F882EE80639C3F /* Pods-Sawal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sawal.debug.xcconfig"; path = "Target Support Files/Pods-Sawal/Pods-Sawal.debug.xcconfig"; sourceTree = "<group>"; };
+		AF8D95D57E142CAEB85DE600 /* Pods_Sawal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sawal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F6856729A6D00D7421E7DB5 /* Pods_TestableApp.framework in Frameworks */,
+				895DA1EEC6D149E294D85F69 /* Pods_Sawal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +145,15 @@
 			path = "Sign In";
 			sourceTree = "<group>";
 		};
+		0A2F2BD228FA0434001C823D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0A2F2BD028FA042B001C823D /* User.swift */,
+				0A2F2BD328FA0447001C823D /* Post.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		0A7B570928F1D0A900146147 /* PlanATrip */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,34 +168,33 @@
 		0A7D120928E1FF7A009C2C4C = {
 			isa = PBXGroup;
 			children = (
-				0A7D121428E1FF7A009C2C4C /* TestableApp */,
+				0A7D121428E1FF7A009C2C4C /* Sawal */,
 				0A7D121328E1FF7A009C2C4C /* Products */,
 				46256BFE5FB5AD30D6AB3CA2 /* Pods */,
-				A30DD549D114CA300EB8E860 /* Frameworks */,
+				7ADE5453BAB6A5BF9468C84A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		0A7D121328E1FF7A009C2C4C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0A7D121228E1FF7A009C2C4C /* TestableApp.app */,
+				0A7D121228E1FF7A009C2C4C /* Sawal.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0A7D121428E1FF7A009C2C4C /* TestableApp */ = {
+		0A7D121428E1FF7A009C2C4C /* Sawal */ = {
 			isa = PBXGroup;
 			children = (
+				0A2F2BD228FA0434001C823D /* Model */,
 				0AF36F2A28F470FA00A986F0 /* Utils */,
 				0A969DEE28EB12D800529B6B /* Extentions */,
 				0A7D124228E203DF009C2C4C /* Resources */,
 				0A7D122B28E20023009C2C4C /* Service */,
-				0A7D122A28E20018009C2C4C /* Model */,
 				0A7D122928E20013009C2C4C /* Core */,
 				0A7D122328E1FF7A009C2C4C /* Info.plist */,
-				0A8FAF7628EB7EB50009E65A /* GoogleService-Info.plist */,
 			);
-			path = TestableApp;
+			path = Sawal;
 			sourceTree = "<group>";
 		};
 		0A7D122928E20013009C2C4C /* Core */ = {
@@ -202,22 +208,13 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
-		0A7D122A28E20018009C2C4C /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				0A6DFAF828EC5AC4006C7B1C /* User.swift */,
-				0AA7F08028F0CFE0000ED5D3 /* Post.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		0A7D122B28E20023009C2C4C /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				0AB0BAFE28EC9EA200EEB48C /* UserService.swift */,
 				0AF9DCEC28EC037500B2570F /* AuthManager.swift */,
 				0AA7F07E28F0CFC5000ED5D3 /* PostService.swift */,
 				0AA7F08228F0D2D2000ED5D3 /* ImageService.swift */,
+				0A2F2BCE28FA0424001C823D /* UserService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -367,16 +364,16 @@
 		46256BFE5FB5AD30D6AB3CA2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0E1DD3B299AB6442D0ADF3F8 /* Pods-TestableApp.debug.xcconfig */,
-				2119EEB945EC24C89819F90D /* Pods-TestableApp.release.xcconfig */,
+				3AA448B648F882EE80639C3F /* Pods-Sawal.debug.xcconfig */,
+				36810152434B1FB3312860D6 /* Pods-Sawal.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		A30DD549D114CA300EB8E860 /* Frameworks */ = {
+		7ADE5453BAB6A5BF9468C84A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				99EEC335AC54C3B5F123483A /* Pods_TestableApp.framework */,
+				AF8D95D57E142CAEB85DE600 /* Pods_Sawal.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -384,23 +381,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0A7D121128E1FF7A009C2C4C /* TestableApp */ = {
+		0A7D121128E1FF7A009C2C4C /* Sawal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A7D122628E1FF7A009C2C4C /* Build configuration list for PBXNativeTarget "TestableApp" */;
+			buildConfigurationList = 0A7D122628E1FF7A009C2C4C /* Build configuration list for PBXNativeTarget "Sawal" */;
 			buildPhases = (
-				C1661F374EB9CAD77C1EA08B /* [CP] Check Pods Manifest.lock */,
+				A8B26B8478CBE8B2E91BBA0C /* [CP] Check Pods Manifest.lock */,
 				0A7D120E28E1FF7A009C2C4C /* Sources */,
 				0A7D120F28E1FF7A009C2C4C /* Frameworks */,
 				0A7D121028E1FF7A009C2C4C /* Resources */,
-				8F3E40C182FA6EAB858B8BFC /* [CP] Embed Pods Frameworks */,
+				9CBE5136761D39759355B67A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = TestableApp;
+			name = Sawal;
 			productName = TestableApp;
-			productReference = 0A7D121228E1FF7A009C2C4C /* TestableApp.app */;
+			productReference = 0A7D121228E1FF7A009C2C4C /* Sawal.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -431,7 +428,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0A7D121128E1FF7A009C2C4C /* TestableApp */,
+				0A7D121128E1FF7A009C2C4C /* Sawal */,
 			);
 		};
 /* End PBXProject section */
@@ -443,7 +440,6 @@
 			files = (
 				0A7B570828F1CBC900146147 /* success.json in Resources */,
 				0A7D122228E1FF7A009C2C4C /* LaunchScreen.storyboard in Resources */,
-				0A8FAF7728EB7EB60009E65A /* GoogleService-Info.plist in Resources */,
 				0A8C947628F75F350053AEAB /* warning.mp3 in Resources */,
 				0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */,
 				0A42A95628EA0D6200B0F380 /* login.json in Resources */,
@@ -454,24 +450,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		8F3E40C182FA6EAB858B8BFC /* [CP] Embed Pods Frameworks */ = {
+		9CBE5136761D39759355B67A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TestableApp/Pods-TestableApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Sawal/Pods-Sawal-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TestableApp/Pods-TestableApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Sawal/Pods-Sawal-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TestableApp/Pods-TestableApp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Sawal/Pods-Sawal-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C1661F374EB9CAD77C1EA08B /* [CP] Check Pods Manifest.lock */ = {
+		A8B26B8478CBE8B2E91BBA0C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -486,7 +482,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TestableApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Sawal-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -510,7 +506,6 @@
 				0AEA481628ECD566002538D6 /* UIColor+Extentions.swift in Sources */,
 				0A7D121828E1FF7A009C2C4C /* SceneDelegate.swift in Sources */,
 				0AF9DCED28EC037500B2570F /* AuthManager.swift in Sources */,
-				0A6DFAF928EC5AC4006C7B1C /* User.swift in Sources */,
 				0AC21DC028EF7C6D0078E382 /* MapViewModel.swift in Sources */,
 				0AF9DCF128EC03FF00B2570F /* RegisterViewModel.swift in Sources */,
 				0A969DF028EB12EF00529B6B /* UIView+Extentions.swift in Sources */,
@@ -519,19 +514,20 @@
 				0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */,
 				0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */,
 				0AAD849428F825BD0050DA5D /* CapturedImageView.swift in Sources */,
+				0A2F2BD428FA0447001C823D /* Post.swift in Sources */,
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,
 				0AA7F08328F0D2D2000ED5D3 /* ImageService.swift in Sources */,
 				0AA7F07F28F0CFC5000ED5D3 /* PostService.swift in Sources */,
 				0A7D123E28E201C9009C2C4C /* ShareViewController.swift in Sources */,
-				0AA7F08128F0CFE0000ED5D3 /* Post.swift in Sources */,
 				0AF36E3D28F2441C00314F79 /* Extentions+MKMapItem.swift in Sources */,
-				0AB0BAFF28EC9EA200EEB48C /* UserService.swift in Sources */,
+				0A2F2BD128FA042B001C823D /* User.swift in Sources */,
 				0A70FC1028EACED6006029D5 /* WelcomePage1ViewController.swift in Sources */,
 				0A89F85628F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift in Sources */,
 				0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */,
 				0AF9DCEF28EC03D300B2570F /* SignInViewModel.swift in Sources */,
 				0AA7F07D28F0CF21000ED5D3 /* ShareViewModel.swift in Sources */,
 				0A7B570B28F1D0BC00146147 /* PlanATripViewController.swift in Sources */,
+				0A2F2BCF28FA0424001C823D /* UserService.swift in Sources */,
 				0AF36F2C28F4710C00A986F0 /* AnnotationTypes.swift in Sources */,
 				0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */,
 				0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */,
@@ -670,7 +666,7 @@
 		};
 		0A7D122728E1FF7A009C2C4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0E1DD3B299AB6442D0ADF3F8 /* Pods-TestableApp.debug.xcconfig */;
+			baseConfigurationReference = 3AA448B648F882EE80639C3F /* Pods-Sawal.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -678,7 +674,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HJ3CX8Z5MV;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TestableApp/Info.plist;
+				INFOPLIST_FILE = Sawal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Sawal;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to make sure you can take pictures.";
@@ -693,7 +689,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.boraerdem.TestableApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boraerdem.Sawal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -706,7 +702,7 @@
 		};
 		0A7D122828E1FF7A009C2C4C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2119EEB945EC24C89819F90D /* Pods-TestableApp.release.xcconfig */;
+			baseConfigurationReference = 36810152434B1FB3312860D6 /* Pods-Sawal.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -714,7 +710,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HJ3CX8Z5MV;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TestableApp/Info.plist;
+				INFOPLIST_FILE = Sawal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Sawal;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to make sure you can take pictures.";
@@ -729,7 +725,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.boraerdem.TestableApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boraerdem.Sawal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -752,7 +748,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A7D122628E1FF7A009C2C4C /* Build configuration list for PBXNativeTarget "TestableApp" */ = {
+		0A7D122628E1FF7A009C2C4C /* Build configuration list for PBXNativeTarget "Sawal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A7D122728E1FF7A009C2C4C /* Debug */,

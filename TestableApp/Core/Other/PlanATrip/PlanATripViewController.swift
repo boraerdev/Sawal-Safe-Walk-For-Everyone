@@ -77,7 +77,6 @@ extension PlanATripViewController {
         prepareMainView()
         prepareFields()
         addTargets()
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -95,8 +94,7 @@ extension PlanATripViewController {
         view.addSubview(lbl.view)
         lbl.view.fillSuperview()
         lbl.playSound()
-        lbl.player?.stop()
-        
+        //lbl.player?.play()
         PlanATripViewController.viewModel.riskMode.subscribe { result in
             if result.element == .inAreaCloser || result.element == .inAreaAway {
                 lbl.view.isHidden = false

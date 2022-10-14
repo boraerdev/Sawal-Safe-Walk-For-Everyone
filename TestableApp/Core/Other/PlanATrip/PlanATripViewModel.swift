@@ -152,7 +152,7 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
             
             // success
             print("Found my directions/routing....")
-            var newList = resp?.routes.sorted(by: {$0.distance<$1.distance})
+            let newList = resp?.routes.sorted(by: {$0.distance<$1.distance})
             guard let route =  newList?.first else {return}
             sharedRoute.accept(route)
             filterAndDetect { post in

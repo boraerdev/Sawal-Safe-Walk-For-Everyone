@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let user = Auth.auth().currentUser {
             UserService.shared.getUser(uid: user.uid) { [weak self] returned in
                 AuthManager.shared.currentUser = returned
-                self?.window?.rootViewController = MainTabBarController()
+                self?.window?.rootViewController = UINavigationController(rootViewController: HomeViewController())
             }
         } else {
             window?.rootViewController = vc

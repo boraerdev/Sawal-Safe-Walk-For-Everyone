@@ -14,7 +14,6 @@ import AVFoundation
 
 final class RiskView: UIViewController {
     
-    
     var player: AVAudioPlayer?
     private lazy var meter = UILabel(text: "Test",font: .systemFont(ofSize: 34), textColor: .secondaryLabel)
     let disposeBag = DisposeBag()
@@ -60,22 +59,22 @@ final class RiskView: UIViewController {
             try AVAudioSession.sharedInstance().setActive(true)
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
             guard let player = player else { return }
+            //TODO ram managment
             bindTitle()
             //player.play()
-            
-
         } catch let error {
             print(error.localizedDescription)
         }
     }
     
     func bindTitle() {
-        PlanATripViewController.viewModel.distance.subscribe { [unowned self] result in
+        PlanATripViewController.viewModel.distance.subscribe { [weak self] result in
             if let res = result.element {
                 if let r = res {
-                    self.meter.text = String(format: "%.1f m", r)
+//                    self?.meter.text = String(format: "%.1f m", r)
                 }
             }
+            
         }.disposed(by: disposeBag)
     }
 }

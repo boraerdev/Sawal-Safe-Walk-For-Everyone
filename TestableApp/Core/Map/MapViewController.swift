@@ -85,7 +85,7 @@ extension MapViewController {
     private func handleUserLocation() {
         clManager.requestWhenInUseAuthorization()
         clManager.startUpdatingLocation()
-        clManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        clManager.desiredAccuracy = kCLLocationAccuracyBest
     }
     
     private func handleMapKit() {

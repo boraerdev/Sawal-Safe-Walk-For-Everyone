@@ -166,10 +166,8 @@ extension ShareViewController {
         navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(didTapShare))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didtapCancel))
-        
-        viewModel.isLoading.subscribe { [weak self] result in
-            result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
-        }.disposed(by: disposeBag)
+        mapView.layer.cornerRadius = 8
+        configureRiskButtons()
         
     }
     
@@ -183,36 +181,20 @@ extension ShareViewController {
                    mapView.withHeight(250),
                    postField,
                    UIView(),
-                   view.hstack(
-                    view.hstack(
-                        UILabel(
-                            text:"Risk:",font: .systemFont(ofSize: 15), textColor: .secondaryLabel),
-                        lowBtn,
-                        medBtn,
-                        highBtn,
-                        spacing: 5)
-                    ,UIView(),
-                    countLbl).padBottom(10),
-                   view.hstack(
-                    postImage,
-                    addImageBtn,
-                    spacing: 5,
-                    distribution: .fillEqually)
-                    .withHeight(100),
+                   view.hstack( view.hstack(UILabel(text:"Risk:",font: .systemFont(ofSize:15), textColor: .secondaryLabel),lowBtn,medBtn,highBtn,
+                        spacing: 5) ,UIView(), countLbl).padBottom(10),
+                   view.hstack(postImage,addImageBtn, spacing: 5, distribution: .fillEqually).withHeight(100),
                    spacing: 5)
         .withMargins(.init(top: 10, left: 20, bottom: 0, right: 20))
         view.addSubviews(spinner,successAnimation)
     }
 
-    private func setupSomeUI() {
-        
-//        ShareViewController.annotationImage.subscribe { [weak self] returned in
-//            self?.postImage.image = returned
-//        }.disposed(by: disposeBag)
-        
+    private func setLocationName() {
         let inf = "\(locationInfo?.name ?? ""), \(locationInfo?.administrativeArea ?? "")"
         headerLocation.text = inf
-        
+    }
+    
+    private func configureRiskButtons() {
         [lowBtn, medBtn, highBtn].enumerated().forEach { i, btn in
             btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
             btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
@@ -220,9 +202,6 @@ extension ShareViewController {
             btn.layer.cornerRadius = 4
             btn.tag = RiskDegree(rawValue: i)?.rawValue ?? 0
         }
-        
-        mapView.layer.cornerRadius = 8
-        
     }
     
     private func throwAlert(title: String, message: String,cancel: Bool = false, handler: (()->())? = nil) {
@@ -242,14 +221,20 @@ extension ShareViewController {
         location?.fetchLocationInfo { [weak self] locationInfo, error in
             guard error == nil else { return }
             self?.locationInfo = locationInfo
-            self?.setupSomeUI()
+            self?.setLocationName()
         }
     }
     
     private func handleBind() {
         postField.rx.text.orEmpty.bind(to: viewModel.description).disposed(by: disposeBag)
-        ShareViewController.annotationImage.bind(to: viewModel.postImage).disposed(by: disposeBag)
+        ShareViewController.annotationImage.bind(to: viewModel.postImage)
+            .disposed(by: disposeBag)
+        
         currentLocation.bind(to: viewModel.location).disposed(by: disposeBag)
+        
+        viewModel.isLoading.subscribe { [weak self] result in
+            result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
+        }.disposed(by: disposeBag)
     }
     
     private func bindMapViewImage() {
@@ -262,11 +247,12 @@ extension ShareViewController {
             }
         }.disposed(by: disposeBag)
     }
+    
 }
-
 
 //MARK: MapView Delegate
 extension ShareViewController: MKMapViewDelegate {
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         fetchLocationInfo(for: mapView.userLocation.location)
         currentLocation.accept(mapView.userLocation.location)
@@ -300,6 +286,7 @@ extension ShareViewController: MKMapViewDelegate {
         let region: MKCoordinateRegion = .init(center: center, span: span)
         mapView.setRegion(region, animated: false)
     }
+    
 }
 
 //MARK: Interface Delegate

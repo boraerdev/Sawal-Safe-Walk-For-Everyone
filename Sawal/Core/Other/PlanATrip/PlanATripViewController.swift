@@ -11,9 +11,10 @@ import RxSwift
 import RxCocoa
 import CoreLocation
 import LBTATools
-import AVFAudio
+import AVFoundation
 
 protocol PlanATripViewControllerInterFace: AnyObject {
+    func speech(message: String)
 }
 
 //MARK: Def, UI
@@ -31,6 +32,9 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     static let viewModel = PlanATripViewModel()
     var startItem: MKMapItem? = nil
     var finishItem: MKMapItem? = nil
+    let speechSynthesizer = AVSpeechSynthesizer()
+    var stepCounter = 0
+    var steps: [MKRoute.Step] = []
 
     //MARK: UI
     let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
@@ -179,6 +183,16 @@ extension PlanATripViewController {
         )
     }
     
+    private func startMonitoring() {
+        let route = PlanATripViewController.viewModel.sharedRoute.value
+        guard let route = route else {return}
+        for i in 0 ..< route.steps.count {
+            let step = route.steps[i]
+            let region = CLCircularRegion(center: step.polyline.coordinate , radius: 20, identifier: "\(i)")
+            self.manager.startMonitoring(for: region)
+        }
+    }
+    
     private func addTargets() {
         startField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeStart)))
         finishField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeFinish)))
@@ -248,9 +262,16 @@ extension PlanATripViewController {
         //mapKit.showAnnotations(mapKit.annotations, animated: false)
     }
     
+    func speech(message: String) {
+        let msg = message
+        let speecU = AVSpeechUtterance(string: msg)
+        speecU.voice = .init(language: "en-EN")
+        speechSynthesizer.speak(speecU)
+    }
+    
 }
 
-//MARK: CLMANAGERDelegate
+//MARK: CLManagerDelegate
 extension PlanATripViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let loca = locations.first {
@@ -259,8 +280,25 @@ extension PlanATripViewController: CLLocationManagerDelegate {
             let region: MKCoordinateRegion = .init(center: center, span: span)
             self.mapView.setRegion(region, animated: false)
         }
+        mapView.userTrackingMode = .followWithHeading
         manager.stopUpdatingLocation()
     }
+    
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        stepCounter += 1
+        if stepCounter < steps.count {
+            let currentStep = steps[stepCounter]
+            speech(message: "In \(currentStep.distance.rounded()) meters, \(currentStep.instructions)")
+        } else {
+            speech(message: "Arrived at destination")
+            stepCounter = 0
+            manager.monitoredRegions.forEach { region in
+                manager.stopMonitoring(for: region)
+            }
+        }
+    }
+    
+    
 }
 
 //MARK: MapView Delegate
@@ -313,9 +351,11 @@ extension PlanATripViewController {
     
     @objc func didTapStart() {
         guard startField.text != "", finishField.text != "" else {return}
-        PlanATripViewController.viewModel.filterAndDetect { list in
-            PlanATripViewController.viewModel.detectRisk(postList: list)
-        }
+//        PlanATripViewController.viewModel.filterAndDetect { list in
+//            PlanATripViewController.viewModel.detectRisk(postList: list)
+//        }
+        steps = PlanATripViewController.viewModel.sharedRoute.value?.steps ?? []
+        startMonitoring()
     }
 
     @objc private func didTapChangeStart() {

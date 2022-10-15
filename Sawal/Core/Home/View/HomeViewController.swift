@@ -171,10 +171,11 @@ extension HomeViewController {
         UIView.animate(withDuration: 0.2) { [unowned self] in
             self.sideMenu.view.frame = .init(x: -(self.view.frame.width * 0.8), y: 0, width: self.view.frame.width * 0.8, height: self.view.frame.height)
 
-        } completion: { isFinish in
-            self.sideMenu.view.removeFromSuperview()
-            self.darkBgForSideMenu.removeFromSuperview()
-            self.welcomeStack.isHidden = false
+        } completion: { [weak self] isFinish in
+            self?.sideMenu.view.removeFromSuperview()
+            self?.sideMenu.removeFromParent()
+            self?.darkBgForSideMenu.removeFromSuperview()
+            self?.welcomeStack.isHidden = false
         }
     }
 }

@@ -137,6 +137,7 @@ extension MapViewController: CLLocationManagerDelegate {
         let center: CLLocationCoordinate2D = .init(latitude: loca.coordinate.latitude, longitude: loca.coordinate.longitude)
         let region: MKCoordinateRegion = .init(center: center, span: span)
         self.mapKit.setRegion(region, animated: false)
+        mapKit.userTrackingMode = .followWithHeading
         manager.stopUpdatingLocation()
         
     }

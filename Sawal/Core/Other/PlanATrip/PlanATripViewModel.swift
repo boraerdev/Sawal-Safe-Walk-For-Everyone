@@ -74,7 +74,6 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
             }
         }
         completion(filteredPostsOnRoute)
-        print(filteredPostsOnRoute.count)
     }
     
     func detectRisk(postList: [Post]) {
@@ -149,7 +148,6 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
                 print("Failed to find routing info:", err)
                 return
             }
-            
             // success
             print("Found my directions/routing....")
             let newList = resp?.routes.sorted(by: {$0.distance<$1.distance})
@@ -160,8 +158,15 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
             }
             completion(route)
             
-            
-            
+            var msg = ""
+            if filteredPostsOnRoute.count != 0 {
+                msg = "There are \(filteredPostsOnRoute.count) risky areas on the route. When you approach here, we will inform you with an audible warning. You can start your safe journey by clicking the Go button.  Please be careful."
+            } else {
+                msg = "We do not found any risk on your route. But may exist unreported risk on your route. You can start your safe journey by clicking the Go button.  Please be careful."
+            }
+            view?.speech(message: msg)
+
         }
+        
     }
 }

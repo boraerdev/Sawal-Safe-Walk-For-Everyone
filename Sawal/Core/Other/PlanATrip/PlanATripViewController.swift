@@ -92,9 +92,6 @@ extension PlanATripViewController {
         header.addSubview(container)
         container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
         
-        //Add RsikView
-        //showRiskView()
-        
         PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
             if result.element == .inAreaCloser || result.element == .inAreaAway {
                 self?.AddRiskView()
@@ -216,7 +213,6 @@ extension PlanATripViewController {
     }
     
     private func updateStartFinishAnnotations() {
-        
         if let _ = startItem {
             if let ano = mapView.annotations.first(where: {$0.title == "Start"}) {
                 mapView.removeAnnotation(ano)
@@ -224,7 +220,6 @@ extension PlanATripViewController {
             }
             addAnnotation(title: "Start", item: startItem!)
         }
-        
         if let _ = finishItem {
             if let ano = mapView.annotations.first(where: {$0.title == "Finish"}) {
                 mapView.removeAnnotation(ano)
@@ -232,7 +227,6 @@ extension PlanATripViewController {
             }
             addAnnotation(title: "Finish", item: finishItem!)
         }
-        
         requestForDirections()
         mapView.showAnnotations(tripAnnotations, animated: false)
     }
@@ -246,7 +240,6 @@ extension PlanATripViewController {
             }
         }
         self.mapView.showAnnotations(tripAnnotations , animated: true)
-
     }
     
     private func handleSharedAnnotations() {
@@ -306,9 +299,7 @@ extension PlanATripViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is DirectionEndPoint || annotation is RiskColoredAnnotations) {return nil}
-        
         let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id")
-        
         if let customAnnotation = annotation as? DirectionEndPoint {
             if customAnnotation.type == "Start" {
                 annotationView.image = .init(named: "StartPin")
@@ -351,11 +342,11 @@ extension PlanATripViewController {
     
     @objc func didTapStart() {
         guard startField.text != "", finishField.text != "" else {return}
-//        PlanATripViewController.viewModel.filterAndDetect { list in
-//            PlanATripViewController.viewModel.detectRisk(postList: list)
-//        }
         steps = PlanATripViewController.viewModel.sharedRoute.value?.steps ?? []
         startMonitoring()
+        mapView.camera = .init(lookingAtCenter: PlanATripViewController.viewModel.currentLocation.value!, fromDistance: .init(50), pitch: .init(45), heading: CLLocationDirection(0))
+        mapView.setCameraZoomRange(.init(maxCenterCoordinateDistance: 1000), animated: true)
+        mapView.userTrackingMode = .follow
     }
 
     @objc private func didTapChangeStart() {
@@ -365,6 +356,7 @@ extension PlanATripViewController {
             PlanATripViewController.viewModel.startLocation.accept(PlanATripViewController.viewModel.currentLocation.value)
             let item: MKMapItem = .init(placemark: .init(coordinate: PlanATripViewController.viewModel.currentLocation.value!))
             self?.addAnnotation(title: "Start", item: item)
+            
         }
         vc.selectionHandler = { [unowned self] item in
             self.startField.text = item.name

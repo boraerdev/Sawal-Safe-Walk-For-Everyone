@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */; };
+		0A0984A028FC3FC900A12EBA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A09849F28FC3FC900A12EBA /* GoogleService-Info.plist */; };
 		0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */; };
 		0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D155528E9EC09001E8240 /* SignInViewController.swift */; };
 		0A2F2BCF28FA0424001C823D /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2F2BCE28FA0424001C823D /* UserService.swift */; };
@@ -55,6 +56,7 @@
 
 /* Begin PBXFileReference section */
 		0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanATripViewModel.swift; sourceTree = "<group>"; };
+		0A09849F28FC3FC900A12EBA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewController.swift; sourceTree = "<group>"; };
 		0A2D155528E9EC09001E8240 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0A2F2BCE28FA0424001C823D /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				0A7D122B28E20023009C2C4C /* Service */,
 				0A7D122928E20013009C2C4C /* Core */,
 				0A7D122328E1FF7A009C2C4C /* Info.plist */,
+				0A09849F28FC3FC900A12EBA /* GoogleService-Info.plist */,
 			);
 			path = Sawal;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 				0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */,
 				0A42A95628EA0D6200B0F380 /* login.json in Resources */,
 				0A53BDAD28F9C91A0042BB71 /* warning.json in Resources */,
+				0A0984A028FC3FC900A12EBA /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

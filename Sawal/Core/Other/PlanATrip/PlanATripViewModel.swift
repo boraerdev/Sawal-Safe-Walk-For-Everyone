@@ -157,6 +157,7 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
                 detectRisk(postList: post)
             }
             completion(route)
+            print(route.steps.count)
             
             var msg = ""
             if filteredPostsOnRoute.count != 0 {

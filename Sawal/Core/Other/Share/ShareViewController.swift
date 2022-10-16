@@ -35,6 +35,7 @@ final class ShareViewController: UIViewController {
     private var viewModel = ShareViewModel()
     static var annotationImage: BehaviorRelay<UIImage?> = BehaviorRelay(value: nil)
     var annotationView: MKAnnotationView?
+    let manager = CLLocationManager()
 
     
     //MARK: UI
@@ -82,7 +83,7 @@ final class ShareViewController: UIViewController {
     
     private lazy var medBtn = UIButton(title: "Medium", titleColor: .systemRed, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     
-    private lazy var highBtn = UIButton(title: "High", titleColor: .main2, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    private lazy var highBtn = UIButton(title: "High", titleColor: .main2Light, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     
     private lazy var headerLocation = UILabel(font: .systemFont(ofSize: 11), textColor: .secondaryLabel)
     
@@ -162,12 +163,14 @@ extension ShareViewController {
     
     private func prepareMainView() {
         viewModel.view = self
+        manager.delegate = self
         view.backgroundColor = .systemBackground
         navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(didTapShare))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didtapCancel))
         mapView.layer.cornerRadius = 8
         configureRiskButtons()
+        manager.startUpdatingLocation()
         
     }
     
@@ -252,7 +255,6 @@ extension ShareViewController {
 
 //MARK: MapView Delegate
 extension ShareViewController: MKMapViewDelegate {
-    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         fetchLocationInfo(for: mapView.userLocation.location)
         currentLocation.accept(mapView.userLocation.location)
@@ -278,15 +280,19 @@ extension ShareViewController: MKMapViewDelegate {
             return nil
         }
     }
-    
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        viewModel.location.accept(userLocation.location)
+}
+
+//MARK: CLManager Delegate
+extension ShareViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else {return}
         let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
-        let center: CLLocationCoordinate2D = .init(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
+        let center: CLLocationCoordinate2D = .init(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         let region: MKCoordinateRegion = .init(center: center, span: span)
         mapView.setRegion(region, animated: false)
+        mapView.userTrackingMode = .follow
+        manager.stopUpdatingLocation()
     }
-    
 }
 
 //MARK: Interface Delegate

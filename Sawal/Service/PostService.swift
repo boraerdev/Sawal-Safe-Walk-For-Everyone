@@ -8,6 +8,7 @@
 import UIKit
 import CoreLocation
 import FirebaseFirestore
+import FirebaseAuth
 
 final class PostService {
     static let shared = PostService()
@@ -24,6 +25,25 @@ final class PostService {
                 completion(.success(true))
             }
         }
+    }
+    
+    func getPostComments(of postId: String, completion: @escaping (Result<[Comment], Error>)->()) {
+        Firestore.firestore().collection("posts").document(postId).collection("comments").getDocuments { snapshots, err in
+            guard err == nil else {return}
+            guard let docs = snapshots?.documents else {return}
+            var comments: [Comment] = []
+            do {
+                comments = try docs.compactMap({try $0.data(as: Comment.self)})
+                completion(.success(comments))
+            } catch let error {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func uploadComment(for postId: String, comment: String) {
+        let data = ["authorUid": Auth.auth().currentUser?.uid, "date": Date(), "comment": comment] as [String: Any]
+        Firestore.firestore().collection("posts").document(postId).collection("comments").document().setData(data)
     }
     
     func fetchSharedLocations(completion: @escaping (Result<[Post], Error>)->()) {

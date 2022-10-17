@@ -261,12 +261,11 @@ extension ShareViewController: MKMapViewDelegate {
         
         annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
         
-        annotationView?.layer.borderWidth = 4
+        annotationView?.layer.borderWidth = 2
         annotationView?.contentMode = .scaleAspectFill
-        annotationView?.layer.borderColor = UIColor.white.cgColor
+        annotationView?.layer.borderColor = UIColor.systemBackground.cgColor
         annotationView?.layer.shadowColor = UIColor.black.cgColor
         annotationView?.layer.cornerRadius = 8
-        annotationView?.layer.shadowRadius = 40
         annotationView?.clipsToBounds = true
         annotationView?.layer.masksToBounds = true
         

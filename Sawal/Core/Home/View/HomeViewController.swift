@@ -118,8 +118,8 @@ extension HomeViewController {
     
     private func prepareStack() {
         let container = UIView()
-        container.withHeight(250)
-        view.stack(container, UIView()).withMargins(.init(top: 10, left: 20, bottom:0, right: 20))
+        //container.withHeight(250)
+        view.stack(container).withMargins(.init(top: 10, left: 20, bottom:0, right: 20))
         
         container.stack(
             container.hstack(goMapBtn, addRiskBtn, spacing: 10, distribution: .fillEqually),

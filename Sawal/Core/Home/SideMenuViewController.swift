@@ -13,8 +13,13 @@ final class SideMenuViewController: UIViewController {
     
     //MARK: UI
     let exitBtn = UIButton(title: " Log Out", titleColor: .systemRed, backgroundColor: .white, target: self, action: #selector(didTapExit))
+    
     let buttonLists = MenuButtonsList()
+    
     let userFullNameLbl = UILabel(text: AuthManager.shared.currentUser?.fullName, font: .systemFont(ofSize: 22, weight: .heavy), textColor: .white)
+    
+    let userMailLbl = UILabel(text: AuthManager.shared.currentUser?.mail, font: .systemFont(ofSize: 13, weight: .light), textColor: .white)
+    
     let versionLbl = UILabel(text: "v1.0.0", font: .systemFont(ofSize: 13, weight: .light), textColor: .white, textAlignment: .center, numberOfLines: 1)
     
 
@@ -28,7 +33,9 @@ extension SideMenuViewController {
         prepareExitBtn()
         
         view.stack(
-            userFullNameLbl,
+            view.stack(
+                userFullNameLbl,
+                userMailLbl),
             buttonLists.view,
             UIView(),
             view.stack(exitBtn.withHeight(45),

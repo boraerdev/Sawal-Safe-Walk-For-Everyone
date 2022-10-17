@@ -185,6 +185,10 @@ extension MapViewController: MKMapViewDelegate {
         if !(view.annotation is RiskColoredAnnotations) {return}
         
         //Def
+        postInfoHud(view: view)
+    }
+    
+    private func postInfoHud(view: MKAnnotationView) {
         let customCallout = UIView(backgroundColor: .clear)
         let hudView = UIView(backgroundColor: .systemBackground)
         let post: Post!
@@ -193,6 +197,7 @@ extension MapViewController: MKMapViewDelegate {
         let riskDEgreeLbl = UILabel(text: "", font: .systemFont(ofSize: 13), numberOfLines: 1)
         let descLbl = UILabel(text: "", font: .systemFont(ofSize: 13), textColor: .secondaryLabel, numberOfLines: 2)
         let infoBtn = UIButton(image: .init(systemName: "info.circle.fill")!, tintColor: .label, target: self, action: #selector(didTapGoDetail))
+        let shareBtn = UIButton(image: .init(systemName: "square.and.arrow.up.circle.fill")!, tintColor: .label, target: self, action: #selector(didTapShare(sender:)))
         
         
         view.addSubview(customCallout)
@@ -212,8 +217,8 @@ extension MapViewController: MKMapViewDelegate {
             let loc = CLLocation(latitude: post.location.latitude, longitude: post.location.longitude)
             loc.fetchLocationInfo { locationInfo, error in
                 adressLbl.text = locationInfo?.name
-                
             }
+            
         }
         
         hudContainer.addSubview(hudView)
@@ -223,12 +228,12 @@ extension MapViewController: MKMapViewDelegate {
         
         customCallout.stack(bgImage)
         //hudView.stack(adressLbl, alignment: .center).withMargins(.allSides(12))
-        hudView.hstack(hudView.stack(hudView.hstack(riskDEgreeLbl, infoBtn, alignment: .top),
-                                     UIView(),
-                                     adressLbl,
-                                     descLbl))
+        hudView.stack(
+            hudView.hstack(riskDEgreeLbl,UIView(), shareBtn, infoBtn, alignment: .top),
+            UIView(),
+            adressLbl,
+            descLbl)
         .withMargins(.allSides(12))
-        
         
         tempHud = hudView
         currentSelectCallout = customCallout
@@ -239,7 +244,7 @@ extension MapViewController: MKMapViewDelegate {
         customCallout.clipsToBounds = true
         customCallout.layer.cornerRadius = 8
         customCallout.layer.borderWidth = 2
-        customCallout.layer.borderColor = UIColor.black.cgColor
+        customCallout.layer.borderColor = UIColor.systemBackground.cgColor
         customCallout.translatesAutoresizingMaskIntoConstraints = false
         customCallout.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         customCallout.bottomAnchor.constraint(equalTo: view.topAnchor, constant: -10).isActive = true
@@ -268,5 +273,23 @@ extension MapViewController {
         currentSelectCallout?.removeFromSuperview()
         tempHud?.removeFromSuperview()
         hudContainer.isHidden = true
+    }
+    
+    @objc func didTapShare(sender: UIView) {
+        
+        let textToShare = "Look at this risk: "
+        let riskImg = "Image: \((selectedPost?.imageURL)!)"
+        
+        if let riskUrl = URL(string: "http://maps.apple.com/?ll=\((selectedPost?.location.latitude)!),\((selectedPost?.location.longitude)!)") {
+            let objectsToShare = [textToShare, riskUrl,riskImg] as [Any]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            //Excluded Activities
+            activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToTwitter, .postToFacebook]
+            //
+            
+            //activityVC.popoverPresentationController?.sourceView = sender
+            self.present(activityVC, animated: true, completion: nil)
+        }
     }
 }

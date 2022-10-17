@@ -37,13 +37,12 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     var steps: [MKRoute.Step] = []
 
     //MARK: UI
-    let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
         
     private lazy var fieldsBG = UIView()
     
-    private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10, cornerRadius: 8, backgroundColor: .systemBackground.withAlphaComponent(0.3))
+    private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10, cornerRadius: 8, backgroundColor: .systemBackground.withAlphaComponent(0.5))
     
-    private lazy var finishField = IndentedTextField(placeholder: "Finish", padding: 10, cornerRadius: 8, backgroundColor: .systemBackground.withAlphaComponent(0.3))
+    private lazy var finishField = IndentedTextField(placeholder: "Finish", padding: 10, cornerRadius: 8, backgroundColor: .systemBackground.withAlphaComponent(0.5))
     
     private lazy var startIcon = UIImageView(image: .init(systemName: "circle.circle"))
     
@@ -55,6 +54,7 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
         btn.addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
         return btn
     }()
+    
     
     let header = UIView(backgroundColor: .systemBackground)
     
@@ -81,8 +81,8 @@ extension PlanATripViewController {
         super.viewDidLoad()
         prepareMainView()
         addTargets()
-        prepareRiskView()
         configureSomeUI()
+        prepareRiskView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -90,11 +90,10 @@ extension PlanATripViewController {
         let container = UIView()
         view.addSubview(container)
         prepareFields()
-        
         container.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: .none, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
         container.withHeight(45)
         exitBtn.withWidth(45)
-        container.hstack(exitBtn,UIView())
+        container.hstack(exitBtn,UIView(),spacing: 10)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -128,7 +127,9 @@ extension PlanATripViewController {
     private func AddRiskView() {
         guard !isNowPlaying else {return}
         let vc = RiskView()
-        navigationController?.pushViewController(vc, animated: true)
+        DispatchQueue.main.async {
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
         curRiskView = vc
     }
     
@@ -152,7 +153,7 @@ extension PlanATripViewController {
     
     private func prepareFields() {
         let blurView = UIVisualEffectView()
-        let blur = UIBlurEffect(style: .systemThickMaterial)
+        let blur = UIBlurEffect(style: .regular)
         blurView.effect = blur
         
         
@@ -180,30 +181,17 @@ extension PlanATripViewController {
         }
         
         
-        fieldsBG.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10), size: .init(width: 0, height: 200))
+        fieldsBG.anchor(top: .none, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
+        fieldsBG.withHeight(200)
         
         containerView.hstack(fieldsBG.stack(
-            containerView.hstack(startIcon.withWidth(25),startField,spacing: 10).withHeight(45),
-            containerView.hstack(finishIcon.withWidth(25),finishField,spacing: 10).withHeight(45),
+            UIView(),
+            containerView.hstack(startIcon.withWidth(25),startField,spacing: 10, distribution: .fill).withHeight(45),
+            containerView.hstack(finishIcon.withWidth(25),finishField,spacing: 10, distribution: .fill).withHeight(45),
             startBtn.withHeight(45),
+            UIView(),
             spacing: 10
         ), alignment: .center).withMargins(.allSides(12))
-        
-//        containerView.stack(
-//            containerView.hstack(
-//                startIcon.withWidth(25)
-//                ,startField,
-//                spacing: 12,
-//                alignment: .center),
-//            containerView.hstack(
-//                finishIcon.withWidth(25)
-//                ,finishField,
-//                spacing: 12,
-//                alignment: .center),
-//            startBtn,
-//            spacing: 10,
-//            distribution: .fillEqually
-//        )
     }
     
     private func startMonitoring() {
@@ -214,6 +202,7 @@ extension PlanATripViewController {
             let region = CLCircularRegion(center: step.polyline.coordinate , radius: 20, identifier: "\(i)")
             self.manager.startMonitoring(for: region)
         }
+        
     }
     
     private func addTargets() {
@@ -225,7 +214,6 @@ extension PlanATripViewController {
         exitBtn.layer.cornerRadius = 8
         header.applyGradient(colours: [.main3,.main3Light])
         fieldsBG.applyGradient(colours: [.main3, .main3Light])
-        directionsView.layer.cornerRadius = 8
     }
     
     private func addAnnotation(title: String, item: MKMapItem) {
@@ -278,14 +266,13 @@ extension PlanATripViewController {
                 }
             })
         }.disposed(by: disposeBag)
-        //mapKit.showAnnotations(mapKit.annotations, animated: false)
     }
     
     func speech(message: String) {
-        let msg = message
-        let speecU = AVSpeechUtterance(string: msg)
-        speecU.voice = .init(language: "en-EN")
-        speechSynthesizer.speak(speecU)
+            let msg = message
+            let speecU = AVSpeechUtterance(string: msg)
+            speecU.voice = .init(language: "en-EN")
+            self.speechSynthesizer.speak(speecU)
     }
     
 }
@@ -293,28 +280,23 @@ extension PlanATripViewController {
 //MARK: CLManagerDelegate
 extension PlanATripViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let loca = locations.first {
-            let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
-            let center: CLLocationCoordinate2D = .init(latitude: loca.coordinate.latitude, longitude: loca.coordinate.longitude)
-            let region: MKCoordinateRegion = .init(center: center, span: span)
-            self.mapView.setRegion(region, animated: false)
-        }
-        mapView.userTrackingMode = .followWithHeading
-        manager.stopUpdatingLocation()
     }
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        stepCounter += 1
-        if stepCounter < steps.count {
+        print("girdiii")
+            self.stepCounter += 1
+        if self.stepCounter < steps.count {
             let currentStep = steps[stepCounter]
-            speech(message: "In \(currentStep.distance.rounded()) meters, \(currentStep.instructions)")
-        } else {
-            speech(message: "Arrived at destination")
-            stepCounter = 0
-            manager.monitoredRegions.forEach { region in
-                manager.stopMonitoring(for: region)
+            self.speech(message: "In \(currentStep.distance.rounded()) meters, \(currentStep.instructions)")
+            
+            } else {
+                self.speech(message: "Arrived at destination")
+                self.stepCounter = 0
+                manager.monitoredRegions.forEach { region in
+                    manager.stopMonitoring(for: region)
+                }
             }
-        }
+        
     }
     
     
@@ -349,6 +331,7 @@ extension PlanATripViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         PlanATripViewController.viewModel.currentLocation.accept(userLocation.coordinate)
+        mapView.userTrackingMode = .follow
     }
 
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -372,7 +355,6 @@ extension PlanATripViewController {
         startMonitoring()
         mapView.camera = .init(lookingAtCenter: PlanATripViewController.viewModel.currentLocation.value!, fromDistance: .init(50), pitch: .init(45), heading: CLLocationDirection(0))
         mapView.setCameraZoomRange(.init(maxCenterCoordinateDistance: 1000), animated: true)
-        mapView.userTrackingMode = .follow
     }
 
     @objc private func didTapChangeStart() {

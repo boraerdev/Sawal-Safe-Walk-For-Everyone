@@ -79,47 +79,25 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
     func detectRisk(postList: [Post]) {
         var postCoor: CLLocationCoordinate2D = .init(latitude: 0, longitude: 0)
         var distance: Double?
-        currentLocation.subscribe { [weak self] result in
-            postList.forEach { post in
-                postCoor = .init(latitude: post.location.latitude, longitude: post.location.longitude)
-                distance = result?.distance(to: postCoor)
-                if distance ?? 100 <= 21, distance ?? 100 >= 19 {
-                    if self?.riskMode.value == .outArea {
-                       self?.riskMode.accept(.inAreaCloser)
-                    } else if self?.riskMode.value == .inAreaAway {
+        DispatchQueue.global(priority: .high).async {
+            self.currentLocation.subscribe { [weak self] result in
+                postList.forEach { post in
+                    postCoor = .init(latitude: post.location.latitude, longitude: post.location.longitude)
+                    guard let distance = result?.distance(to: postCoor) else {return}
+                    
+                    if distance <= 20 {
+                        self?.distance.accept(distance)
+                        if distance > 1, distance <= 20 {
+                            self?.riskMode.accept(.inAreaCloser)
+                        } else if distance > 0, distance <= 1 {
+                            print("alanda")
+                        }
+                    } else if distance < 25 {
                         self?.riskMode.accept(.outArea)
-                    } else if self?.riskMode.value == .inAreaCloser {
-                        self?.riskMode.accept(.outArea)
-                        
-                    }
-                    else if self?.riskMode.value == nil {
-                        self?.riskMode.accept(.inAreaCloser)
                     }
                 }
-                
-                if distance ?? 100 <= 0.5{
-                    switch self?.riskMode.value {
-                    case .inAreaCloser:
-                        self?.riskMode.accept(.inAreaAway)
-                    case .inAreaAway:
-                        self?.riskMode.accept(.inAreaCloser)
-                    case .outArea:
-                        self?.riskMode.accept(.inAreaAway)
-                    case .none:
-                        print("ok")
-                    }
-                }
-                
-                if distance ?? 100 <= 20 {
-                    self?.distance.accept(distance)
-                    if self?.riskMode.value == .inAreaCloser {
-                        print("Riskli alana \(String(format: "%.1f", distance!))m kaldı.")
-                    } else if self?.riskMode.value == .inAreaAway {
-                        print("Riskli alandan \(String(format: "%.1f", distance!))m uzaklaştınız.")
-                    }
-                }
-            }
-        }.disposed(by: disposeBag)
+            }.disposed(by: self.disposeBag)
+        }
     }
     
     func requestForDirections(completion: @escaping (MKRoute)->() ) {
@@ -144,28 +122,30 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
         
         let directions = MKDirections(request: request)
         directions.calculate { [unowned self] (resp, err) in
+            
             if let err = err {
                 print("Failed to find routing info:", err)
                 return
             }
             // success
             print("Found my directions/routing....")
-            let newList = resp?.routes.sorted(by: {$0.distance<$1.distance})
-            guard let route =  newList?.first else {return}
+            guard let route =  resp?.routes.first else {return}
             sharedRoute.accept(route)
+            
             filterAndDetect { post in
                 detectRisk(postList: post)
             }
             completion(route)
-            print(route.steps.count)
             
             var msg = ""
             if filteredPostsOnRoute.count != 0 {
-                msg = "There are \(filteredPostsOnRoute.count) risky areas on the route. When you approach here, we will inform you with an audible warning. You can start your safe journey by clicking the Go button.  Please be careful."
+                msg = "There are \(filteredPostsOnRoute.count) risky areas on the route. When you approach here, we will inform you with an audible warning. You can start your safe journey by clicking the Go button."
             } else {
-                msg = "We do not found any risk on your route. But may exist unreported risk on your route. You can start your safe journey by clicking the Go button.  Please be careful."
+                msg = "We do not found any risk on your route. But may exist unreported risk on your route. You can start your safe journey by clicking the Go button."
             }
-            view?.speech(message: msg)
+            DispatchQueue.global(qos: .userInteractive).async {
+                view?.speech(message: msg)
+            }
 
         }
         

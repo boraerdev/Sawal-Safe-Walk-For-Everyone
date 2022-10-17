@@ -28,7 +28,7 @@ final class RiskView: UIViewController {
         return ani
     }()
     
-    let warnLbl = UILabel(text: "Please be careful, the distance between you and the risk:", font: .boldSystemFont(ofSize: 22),textColor: .label, textAlignment: .center, numberOfLines: 0)
+    private lazy var warnLbl = UILabel(text: "Please be careful, the distance between you and the risk:", font: .boldSystemFont(ofSize: 22),textColor: .label, textAlignment: .center, numberOfLines: 0)
     
     private lazy var meter = UILabel(text: "Test",font: .systemFont(ofSize: 34), textColor: .secondaryLabel)
 

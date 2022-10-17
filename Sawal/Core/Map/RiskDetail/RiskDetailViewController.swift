@@ -50,7 +50,7 @@ final class RiskDetailViewController: UIViewController, RiskDetailViewController
                 commentField.withHeight(45),
                 commentBtn,
                 settingsBtn,
-                spacing: 5).withMargins(.init(top: 0, left: 10, bottom: 0, right: 10)),
+                spacing: 5, distribution: .fill).withMargins(.init(top: 0, left: 10, bottom: 0, right: 10)),
             view.hstack(goCommentsBtn),
             spacing: 10)
         .withMargins(.init(top: 0, left: 0, bottom: 10, right: 0))

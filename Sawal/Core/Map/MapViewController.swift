@@ -129,16 +129,6 @@ extension MapViewController {
 extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let loca = locations.first else {
-            print("location has not received")
-            return
-        }
-        let span: MKCoordinateSpan = .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
-        let center: CLLocationCoordinate2D = .init(latitude: loca.coordinate.latitude, longitude: loca.coordinate.longitude)
-        let region: MKCoordinateRegion = .init(center: center, span: span)
-        self.mapKit.setRegion(region, animated: false)
-        mapKit.userTrackingMode = .follow
-        manager.stopUpdatingLocation()
         
     }
     
@@ -159,6 +149,7 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         viewModel.currentCoordinate.accept(userLocation.coordinate)
+        mapKit.userTrackingMode = .follow
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -223,11 +214,8 @@ extension MapViewController: MKMapViewDelegate {
         
         hudContainer.addSubview(hudView)
         hudView.fillSuperview()
-        
         configureCustomCallout(customCallout: customCallout, view: view)
-        
         customCallout.stack(bgImage)
-        //hudView.stack(adressLbl, alignment: .center).withMargins(.allSides(12))
         hudView.stack(
             hudView.hstack(riskDEgreeLbl,UIView(), shareBtn, infoBtn, alignment: .top),
             UIView(),

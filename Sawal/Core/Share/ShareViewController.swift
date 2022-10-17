@@ -290,7 +290,6 @@ extension ShareViewController: CLLocationManagerDelegate {
         let region: MKCoordinateRegion = .init(center: center, span: span)
         mapView.setRegion(region, animated: false)
         mapView.userTrackingMode = .follow
-        manager.stopUpdatingLocation()
     }
 }
 

@@ -99,7 +99,6 @@ final class RiskDetailViewController: UIViewController, RiskDetailViewController
         progressBar.progress = 1
         
         overrideUserInterfaceStyle = .dark
-        UIApplication.shared.statusBarStyle = .lightContent
         
         goCommentsBtn.setImage(.init(systemName: "chevron.up")!, for: .normal)
         goCommentsBtn.tintColor = .secondaryLabel

@@ -39,19 +39,19 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     //MARK: UI
     let directionsView = UIView(backgroundColor: .white.withAlphaComponent(0.3))
         
-    private lazy var fieldsBG = UIView(backgroundColor: .main3)
+    private lazy var fieldsBG = UIView()
     
-    private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10, cornerRadius: 8, backgroundColor: .white.withAlphaComponent(0.3))
+    private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10, cornerRadius: 8, backgroundColor: .systemBackground.withAlphaComponent(0.3))
     
-    private lazy var finishField = IndentedTextField(placeholder: "Finish", padding: 10, cornerRadius: 8, backgroundColor: .white.withAlphaComponent(0.3))
+    private lazy var finishField = IndentedTextField(placeholder: "Finish", padding: 10, cornerRadius: 8, backgroundColor: .systemBackground.withAlphaComponent(0.3))
     
     private lazy var startIcon = UIImageView(image: .init(systemName: "circle.circle"))
     
     private lazy var exitBtn: UIButton = {
         let btn = UIButton()
         btn.setImage(.init(systemName: "xmark"), for: .normal)
-        btn.tintColor = .main3
-        btn.backgroundColor = .white
+        btn.tintColor = .label
+        btn.backgroundColor = .systemBackground
         btn.addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
         return btn
     }()
@@ -61,10 +61,10 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     private lazy var startBtn: UIButton = {
         let btn = UIButton()
         btn.setTitle(" Go", for: .normal)
-        btn.setTitleColor(.main3, for: .normal)
+        btn.setTitleColor(.label, for: .normal)
         btn.setImage(.init(systemName: "arrowtriangle.right"), for: .normal)
-        btn.tintColor = .main3
-        btn.backgroundColor = .white
+        btn.tintColor = .label
+        btn.backgroundColor = .systemBackground
         btn.layer.cornerRadius = 8
         btn.addTarget(self, action: #selector(didTapStart), for: .touchUpInside)
         return btn
@@ -80,31 +80,21 @@ extension PlanATripViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareMainView()
-        prepareFields()
         addTargets()
+        prepareRiskView()
+        configureSomeUI()
     }
     
     override func viewDidLayoutSubviews() {
-        view.stack(header, mapView,fieldsBG)
-        header.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor,padding: .init(top: 0, left: 0, bottom: -55, right: 0))
+        view.stack(mapView)
+        let container = UIView()
+        view.addSubview(container)
+        prepareFields()
         
-        let container = UIView(backgroundColor: .clear)
-        header.addSubview(container)
-        container.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 0, left: 20, bottom: 10, right: 20))
-        
-        PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
-            if result.element == .inAreaCloser || result.element == .inAreaAway {
-                self?.AddRiskView()
-                self?.isNowPlaying = true
-            } else {
-                self?.RemoveRiskView()
-                self?.isNowPlaying = false
-            }
-        }.disposed(by: disposeBag)
-        
-        container.hstack(exitBtn.withWidth(45),directionsView, spacing: 12)
-        fieldsBG.withHeight(250)
-        setupSomeUI()
+        container.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: .none, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
+        container.withHeight(45)
+        exitBtn.withWidth(45)
+        container.hstack(exitBtn,UIView())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -123,6 +113,18 @@ extension PlanATripViewController {
 //MARK: Funcs
 extension PlanATripViewController {
     
+    private func prepareRiskView() {
+        PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
+            if result.element == .inAreaCloser || result.element == .inAreaAway {
+                self?.AddRiskView()
+                self?.isNowPlaying = true
+            } else {
+                self?.RemoveRiskView()
+                self?.isNowPlaying = false
+            }
+        }.disposed(by: disposeBag)
+    }
+    
     private func AddRiskView() {
         guard !isNowPlaying else {return}
         let vc = RiskView()
@@ -134,6 +136,11 @@ extension PlanATripViewController {
         guard isNowPlaying else {return}
         curRiskView?.navigationController?.popViewController(animated: true)
     }
+    
+    private func configureSomeUI() {
+        exitBtn.layer.cornerRadius = 8
+        exitBtn.dropShadow()
+    }
 
     private func prepareMainView() {
         manager.delegate = self
@@ -144,40 +151,59 @@ extension PlanATripViewController {
     }
     
     private func prepareFields() {
+        let blurView = UIVisualEffectView()
+        let blur = UIBlurEffect(style: .systemThickMaterial)
+        blurView.effect = blur
         
+        
+        fieldsBG.layer.cornerRadius = 8
+        fieldsBG.layer.masksToBounds = true
+        view.addSubview(fieldsBG)
         lazy var containerView = UIView()
+        fieldsBG.addSubview(blurView)
+        blurView.fillSuperview()
         fieldsBG.addSubview(containerView)
-        containerView.fillSuperviewSafeAreaLayoutGuide(padding: .init(top: 30, left: 20, bottom: 30, right: 20))
+        containerView.fillSuperview()
         
         [startField, finishField].forEach { field in
             field.withHeight(45)
-            field.textColor = .white
+            field.textColor = .label
         }
                 
-        startField.attributedPlaceholder = .init(string: "Start", attributes: [.foregroundColor: UIColor.white.withAlphaComponent(0.7)])
+        startField.attributedPlaceholder = .init(string: "Start", attributes: [.foregroundColor: UIColor.label.withAlphaComponent(0.3)])
         
-        finishField.attributedPlaceholder = .init(string: "Finish", attributes: [.foregroundColor: UIColor.white.withAlphaComponent(0.7)])
+        finishField.attributedPlaceholder = .init(string: "Finish", attributes: [.foregroundColor: UIColor.label.withAlphaComponent(0.3)])
         
         [startIcon, finishIcon].forEach { icon in
             icon.contentMode = .scaleAspectFit
-            icon.tintColor = .white
+            icon.tintColor = .label.withAlphaComponent(0.3)
         }
         
-        containerView.stack(
-            containerView.hstack(
-                startIcon.withWidth(25)
-                ,startField,
-                spacing: 12,
-                alignment: .center),
-            containerView.hstack(
-                finishIcon.withWidth(25)
-                ,finishField,
-                spacing: 12,
-                alignment: .center),
-            startBtn,
-            spacing: 10,
-            distribution: .fillEqually
-        )
+        
+        fieldsBG.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10), size: .init(width: 0, height: 200))
+        
+        containerView.hstack(fieldsBG.stack(
+            containerView.hstack(startIcon.withWidth(25),startField,spacing: 10).withHeight(45),
+            containerView.hstack(finishIcon.withWidth(25),finishField,spacing: 10).withHeight(45),
+            startBtn.withHeight(45),
+            spacing: 10
+        ), alignment: .center).withMargins(.allSides(12))
+        
+//        containerView.stack(
+//            containerView.hstack(
+//                startIcon.withWidth(25)
+//                ,startField,
+//                spacing: 12,
+//                alignment: .center),
+//            containerView.hstack(
+//                finishIcon.withWidth(25)
+//                ,finishField,
+//                spacing: 12,
+//                alignment: .center),
+//            startBtn,
+//            spacing: 10,
+//            distribution: .fillEqually
+//        )
     }
     
     private func startMonitoring() {

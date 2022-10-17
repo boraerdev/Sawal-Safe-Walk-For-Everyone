@@ -94,7 +94,7 @@ extension MapViewController {
         mapKit.fillSuperview()
         view.addSubview(hudContainer)
         
-        hudContainer.anchor(top: nil, leading: mapKit.leadingAnchor, bottom: mapKit.safeAreaLayoutGuide.bottomAnchor, trailing: mapKit.trailingAnchor, padding: .init(top: 0, left: 20, bottom: 0, right: 20))
+        hudContainer.anchor(top: nil, leading: mapKit.leadingAnchor, bottom: mapKit.safeAreaLayoutGuide.bottomAnchor, trailing: mapKit.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
         hudContainer.withHeight(150)
     }
     
@@ -113,13 +113,13 @@ extension MapViewController {
     }
     
     private func handleBackBtn() {
-        let btn = UIButton(image: .init(systemName: "xmark")!, tintColor: .main3, target: self, action: #selector(didTapBack))
+        let btn = UIButton(image: .init(systemName: "xmark")!, tintColor: .label, target: self, action: #selector(didTapBack))
         btn.backgroundColor = .systemBackground
         btn.clipsToBounds = false
         btn.layer.cornerRadius = 8
         btn.dropShadow()
         view.addSubview(btn)
-        btn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 20, bottom: 0, right: 0), size: .init(width: 45, height: 45))
+        btn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
     }
     
     

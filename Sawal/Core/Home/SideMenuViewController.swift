@@ -20,7 +20,7 @@ final class SideMenuViewController: UIViewController {
     
     let userMailLbl = UILabel(text: AuthManager.shared.currentUser?.mail, font: .systemFont(ofSize: 13, weight: .light), textColor: .white)
     
-    let versionLbl = UILabel(text: "v1.0.0", font: .systemFont(ofSize: 13, weight: .light), textColor: .white, textAlignment: .center, numberOfLines: 1)
+    let versionLbl = UILabel(text: "v0.0.5", font: .systemFont(ofSize: 13, weight: .light), textColor: .white, textAlignment: .center, numberOfLines: 1)
     
 
 }

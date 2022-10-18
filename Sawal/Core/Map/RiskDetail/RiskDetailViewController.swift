@@ -51,10 +51,10 @@ final class RiskDetailViewController: UIViewController, RiskDetailViewController
                 commentBtn,
                 settingsBtn,
                 spacing: 5, distribution: .fill).withMargins(.init(top: 0, left: 10, bottom: 0, right: 10)),
-            view.hstack(goCommentsBtn),
-            spacing: 10)
-        .withMargins(.init(top: 0, left: 0, bottom: 10, right: 0))
-        .fillSuperviewSafeAreaLayoutGuide()
+            view.hstack(goCommentsBtn, distribution: .fill),
+            spacing: 20,
+            distribution: .fill)
+        .withMargins(.init(top: 0, left: 0, bottom: 20, right: 0))
         
         
         let headContainer = UIView(backgroundColor: .clear)
@@ -185,6 +185,7 @@ extension RiskDetailViewController {
     }
     
     @objc func didTapGoComments() {
+        print("go comments")
         let vc = PostCommentsViewController()
         vc.post = post
         let nav = UINavigationController(rootViewController: vc)

@@ -79,7 +79,7 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
     func detectRisk(postList: [Post]) {
         var postCoor: CLLocationCoordinate2D = .init(latitude: 0, longitude: 0)
         var distance: Double?
-        DispatchQueue.global(priority: .high).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             self.currentLocation.subscribe { [weak self] result in
                 postList.forEach { post in
                     postCoor = .init(latitude: post.location.latitude, longitude: post.location.longitude)
@@ -90,7 +90,7 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
                         if distance > 1, distance <= 20 {
                             self?.riskMode.accept(.inAreaCloser)
                         } else if distance > 0, distance <= 1 {
-                            print("alanda")
+                            print("inArea")
                         }
                     } else if distance < 25 {
                         self?.riskMode.accept(.outArea)

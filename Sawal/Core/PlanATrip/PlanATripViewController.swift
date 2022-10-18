@@ -38,11 +38,11 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
 
     //MARK: UI
         
-    private lazy var fieldsBG = UIView()
+    private lazy var fieldsBG = UIView(backgroundColor: .secondarySystemBackground)
     
-    private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10, cornerRadius: 8, backgroundColor: .systemBackground.withAlphaComponent(0.5))
+    private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10)
     
-    private lazy var finishField = IndentedTextField(placeholder: "Finish", padding: 10, cornerRadius: 8, backgroundColor: .systemBackground.withAlphaComponent(0.5))
+    private lazy var finishField = IndentedTextField(placeholder: "Finish", padding: 10)
     
     private lazy var startIcon = UIImageView(image: .init(systemName: "circle.circle"))
     
@@ -50,7 +50,7 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
         let btn = UIButton()
         btn.setImage(.init(systemName: "xmark"), for: .normal)
         btn.tintColor = .label
-        btn.backgroundColor = .systemBackground
+        btn.backgroundColor = .secondarySystemBackground
         btn.addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
         return btn
     }()
@@ -92,8 +92,8 @@ extension PlanATripViewController {
         prepareFields()
         container.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: .none, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
         container.withHeight(45)
-        exitBtn.withWidth(45)
-        container.hstack(exitBtn,UIView(),spacing: 10)
+        exitBtn.withSize(.init(width: 45, height: 45))
+        container.hstack(exitBtn,UIView())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -141,34 +141,17 @@ extension PlanATripViewController {
     private func configureSomeUI() {
         exitBtn.layer.cornerRadius = 8
         exitBtn.dropShadow()
-    }
-
-    private func prepareMainView() {
-        manager.delegate = self
-        manager.startUpdatingLocation()
-        mapView.delegate = self
-        mapView.showsUserLocation = true
-        PlanATripViewController.viewModel.view = self
-    }
-    
-    private func prepareFields() {
-        let blurView = UIVisualEffectView()
-        let blur = UIBlurEffect(style: .regular)
-        blurView.effect = blur
-        
-        
         fieldsBG.layer.cornerRadius = 8
         fieldsBG.layer.masksToBounds = true
-        view.addSubview(fieldsBG)
-        lazy var containerView = UIView()
-        fieldsBG.addSubview(blurView)
-        blurView.fillSuperview()
-        fieldsBG.addSubview(containerView)
-        containerView.fillSuperview()
-        
+
         [startField, finishField].forEach { field in
             field.withHeight(45)
             field.textColor = .label
+            field.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
+            field.layer.borderWidth = 0.2
+            field.layer.cornerRadius = 8
+            field.backgroundColor = .systemBackground
+            
         }
                 
         startField.attributedPlaceholder = .init(string: "Start", attributes: [.foregroundColor: UIColor.label.withAlphaComponent(0.3)])
@@ -180,18 +163,30 @@ extension PlanATripViewController {
             icon.tintColor = .label.withAlphaComponent(0.3)
         }
         
-        
+        startBtn.dropShadow()
+    }
+
+    private func prepareMainView() {
+        manager.delegate = self
+        manager.startUpdatingLocation()
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+        PlanATripViewController.viewModel.view = self
+    }
+    
+    private func prepareFields() {
+        view.addSubview(fieldsBG)
         fieldsBG.anchor(top: .none, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
         fieldsBG.withHeight(200)
-        
-        containerView.hstack(fieldsBG.stack(
+        fieldsBG.hstack(fieldsBG.stack(
             UIView(),
-            containerView.hstack(startIcon.withWidth(25),startField,spacing: 10, distribution: .fill).withHeight(45),
-            containerView.hstack(finishIcon.withWidth(25),finishField,spacing: 10, distribution: .fill).withHeight(45),
+            fieldsBG.hstack(startIcon.withWidth(25),startField,spacing: 10, distribution: .fill).withHeight(45),
+            fieldsBG.hstack(finishIcon.withWidth(25),finishField,spacing: 10, distribution: .fill).withHeight(45),
             startBtn.withHeight(45),
             UIView(),
             spacing: 10
         ), alignment: .center).withMargins(.allSides(12))
+        fieldsBG.dropShadow()
     }
     
     private func startMonitoring() {
@@ -282,24 +277,30 @@ extension PlanATripViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     }
     
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .denied:
+            manager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse:
+            manager.startUpdatingLocation()
+        default:
+            print("ok")
+        }
+    }
+    
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        print("girdiii")
-            self.stepCounter += 1
+        self.stepCounter += 1
         if self.stepCounter < steps.count {
             let currentStep = steps[stepCounter]
             self.speech(message: "In \(currentStep.distance.rounded()) meters, \(currentStep.instructions)")
-            
-            } else {
-                self.speech(message: "Arrived at destination")
-                self.stepCounter = 0
-                manager.monitoredRegions.forEach { region in
-                    manager.stopMonitoring(for: region)
-                }
+        } else {
+            self.speech(message: "Arrived at destination")
+            self.stepCounter = 0
+            manager.monitoredRegions.forEach { region in
+                manager.stopMonitoring(for: region)
             }
-        
+        }
     }
-    
-    
 }
 
 //MARK: MapView Delegate
@@ -331,7 +332,7 @@ extension PlanATripViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         PlanATripViewController.viewModel.currentLocation.accept(userLocation.coordinate)
-        mapView.userTrackingMode = .follow
+        mapView.userTrackingMode = .followWithHeading
     }
 
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {

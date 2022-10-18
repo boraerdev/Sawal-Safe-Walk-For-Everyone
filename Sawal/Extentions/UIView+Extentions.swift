@@ -50,9 +50,9 @@ extension UIView {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame = self.bounds
         gradient.colors = colours.map { $0.cgColor }
-        gradient.locations = [0.0, 1.0]
-        gradient.startPoint = CGPoint(x: 0.0, y: 1.0)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0.0)
+        gradient.locations = locations
+        gradient.startPoint = CGPoint(x: 1.0, y: 1.0)
+        gradient.endPoint = CGPoint(x: 0.0, y: 0.0)
         self.layer.insertSublayer(gradient, at: 0)
     }
     
@@ -60,9 +60,11 @@ extension UIView {
         layer.masksToBounds = false
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.2
-        layer.shadowRadius = 5
+        layer.shadowRadius = 10
         layer.shadowOffset = .zero
     }
+    
+    
 }
 
 //

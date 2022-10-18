@@ -23,9 +23,6 @@ final class MapViewController: UIViewController {
     let clManager = CLLocationManager()
     let viewModel = MapViewModel.shared
     let disposeBag = DisposeBag()
-    var currentSelectCallout: UIView?
-    var tempHud: UIView?
-    var hudContainer = UIView(backgroundColor: .clear)
     var selectedPost: Post?
     
     //MARK: UI
@@ -34,6 +31,13 @@ final class MapViewController: UIViewController {
         mv.translatesAutoresizingMaskIntoConstraints = false
         return mv
     }()
+    
+    var currentSelectCallout: UIView?
+    
+    var tempHud: UIView?
+    
+    var hudContainer = UIView(backgroundColor: .clear)
+
 }
 
 //MARK: Core
@@ -114,7 +118,7 @@ extension MapViewController {
     
     private func handleBackBtn() {
         let btn = UIButton(image: .init(systemName: "xmark")!, tintColor: .label, target: self, action: #selector(didTapBack))
-        btn.backgroundColor = .systemBackground
+        btn.backgroundColor = .secondarySystemBackground
         btn.clipsToBounds = false
         btn.layer.cornerRadius = 8
         btn.dropShadow()
@@ -149,7 +153,7 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         viewModel.currentCoordinate.accept(userLocation.coordinate)
-        mapKit.userTrackingMode = .follow
+        mapKit.userTrackingMode = .followWithHeading
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -181,7 +185,7 @@ extension MapViewController: MKMapViewDelegate {
     
     private func postInfoHud(view: MKAnnotationView) {
         let customCallout = UIView(backgroundColor: .clear)
-        let hudView = UIView(backgroundColor: .systemBackground)
+        let hudView = UIView(backgroundColor: .secondarySystemBackground)
         let post: Post!
         let bgImage = UIImageView(image: nil, contentMode: .scaleAspectFill)
         let adressLbl = UILabel(text: "", font: .systemFont(ofSize: 22), textColor: .label, numberOfLines: 1)
@@ -196,7 +200,7 @@ extension MapViewController: MKMapViewDelegate {
         
         hudView.layer.cornerRadius = 8
         hudView.dropShadow()
-        adressLbl.backgroundColor = .systemBackground
+        
 
         if let ano = view.annotation as? RiskColoredAnnotations {
             post = ano.post

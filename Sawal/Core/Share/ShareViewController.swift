@@ -118,7 +118,10 @@ final class ShareViewController: UIViewController {
         let btn = UIButton()
         let conf = UIImage.SymbolConfiguration(pointSize: 32)
         btn.setImage(.init(systemName: "plus.square.fill.on.square.fill", withConfiguration: conf), for: .normal)
-        btn.backgroundColor = .secondarySystemBackground
+        btn.backgroundColor = .clear
+        btn.layer.borderWidth = 0.2
+        btn.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
+
         btn.addTarget(self, action: #selector(openPHPicker), for: .touchUpInside)
         btn.layer.cornerRadius = 8
         btn.tintColor = .secondaryLabel
@@ -129,6 +132,10 @@ final class ShareViewController: UIViewController {
     private lazy var postField: UITextView = {
        let field = UITextView()
         field.delegate = self
+        field.backgroundColor = .clear
+        field.layer.borderWidth = 0.2
+        field.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
+        field.layer.cornerRadius = 8
         field.textAlignment = .justified
         field.text = "Explain this situation..."
         field.font = .systemFont(ofSize: 17)
@@ -150,7 +157,7 @@ extension ShareViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.backgroundColor = .systemBackground
+        navigationController?.navigationBar.backgroundColor = .clear
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -164,7 +171,7 @@ extension ShareViewController {
     private func prepareMainView() {
         viewModel.view = self
         manager.delegate = self
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .secondarySystemBackground
         navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(didTapShare))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didtapCancel))
@@ -188,7 +195,7 @@ extension ShareViewController {
                         spacing: 5) ,UIView(), countLbl).padBottom(10),
                    view.hstack(postImage,addImageBtn, spacing: 5, distribution: .fillEqually).withHeight(100),
                    spacing: 5)
-        .withMargins(.init(top: 10, left: 20, bottom: 0, right: 20))
+        .withMargins(.init(top: 10, left: 10, bottom: 0, right: 10))
         view.addSubviews(spinner,successAnimation)
     }
 
@@ -290,6 +297,18 @@ extension ShareViewController: CLLocationManagerDelegate {
         let region: MKCoordinateRegion = .init(center: center, span: span)
         mapView.setRegion(region, animated: false)
         mapView.userTrackingMode = .follow
+        viewModel.location.accept(location)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .denied:
+            manager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse:
+            manager.startUpdatingLocation()
+        default:
+            print("ok")
+        }
     }
 }
 

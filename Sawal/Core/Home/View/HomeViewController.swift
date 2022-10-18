@@ -25,20 +25,7 @@ final class HomeViewController: UIViewController {
 
     
     //MARK: UI
-    private lazy var goMapBtn: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .red
-        btn.layer.cornerRadius = 8
-        btn.setTitle("Go Map", for: .normal)
-        let bgImg = UIImageView(image: .init(systemName: "map.fill")!)
-        bgImg.frame = .init(x: -20, y: 20, width: 100, height: 100)
-        bgImg.contentMode = .scaleAspectFit
-        bgImg.tintColor = .secondarySystemBackground
-        bgImg.alpha = 0.3
-        btn.clipsToBounds = true
-        btn.addSubview(bgImg)
-        return btn
-    }()
+    private lazy var goMapBtn = UIButton()
     
     private lazy var welcomeStack: UIStackView = {
         let welcomeText = UILabel()
@@ -54,35 +41,9 @@ final class HomeViewController: UIViewController {
         return stack
     }()
     
-    private lazy var addRiskBtn: UIButton = {
-        let btn = UIButton()
-        btn.layer.cornerRadius = 8
-        btn.setTitle("Share a Risk", for: .normal)
-        btn.setTitleColor(.secondarySystemBackground, for: .selected)
-        let bgImg = UIImageView(image: .init(systemName: "square.and.arrow.up.trianglebadge.exclamationmark")!)
-        bgImg.frame = .init(x: -20, y: 20, width: 100, height: 100)
-        bgImg.contentMode = .scaleAspectFit
-        bgImg.tintColor = .secondarySystemBackground
-        bgImg.alpha = 0.3
-        btn.clipsToBounds = true
-        btn.addSubview(bgImg)
-        return btn
-    }()
+    private lazy var shareRiskBtn = UIButton()
     
-    private lazy var planTrpBtn: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .red
-        btn.setTitle("Plan a Trip", for: .normal)
-        let bgImg = UIImageView(image: .init(systemName: "paperplane")!)
-        bgImg.frame = .init(x: -20, y: 20, width: 100, height: 100)
-        bgImg.contentMode = .scaleAspectFit
-        bgImg.tintColor = .secondarySystemBackground
-        bgImg.alpha = 0.3
-        btn.clipsToBounds = true
-        btn.addSubview(bgImg)
-        btn.layer.cornerRadius = 8
-        return btn
-    }()
+    private lazy var planTrpBtn = UIButton()
     
 }
 
@@ -100,7 +61,7 @@ extension HomeViewController {
 extension HomeViewController {
     
     private func prepareMainView() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .secondarySystemBackground
         navigationItem.titleView = welcomeStack
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(didTapMenu))
     }
@@ -118,22 +79,38 @@ extension HomeViewController {
     
     private func prepareStack() {
         let container = UIView()
-        //container.withHeight(250)
         view.stack(container).withMargins(.init(top: 10, left: 20, bottom:0, right: 20))
         
         container.stack(
-            container.hstack(goMapBtn, addRiskBtn, spacing: 10, distribution: .fillEqually),
+            container.hstack(goMapBtn, shareRiskBtn, spacing: 10, distribution: .fillEqually),
             planTrpBtn,
             spacing: 10,
             distribution: .fillEqually
         )
+        configureButtons()
         
-        DispatchQueue.main.async {
-            self.goMapBtn.applyGradient(colours: [.main1,.main1Light])
-            self.addRiskBtn.applyGradient(colours: [.main2,.main2Light])
-            self.planTrpBtn.applyGradient(colours: [.main3,.main3Light])
+    }
+    
+    private func configureButtons() {
+        let titles = ["Go Map", "Share a Risk", "Plan a Trip"]
+        let icons = ["map.fill", "square.and.arrow.up.trianglebadge.exclamationmark", "location.fill"]
+        let colors: [UIColor] = [.main1Light, .main2Light, .main3Light]
+        [goMapBtn,shareRiskBtn, planTrpBtn].enumerated().forEach { i,btn in
+            btn.backgroundColor = .systemBackground
+            let bgImg = UIImageView(image: .init(systemName: icons[i])!)
+            bgImg.frame = .init(x: -30, y: 15, width: 130, height: 130)
+            bgImg.contentMode = .scaleAspectFit
+            btn.setTitle(titles[i], for: .normal)
+            btn.setTitleColor(colors[i], for: .normal)
+            bgImg.tintColor = .secondarySystemBackground
+            bgImg.alpha = 1
+            
+            btn.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
+            btn.layer.borderWidth = 0.2
+            btn.layer.cornerRadius = 8
+            btn.layer.masksToBounds = true
+            btn.addSubview(bgImg)
         }
-        
     }
     
     private func performButtons() {
@@ -142,7 +119,7 @@ extension HomeViewController {
         })
         .disposed(by: disposeBag)
         
-        addRiskBtn.rx.tap.subscribe(onNext: {[unowned self] in
+        shareRiskBtn.rx.tap.subscribe(onNext: {[unowned self] in
             let simulator = true
             simulator ? navigationController?.pushViewController(ShareViewController(), animated: true) :                     navigationController?.pushViewController(CameraView(), animated: true)
         })
@@ -152,6 +129,7 @@ extension HomeViewController {
             navigationController?.pushViewController(PlanATripViewController(), animated: true)
         })
         .disposed(by: disposeBag)
+        
     }
 
 }

@@ -37,7 +37,7 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     var steps: [MKRoute.Step] = []
 
     //MARK: UI
-        
+    
     private lazy var fieldsBG = UIView(backgroundColor: .secondarySystemBackground)
     
     private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10)
@@ -55,8 +55,7 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
         return btn
     }()
     
-    
-    let header = UIView(backgroundColor: .systemBackground)
+    private lazy var header = UIView(backgroundColor: .systemBackground)
     
     private lazy var startBtn: UIButton = {
         let btn = UIButton()
@@ -83,6 +82,9 @@ extension PlanATripViewController {
         addTargets()
         configureSomeUI()
         prepareRiskView()
+        DispatchQueue.main.async {
+            self.mapView.setUserTrackingMode(.followWithHeading, animated: false)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -94,6 +96,7 @@ extension PlanATripViewController {
         container.withHeight(45)
         exitBtn.withSize(.init(width: 45, height: 45))
         container.hstack(exitBtn,UIView())
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -143,7 +146,7 @@ extension PlanATripViewController {
         exitBtn.dropShadow()
         fieldsBG.layer.cornerRadius = 8
         fieldsBG.layer.masksToBounds = true
-
+        
         [startField, finishField].forEach { field in
             field.withHeight(45)
             field.textColor = .label
@@ -151,7 +154,6 @@ extension PlanATripViewController {
             field.layer.borderWidth = 0.2
             field.layer.cornerRadius = 8
             field.backgroundColor = .systemBackground
-            
         }
                 
         startField.attributedPlaceholder = .init(string: "Start", attributes: [.foregroundColor: UIColor.label.withAlphaComponent(0.3)])
@@ -187,6 +189,7 @@ extension PlanATripViewController {
             spacing: 10
         ), alignment: .center).withMargins(.allSides(12))
         fieldsBG.dropShadow()
+        
     }
     
     private func startMonitoring() {
@@ -197,7 +200,6 @@ extension PlanATripViewController {
             let region = CLCircularRegion(center: step.polyline.coordinate , radius: 20, identifier: "\(i)")
             self.manager.startMonitoring(for: region)
         }
-        
     }
     
     private func addTargets() {
@@ -275,6 +277,8 @@ extension PlanATripViewController {
 //MARK: CLManagerDelegate
 extension PlanATripViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let loca = locations.first else {return}
+        PlanATripViewController.viewModel.currentLocation.accept(loca.coordinate)
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -331,8 +335,7 @@ extension PlanATripViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        PlanATripViewController.viewModel.currentLocation.accept(userLocation.coordinate)
-        mapView.userTrackingMode = .followWithHeading
+       // PlanATripViewController.viewModel.currentLocation.accept(userLocation.coordinate)
     }
 
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -353,10 +356,29 @@ extension PlanATripViewController {
     @objc func didTapStart() {
         guard startField.text != "", finishField.text != "" else {return}
         steps = PlanATripViewController.viewModel.sharedRoute.value?.steps ?? []
+        
+        let drView = UIView(backgroundColor: .yellow)
+        view.addSubview(drView)
+        NSLayoutConstraint.activate([
+            drView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 10),
+            drView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10),
+            drView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -10),
+            drView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        
+        if (PlanATripViewController.viewModel.startLocation.value?.distance(to: (manager.location?.coordinate)!))! > 200 {
+            mapView.setUserTrackingMode(.none, animated: true)
+        } else {
+            mapView.setUserTrackingMode(.followWithHeading, animated: true)
+            mapView.camera = .init(lookingAtCenter: PlanATripViewController.viewModel.currentLocation.value!, fromDistance: .init(50), pitch: .init(45), heading: CLLocationDirection(0))
+            mapView.setCameraZoomRange(.init(maxCenterCoordinateDistance: 1000), animated: true)
+        }
+        
         startMonitoring()
-        mapView.camera = .init(lookingAtCenter: PlanATripViewController.viewModel.currentLocation.value!, fromDistance: .init(50), pitch: .init(45), heading: CLLocationDirection(0))
-        mapView.setCameraZoomRange(.init(maxCenterCoordinateDistance: 1000), animated: true)
+        mapView.showAnnotations(tripAnnotations, animated: false)
     }
+    
 
     @objc private func didTapChangeStart() {
         let vc = MapSearchViewController()

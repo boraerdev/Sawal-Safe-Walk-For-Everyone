@@ -21,7 +21,7 @@ final class WelcomePage1ViewController: UIViewController {
     
     private lazy var descLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using."
+        lbl.text = "For safe walking, you can track all existing risks on the map, view their details, share or comment on them. This map will be updated automatically when you share the risks around you."
         lbl.numberOfLines = 0
         lbl.textColor = .systemBackground
         lbl.font = .systemFont(ofSize: 13, weight: .light)

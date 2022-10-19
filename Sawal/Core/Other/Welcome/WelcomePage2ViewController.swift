@@ -13,7 +13,7 @@ final class WelcomePage2ViewController: UIViewController {
     //MARK: UI
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "Share Rısk"
+        lbl.text = "Share Risk"
         lbl.textColor = .systemBackground
         lbl.font = .systemFont(ofSize: 34, weight: .bold)
         return lbl
@@ -21,7 +21,7 @@ final class WelcomePage2ViewController: UIViewController {
     
     private lazy var descLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using."
+        lbl.text = "We use the data we collect from you for a safe walk and create safe routes based on this data. Don't forget to share the risk points around you for safer walks."
         lbl.numberOfLines = 0
         lbl.textColor = .systemBackground
         lbl.font = .systemFont(ofSize: 13, weight: .light)

@@ -11,6 +11,7 @@ import RxCocoa
 
 protocol RiskDetailViewModelInterface: AnyObject {
     func uploadComment()
+    func deletePost()
 }
 
 class RiskDetailViewModel {
@@ -20,6 +21,10 @@ class RiskDetailViewModel {
 }
 
 extension RiskDetailViewModel: RiskDetailViewModelInterface {
+    
+    func deletePost() {
+        PostService.shared.deletePost(post: (view?.post)!)
+    }
     
     func uploadComment() {
         PostService.shared.uploadComment(for: (view?.post.id)!, comment: commentText.value)

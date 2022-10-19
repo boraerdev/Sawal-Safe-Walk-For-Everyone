@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseStorage
 
 final class PostService {
     static let shared = PostService()
@@ -23,6 +24,16 @@ final class PostService {
                     return
                 }
                 completion(.success(true))
+            }
+        }
+    }
+    
+    func deletePost(post: Post) {
+        Firestore.firestore().collection("posts").document(post.id!).delete()
+        Storage.storage().reference(forURL: post.imageURL!).delete { err in
+            guard err == nil else {
+                print("silinemedi")
+                return
             }
         }
     }

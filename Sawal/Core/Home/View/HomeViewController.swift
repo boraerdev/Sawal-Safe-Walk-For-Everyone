@@ -56,9 +56,6 @@ extension HomeViewController {
         performButtons()
     }
     override func viewWillAppear(_ animated: Bool) {
-        PlanATripViewController.viewModel.startLocation.accept(nil)
-        PlanATripViewController.viewModel.finishLocation.accept(nil)
-        PlanATripViewController.viewModel.sharedRoute.accept(nil)
     }
 }
 

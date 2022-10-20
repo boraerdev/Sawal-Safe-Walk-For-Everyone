@@ -294,6 +294,7 @@ extension PlanATripViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         self.stepCounter += 1
+        print("DID ENTER DIRECTION AREA")
         if self.stepCounter < steps.count {
             let currentStep = steps[stepCounter]
             self.speech(message: "In \(currentStep.distance.rounded()) meters, \(currentStep.instructions)")
@@ -357,22 +358,12 @@ extension PlanATripViewController {
         guard startField.text != "", finishField.text != "" else {return}
         steps = PlanATripViewController.viewModel.sharedRoute.value?.steps ?? []
         
-        let drView = UIView(backgroundColor: .yellow)
-        view.addSubview(drView)
-        NSLayoutConstraint.activate([
-            drView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 10),
-            drView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10),
-            drView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -10),
-            drView.heightAnchor.constraint(equalToConstant: 50)
-        ])
-        
-        
         if (PlanATripViewController.viewModel.startLocation.value?.distance(to: (manager.location?.coordinate)!))! > 200 {
             mapView.setUserTrackingMode(.none, animated: true)
         } else {
-            mapView.setUserTrackingMode(.followWithHeading, animated: true)
             mapView.camera = .init(lookingAtCenter: PlanATripViewController.viewModel.currentLocation.value!, fromDistance: .init(50), pitch: .init(45), heading: CLLocationDirection(0))
             mapView.setCameraZoomRange(.init(maxCenterCoordinateDistance: 1000), animated: true)
+            mapView.setUserTrackingMode(.followWithHeading, animated: true)
         }
         
         startMonitoring()

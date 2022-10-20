@@ -32,7 +32,7 @@ final class WelcomePage3ViewController: UIViewController {
     
     private lazy var mainImage: UIImageView = {
        let img = UIImageView()
-        img.image = .init(systemName: "opticaldiscdrive")
+        img.image = .init(systemName: "checkmark.shield")
         img.tintColor = .systemBackground
         img.contentMode = .scaleAspectFit
         img.translatesAutoresizingMaskIntoConstraints = false

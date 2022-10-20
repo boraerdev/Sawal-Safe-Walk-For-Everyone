@@ -55,6 +55,11 @@ extension HomeViewController {
         prepareStack()
         performButtons()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        PlanATripViewController.viewModel.startLocation.accept(nil)
+        PlanATripViewController.viewModel.finishLocation.accept(nil)
+        PlanATripViewController.viewModel.sharedRoute.accept(nil)
+    }
 }
 
 //MARK: Funcs
@@ -93,23 +98,31 @@ extension HomeViewController {
     
     private func configureButtons() {
         let titles = ["Go Map", "Share a Risk", "Plan a Trip"]
-        let icons = ["map.fill", "square.and.arrow.up.trianglebadge.exclamationmark", "location.fill"]
+        let icons = ["Location", "Attention", "Checkbox"]
         let colors: [UIColor] = [.main1Light, .main2Light, .main3Light]
         [goMapBtn,shareRiskBtn, planTrpBtn].enumerated().forEach { i,btn in
-            btn.backgroundColor = .systemBackground
-            let bgImg = UIImageView(image: .init(systemName: icons[i])!)
-            bgImg.frame = .init(x: -30, y: 15, width: 130, height: 130)
+            //Bg Img
+            let bgImg = UIImageView(image: .init(named: icons[i])!)
             bgImg.contentMode = .scaleAspectFit
-            btn.setTitle(titles[i], for: .normal)
-            btn.setTitleColor(colors[i], for: .normal)
             bgImg.tintColor = .secondarySystemBackground
             bgImg.alpha = 1
             
+            //Btn
+            btn.backgroundColor = .systemBackground
+            btn.setTitle("", for: .normal)
+            btn.setTitleColor(colors[i], for: .normal)
             btn.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
             btn.layer.borderWidth = 0.2
             btn.layer.cornerRadius = 8
             btn.layer.masksToBounds = true
             btn.addSubview(bgImg)
+            bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -20, left: 0, bottom: 0, right: -20))
+            
+            //Title
+            let titleBtn = UILabel(text: titles[i], font: .systemFont(ofSize: 28, weight: .heavy), textColor: .label, textAlignment: .left, numberOfLines: 2)
+            btn.addSubview(titleBtn)
+            titleBtn.anchor(top: .none, leading: btn.leadingAnchor, bottom: btn.bottomAnchor, trailing: .none, padding: .init(top: 0, left: 20, bottom: 20, right: 0))
+            titleBtn.withWidth(100)
         }
     }
     

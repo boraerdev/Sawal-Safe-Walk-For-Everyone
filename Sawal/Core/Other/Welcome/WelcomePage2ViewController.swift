@@ -32,7 +32,7 @@ final class WelcomePage2ViewController: UIViewController {
     
     private lazy var mainImage: UIImageView = {
        let img = UIImageView()
-        img.image = .init(systemName: "face.smiling")
+        img.image = .init(systemName: "square.and.arrow.up.trianglebadge.exclamationmark")
         img.tintColor = .systemBackground
         img.contentMode = .scaleAspectFit
         img.translatesAutoresizingMaskIntoConstraints = false

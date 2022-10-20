@@ -150,7 +150,6 @@ extension ShareViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareMainView()
-        ShareViewController.annotationImage.accept(.init(named: "ist"))
         handleMapView()
         prepareStack()
         handleBind()

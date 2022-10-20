@@ -54,10 +54,10 @@ extension RiskDetailViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        prepareStacks()
         handleBind()
         getUserInfo()
         configureSomeUI()
-        prepareStacks()
         configureData()
         handleCloseKeyboard()
         viewModel.view = self
@@ -90,15 +90,15 @@ extension RiskDetailViewController {
         view.stack(
             progressBar,
             postImg,
+            goCommentsBtn,
             view.hstack(
                 commentField.withHeight(45),
                 commentBtn,
                 settingsBtn,
                 spacing: 5, distribution: .fill).withMargins(.init(top: 0, left: 10, bottom: 0, right: 10)),
-            view.hstack(goCommentsBtn, distribution: .fill),
             spacing: 20,
             distribution: .fill)
-        .withMargins(.init(top: 0, left: 0, bottom: 20, right: 0))
+        .withMargins(.init(top: 0, left: 0, bottom: 0, right: 0))
         
         
         let headContainer = UIView(backgroundColor: .clear)
@@ -112,9 +112,10 @@ extension RiskDetailViewController {
                 dateLbl,
                 alignment: .trailing),
             alignment: .center)
-        
+
         postImg.stack(headContainer,UIView())
             .withMargins(.allSides(10))
+        goCommentsBtn.withHeight(30)
     }
     
     private func handleBind() {

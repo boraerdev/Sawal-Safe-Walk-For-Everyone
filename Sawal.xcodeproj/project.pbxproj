@@ -292,6 +292,7 @@
 				0A7D123D28E201C9009C2C4C /* ShareViewController.swift */,
 				0AA7F07C28F0CF21000ED5D3 /* ShareViewModel.swift */,
 				0A67613028F04A3500019BC4 /* CustomCameraController.swift */,
+				0AAD849328F825BD0050DA5D /* CapturedImageView.swift */,
 			);
 			path = Share;
 			sourceTree = "<group>";
@@ -352,7 +353,6 @@
 				0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */,
 				0AF36E3C28F2441C00314F79 /* Extentions+MKMapItem.swift */,
 				0A89F85528F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift */,
-				0AAD849328F825BD0050DA5D /* CapturedImageView.swift */,
 			);
 			path = Extentions;
 			sourceTree = "<group>";

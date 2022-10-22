@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LBTATools
 
 final class WelcomeViewController: UIViewController {
     
@@ -65,7 +66,7 @@ final class WelcomeViewController: UIViewController {
     }
     
     private func addSubViewForScrollView(){
-        for (index, item) in[WelcomePage1ViewController(), WelcomePage2ViewController(), WelcomePage3ViewController()].enumerated() {
+        for (index, item) in [WelcomePage1ViewController(), WelcomePage2ViewController(), WelcomePage3ViewController()].enumerated() {
             let vc = item
             addChild(item)
             vc.didMove(toParent: self)

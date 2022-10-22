@@ -89,14 +89,9 @@ extension PlanATripViewController {
     
     override func viewDidLayoutSubviews() {
         view.stack(mapView)
-        let container = UIView()
-        view.addSubview(container)
         prepareFields()
-        container.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: .none, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
-        container.withHeight(45)
-        exitBtn.withSize(.init(width: 45, height: 45))
-        container.hstack(exitBtn,UIView())
-        
+        view.addSubviews(exitBtn)
+        exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -178,7 +173,7 @@ extension PlanATripViewController {
     
     private func prepareFields() {
         view.addSubview(fieldsBG)
-        fieldsBG.anchor(top: .none, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
+        fieldsBG.anchor(top: .none, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 10, right: 10))
         fieldsBG.withHeight(200)
         fieldsBG.hstack(fieldsBG.stack(
             UIView(),

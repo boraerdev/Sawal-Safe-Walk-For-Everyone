@@ -29,7 +29,9 @@ final class SideMenuViewController: UIViewController {
 extension SideMenuViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .main3
+        view.applyGradient(colours: [.main3Light, .main3])
+        view.clipsToBounds = true
+        
         prepareExitBtn()
         
         view.stack(

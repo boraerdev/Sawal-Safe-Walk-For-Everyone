@@ -113,7 +113,8 @@ extension HomeViewController {
             btn.layer.cornerRadius = 8
             btn.layer.masksToBounds = true
             btn.addSubview(bgImg)
-            bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -20, left: 0, bottom: 0, right: -20))
+            bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -40, left: 0, bottom: 0, right: -130), size: .init(width: 350, height: 350))
+
             
             //Title
             let titleBtn = UILabel(text: titles[i], font: .systemFont(ofSize: 28, weight: .heavy), textColor: .label, textAlignment: .left, numberOfLines: 2)

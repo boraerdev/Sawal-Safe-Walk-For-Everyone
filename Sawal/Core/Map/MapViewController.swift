@@ -97,8 +97,7 @@ extension MapViewController {
         view.addSubview(mapKit)
         mapKit.fillSuperview()
         view.addSubview(hudContainer)
-        
-        hudContainer.anchor(top: nil, leading: mapKit.leadingAnchor, bottom: mapKit.safeAreaLayoutGuide.bottomAnchor, trailing: mapKit.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 10))
+        hudContainer.anchor(top: nil, leading: mapKit.leadingAnchor, bottom: mapKit.safeAreaLayoutGuide.bottomAnchor, trailing: mapKit.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 10, right: 10))
         hudContainer.withHeight(150)
     }
     
@@ -112,8 +111,6 @@ extension MapViewController {
                 }
             })
         }.disposed(by: disposeBag)
-        print(mapKit.annotations.count)
-        //mapKit.showAnnotations(mapKit.annotations, animated: false)
     }
     
     private func handleBackBtn() {
@@ -123,43 +120,10 @@ extension MapViewController {
         btn.layer.cornerRadius = 8
         btn.dropShadow()
         view.addSubview(btn)
-        btn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
+        btn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
     }
     
-    
-}
-
-//MARK: CLLocation Delegate
-extension MapViewController: CLLocationManagerDelegate {
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch status {
-        case .denied:
-            clManager.requestWhenInUseAuthorization()
-        case .authorizedWhenInUse:
-            clManager.startUpdatingLocation()
-        default:
-            print("ok")
-        }
-    }
-}
-
-//MARK: MKMapView Delegate
-extension MapViewController: MKMapViewDelegate {
-    
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        viewModel.currentCoordinate.accept(userLocation.coordinate)
-        mapKit.userTrackingMode = .followWithHeading
-    }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if !(annotation is RiskColoredAnnotations) {return nil}
-        
-        var annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id2")
+    private func handleAnnotationImage(_ annotation: MKAnnotation, for annotationView: MKAnnotationView ) {
         annotationView.canShowCallout = true
         if let customPin = annotation as? RiskColoredAnnotations {
             if customPin.post.riskDegree == 0 {
@@ -170,20 +134,9 @@ extension MapViewController: MKMapViewDelegate {
                 annotationView.image = .init(named: "HighPin")
             }
         }
-        return annotationView
     }
     
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        hudContainer.isHidden = false
-        currentSelectCallout?.removeFromSuperview()
-        tempHud?.removeFromSuperview()
-        if !(view.annotation is RiskColoredAnnotations) {return}
-        
-        //Def
-        postInfoHud(view: view)
-    }
-    
-    private func postInfoHud(view: MKAnnotationView) {
+    private func setupPostInfoHud(view: MKAnnotationView) {
         let customCallout = UIView(backgroundColor: .clear)
         let hudView = UIView(backgroundColor: .secondarySystemBackground)
         let post: Post!
@@ -193,15 +146,11 @@ extension MapViewController: MKMapViewDelegate {
         let descLbl = UILabel(text: "", font: .systemFont(ofSize: 13), textColor: .secondaryLabel, numberOfLines: 2)
         let infoBtn = UIButton(image: .init(systemName: "info.circle.fill")!, tintColor: .label, target: self, action: #selector(didTapGoDetail))
         let shareBtn = UIButton(image: .init(systemName: "square.and.arrow.up.circle.fill")!, tintColor: .label, target: self, action: #selector(didTapShare(sender:)))
-        
-        
         view.addSubview(customCallout)
-        self.mapKit.addSubview(hudView)
         
         hudView.layer.cornerRadius = 8
         hudView.dropShadow()
         
-
         if let ano = view.annotation as? RiskColoredAnnotations {
             post = ano.post
             selectedPost = ano.post
@@ -213,13 +162,14 @@ extension MapViewController: MKMapViewDelegate {
             loc.fetchLocationInfo { locationInfo, error in
                 adressLbl.text = locationInfo?.name
             }
-            
         }
         
         hudContainer.addSubview(hudView)
         hudView.fillSuperview()
+        
         configureCustomCallout(customCallout: customCallout, view: view)
         customCallout.stack(bgImage)
+        
         hudView.stack(
             hudView.hstack(riskDEgreeLbl,UIView(), shareBtn, infoBtn, alignment: .top),
             UIView(),
@@ -242,6 +192,45 @@ extension MapViewController: MKMapViewDelegate {
         customCallout.bottomAnchor.constraint(equalTo: view.topAnchor, constant: -10).isActive = true
         customCallout.withWidth(100)
         customCallout.withHeight(150)
+    }
+    
+}
+
+//MARK: CLLocation Delegate
+extension MapViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .denied:
+            clManager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse:
+            clManager.startUpdatingLocation()
+        default:
+            print("ok")
+        }
+    }
+}
+
+//MARK: MKMapView Delegate
+extension MapViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        viewModel.currentCoordinate.accept(userLocation.coordinate)
+        mapKit.userTrackingMode = .followWithHeading
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if !(annotation is RiskColoredAnnotations) {return nil}
+        var annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id2")
+        handleAnnotationImage(annotation, for: annotationView)
+        return annotationView
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        hudContainer.isHidden = false
+        currentSelectCallout?.removeFromSuperview()
+        tempHud?.removeFromSuperview()
+        if !(view.annotation is RiskColoredAnnotations) {return}
+        setupPostInfoHud(view: view)
     }
     
 }
@@ -275,12 +264,7 @@ extension MapViewController {
         if let riskUrl = URL(string: "http://maps.apple.com/?ll=\((selectedPost?.location.latitude)!),\((selectedPost?.location.longitude)!)") {
             let objectsToShare = [textToShare, riskUrl,riskImg] as [Any]
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-            
-            //Excluded Activities
             activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToTwitter, .postToFacebook]
-            //
-            
-            //activityVC.popoverPresentationController?.sourceView = sender
             self.present(activityVC, animated: true, completion: nil)
         }
     }

@@ -9,6 +9,7 @@ import UIKit
 import Lottie
 import RxSwift
 import RxCocoa
+import LBTATools
 
 protocol SignInViewControllerInterface: AnyObject {
     
@@ -129,7 +130,6 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         viewModel.delegate = self
-        
         prepareStacks()
         prepareButtons()
     }
@@ -150,22 +150,21 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         view.addSubview(passFieldText)
         view.addSubview(forgotBtn)
         view.addSubview(spinner)
-        
-        
+
         NSLayoutConstraint.activate([
             signInAnimation.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             signInAnimation.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant:  -100),
             signInAnimation.widthAnchor.constraint(equalToConstant: 300),
             signInAnimation.heightAnchor.constraint(equalToConstant: 300),
-            
+
             signField.heightAnchor.constraint(equalToConstant: 45),
             passField.heightAnchor.constraint(equalToConstant: 45),
             registerInButton.heightAnchor.constraint(equalToConstant: 45),
             signInButton.heightAnchor.constraint(equalToConstant: 45),
-            
+
             signFieldText.leadingAnchor.constraint(equalTo: signField.leadingAnchor, constant: 20),
             signFieldText.topAnchor.constraint(equalTo: signField.topAnchor, constant: -5),
-            
+
             passFieldText.leadingAnchor.constraint(equalTo: passField.leadingAnchor, constant: 20),
             passFieldText.topAnchor.constraint(equalTo: passField.topAnchor, constant: -5),
 
@@ -173,11 +172,11 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
             signStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             signStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             signStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
-            
+
             forgotBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             forgotBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            
         ])
-        
         handleButtonGradients()
     }
 }
@@ -185,9 +184,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
 
 //MARK: Objc
 extension SignInViewController {
-
     @objc func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
     
@@ -219,10 +216,8 @@ extension SignInViewController {
                 result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
             }
             .disposed(by: disposeBag)
-            
         })
         .disposed(by: disposeBag)
-        
     }
     
     private func handleButtonGradients(){

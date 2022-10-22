@@ -29,7 +29,7 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     let finishAno: MKAnnotation? = nil
     var mapView = MKMapView()
     let manager = CLLocationManager()
-    static let viewModel = PlanATripViewModel()
+    let viewModel = PlanATripViewModel.shared
     var startItem: MKMapItem? = nil
     var finishItem: MKMapItem? = nil
     let speechSynthesizer = AVSpeechSynthesizer()
@@ -37,7 +37,6 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     var steps: [MKRoute.Step] = []
 
     //MARK: UI
-    
     private lazy var fieldsBG = UIView(backgroundColor: .secondarySystemBackground)
     
     private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10)
@@ -90,15 +89,14 @@ extension PlanATripViewController {
     override func viewDidLayoutSubviews() {
         view.stack(mapView)
         prepareFields()
-        view.addSubviews(exitBtn)
-        exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
+        preapreExitBtn()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        PlanATripViewController.viewModel.fetchSharedLocations()
+        viewModel.fetchSharedLocations()
         handleSharedAnnotations()
         navigationController?.navigationBar.isHidden = true
-        PlanATripViewController.viewModel.viewDidLoad()
+        viewModel.viewDidLoad()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -110,8 +108,13 @@ extension PlanATripViewController {
 //MARK: Funcs
 extension PlanATripViewController {
     
+    fileprivate func preapreExitBtn() {
+        view.addSubviews(exitBtn)
+        exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
+    }
+    
     private func prepareRiskView() {
-        PlanATripViewController.viewModel.riskMode.subscribe { [weak self] result in
+        viewModel.riskMode.subscribe { [weak self] result in
             if result.element == .inAreaCloser || result.element == .inAreaAway {
                 self?.AddRiskView()
                 self?.isNowPlaying = true
@@ -168,7 +171,7 @@ extension PlanATripViewController {
         manager.startUpdatingLocation()
         mapView.delegate = self
         mapView.showsUserLocation = true
-        PlanATripViewController.viewModel.view = self
+        viewModel.view = self
     }
     
     private func prepareFields() {
@@ -188,7 +191,7 @@ extension PlanATripViewController {
     }
     
     private func startMonitoring() {
-        let route = PlanATripViewController.viewModel.sharedRoute.value
+        let route = viewModel.sharedRoute.value
         guard let route = route else {return}
         for i in 0 ..< route.steps.count {
             let step = route.steps[i]
@@ -238,7 +241,7 @@ extension PlanATripViewController {
     }
     
     private func requestForDirections() {
-        PlanATripViewController.viewModel.requestForDirections { [weak self] route in
+        viewModel.requestForDirections { [weak self] route in
             DispatchQueue.main.async {
                 self?.tripAnnotations.removeAll(keepingCapacity: false)
                 self?.mapView.removeOverlays(self?.mapView.overlays ?? [])
@@ -249,7 +252,7 @@ extension PlanATripViewController {
     }
     
     private func handleSharedAnnotations() {
-        PlanATripViewController.viewModel.posts.subscribe { [weak self] posts in
+        viewModel.posts.subscribe { [weak self] posts in
             posts.element?.forEach({ post in
                 let ano = RiskColoredAnnotations(post: post)
                 ano.coordinate = .init(latitude: post.location.latitude, longitude: post.location.longitude)
@@ -273,7 +276,7 @@ extension PlanATripViewController {
 extension PlanATripViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let loca = locations.first else {return}
-        PlanATripViewController.viewModel.currentLocation.accept(loca.coordinate)
+        viewModel.currentLocation.accept(loca.coordinate)
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -289,7 +292,6 @@ extension PlanATripViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         self.stepCounter += 1
-        print("DID ENTER DIRECTION AREA")
         if self.stepCounter < steps.count {
             let currentStep = steps[stepCounter]
             self.speech(message: "In \(currentStep.distance.rounded()) meters, \(currentStep.instructions)")
@@ -301,6 +303,7 @@ extension PlanATripViewController: CLLocationManagerDelegate {
             }
         }
     }
+    
 }
 
 //MARK: MapView Delegate
@@ -330,10 +333,6 @@ extension PlanATripViewController: MKMapViewDelegate {
         return annotationView
     }
     
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-       // PlanATripViewController.viewModel.currentLocation.accept(userLocation.coordinate)
-    }
-
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
            let polylineRenderer = MKPolylineRenderer(overlay: overlay)
         polylineRenderer.strokeColor = .systemRed
@@ -351,12 +350,12 @@ extension PlanATripViewController {
     
     @objc func didTapStart() {
         guard startField.text != "", finishField.text != "" else {return}
-        steps = PlanATripViewController.viewModel.sharedRoute.value?.steps ?? []
+        steps = viewModel.sharedRoute.value?.steps ?? []
         
-        if (PlanATripViewController.viewModel.startLocation.value?.distance(to: (manager.location?.coordinate)!))! > 200 {
+        if (viewModel.startLocation.value?.distance(to: (manager.location?.coordinate)!))! > 200 {
             mapView.setUserTrackingMode(.none, animated: true)
         } else {
-            mapView.camera = .init(lookingAtCenter: PlanATripViewController.viewModel.currentLocation.value!, fromDistance: .init(50), pitch: .init(45), heading: CLLocationDirection(0))
+            mapView.camera = .init(lookingAtCenter: viewModel.currentLocation.value!, fromDistance: .init(50), pitch: .init(45), heading: CLLocationDirection(0))
             mapView.setCameraZoomRange(.init(maxCenterCoordinateDistance: 1000), animated: true)
             mapView.setUserTrackingMode(.followWithHeading, animated: true)
         }
@@ -365,20 +364,18 @@ extension PlanATripViewController {
         mapView.showAnnotations(tripAnnotations, animated: false)
     }
     
-
     @objc private func didTapChangeStart() {
         let vc = MapSearchViewController()
         vc.prepareCurrentLocationForSearch = { [weak self] in
             self?.startField.text = "Current Location"
-            PlanATripViewController.viewModel.startLocation.accept(PlanATripViewController.viewModel.currentLocation.value)
-            let item: MKMapItem = .init(placemark: .init(coordinate: PlanATripViewController.viewModel.currentLocation.value!))
+            self?.viewModel.startLocation.accept(self?.viewModel.currentLocation.value)
+            let item: MKMapItem = .init(placemark: .init(coordinate: (self?.viewModel.currentLocation.value)!))
             self?.addAnnotation(title: "Start", item: item)
-            
         }
         vc.selectionHandler = { [unowned self] item in
             self.startField.text = item.name
             self.navigationController?.popViewController(animated: true)
-            PlanATripViewController.viewModel.startLocation.accept(item.placemark.coordinate)
+            viewModel.startLocation.accept(item.placemark.coordinate)
             self.startItem = item
             updateStartFinishAnnotations()
         }
@@ -390,7 +387,7 @@ extension PlanATripViewController {
         vc.selectionHandler = { [unowned self] item in
             self.finishField.text = item.name
             self.navigationController?.popViewController(animated: true)
-            PlanATripViewController.viewModel.finishLocation.accept(item.placemark.coordinate)
+            viewModel.finishLocation.accept(item.placemark.coordinate)
             self.finishItem = item
             updateStartFinishAnnotations()
         }

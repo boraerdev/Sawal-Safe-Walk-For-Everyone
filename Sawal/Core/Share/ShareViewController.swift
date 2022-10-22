@@ -177,7 +177,6 @@ extension ShareViewController {
         mapView.layer.cornerRadius = 8
         configureRiskButtons()
         manager.startUpdatingLocation()
-        
     }
     
     private func handleMapView() {
@@ -257,16 +256,7 @@ extension ShareViewController {
         }.disposed(by: disposeBag)
     }
     
-}
-
-//MARK: MapView Delegate
-extension ShareViewController: MKMapViewDelegate {
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        fetchLocationInfo(for: mapView.userLocation.location)
-        currentLocation.accept(mapView.userLocation.location)
-        
-        annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
-        
+    private func prepareannotationView(for annotationView: MKAnnotationView?) {
         annotationView?.layer.borderWidth = 2
         annotationView?.contentMode = .scaleAspectFill
         annotationView?.layer.borderColor = UIColor.systemBackground.cgColor
@@ -274,11 +264,19 @@ extension ShareViewController: MKMapViewDelegate {
         annotationView?.layer.cornerRadius = 8
         annotationView?.clipsToBounds = true
         annotationView?.layer.masksToBounds = true
-        
-        bindMapViewImage()
-        
         annotationView?.makeConstraints(top: nil, left: nil, right: nil, bottom: nil, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 0, width: 70, height: 70)
-        
+    }
+    
+}
+
+//MARK: MapView Delegate
+extension ShareViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        fetchLocationInfo(for: mapView.userLocation.location)
+        currentLocation.accept(mapView.userLocation.location)
+        annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
+        prepareannotationView(for: annotationView)
+        bindMapViewImage()
         if annotation.coordinate.latitude == mapView.userLocation.coordinate.latitude {
             return annotationView
         }else {

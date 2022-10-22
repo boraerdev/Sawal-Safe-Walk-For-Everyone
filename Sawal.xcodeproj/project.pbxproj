@@ -17,6 +17,7 @@
 		0A53BDA928F9B3A50042BB71 /* RiskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */; };
 		0A53BDAB28F9B6330042BB71 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */; };
 		0A53BDAD28F9C91A0042BB71 /* warning.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A53BDAC28F9C91A0042BB71 /* warning.json */; };
+		0A58FA1D29049730008F3C47 /* MapSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A58FA1C29049730008F3C47 /* MapSearchCell.swift */; };
 		0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613028F04A3500019BC4 /* CustomCameraController.swift */; };
 		0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */; };
 		0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */; };
@@ -70,6 +71,7 @@
 		0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskDetailViewController.swift; sourceTree = "<group>"; };
 		0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		0A53BDAC28F9C91A0042BB71 /* warning.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = warning.json; sourceTree = "<group>"; };
+		0A58FA1C29049730008F3C47 /* MapSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchCell.swift; sourceTree = "<group>"; };
 		0A67613028F04A3500019BC4 /* CustomCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCameraController.swift; sourceTree = "<group>"; };
 		0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extentions.swift"; sourceTree = "<group>"; };
 		0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage2ViewController.swift; sourceTree = "<group>"; };
@@ -167,6 +169,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		0A58FA1B2904971E008F3C47 /* MapSearch */ = {
+			isa = PBXGroup;
+			children = (
+				0A58FA1C29049730008F3C47 /* MapSearchCell.swift */,
+				0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */,
+			);
+			path = MapSearch;
+			sourceTree = "<group>";
+		};
 		0A7A730A28FF0CAB00920856 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -178,9 +189,9 @@
 		0A7B570928F1D0A900146147 /* PlanATrip */ = {
 			isa = PBXGroup;
 			children = (
+				0A58FA1B2904971E008F3C47 /* MapSearch */,
 				0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */,
 				0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */,
-				0A283C2028F2259B00CEE63A /* MapSearchViewController.swift */,
 				0A8C947228F70D630053AEAB /* RiskViewController.swift */,
 			);
 			path = PlanATrip;
@@ -536,6 +547,7 @@
 				0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */,
 				0A7D123728E20161009C2C4C /* PersonViewController.swift in Sources */,
 				0AF910E528E42C9C004779EF /* HomeControllerViewModel.swift in Sources */,
+				0A58FA1D29049730008F3C47 /* MapSearchCell.swift in Sources */,
 				0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */,
 				0ACB8F8828EA2EFD00A17CC4 /* WelcomePage3ViewController.swift in Sources */,
 				0AEA481628ECD566002538D6 /* UIColor+Extentions.swift in Sources */,

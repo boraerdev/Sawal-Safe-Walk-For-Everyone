@@ -35,26 +35,14 @@ final class RiskView: UIViewController {
     //MARK: Core
     override func viewDidLoad(){
         super.viewDidLoad()
-        
         view.backgroundColor = .systemBackground
         warnLbl.withWidth(300)
-        
         self.navigationItem.setHidesBackButton(true, animated: true)
-        
         navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .close, target: self, action: #selector(didTapClose))
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        view.hstack(
-            view.stack(
-                warningAnimation,
-                warnLbl,
-                meter,
-                spacing: 10,
-                alignment: .center),
-            alignment: .center)
         warningAnimation.withSize(.init(width: 250, height: 250))
         warningAnimation.play()
         playSound()
@@ -66,6 +54,17 @@ final class RiskView: UIViewController {
         player?.stop()
         warningAnimation.stop()
         meter.removeFromSuperview()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        view.hstack(
+            view.stack(
+                warningAnimation,
+                warnLbl,
+                meter,
+                spacing: 10,
+                alignment: .center),
+            alignment: .center)
     }
     
 }
@@ -90,7 +89,7 @@ extension RiskView {
     }
     
     func bindTitle() {
-        PlanATripViewController.viewModel.distance.subscribe { [weak self] result in
+        PlanATripViewModel.shared.distance.subscribe { [weak self] result in
             if let res = result.element {
                 if let r = res {
                     self?.meter.text = String(format: "%.1f m", r)

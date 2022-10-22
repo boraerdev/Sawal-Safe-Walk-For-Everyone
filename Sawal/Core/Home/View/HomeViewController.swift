@@ -55,8 +55,6 @@ extension HomeViewController {
         prepareStack()
         performButtons()
     }
-    override func viewWillAppear(_ animated: Bool) {
-    }
 }
 
 //MARK: Funcs
@@ -82,7 +80,6 @@ extension HomeViewController {
     private func prepareStack() {
         let container = UIView()
         view.stack(container).withMargins(.init(top: 10, left: 20, bottom:0, right: 20))
-        
         container.stack(
             container.hstack(goMapBtn, shareRiskBtn, spacing: 10, distribution: .fillEqually),
             planTrpBtn,
@@ -90,7 +87,6 @@ extension HomeViewController {
             distribution: .fillEqually
         )
         configureButtons()
-        
     }
     
     private func configureButtons() {
@@ -115,7 +111,6 @@ extension HomeViewController {
             btn.addSubview(bgImg)
             bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -40, left: 0, bottom: 0, right: -130), size: .init(width: 350, height: 350))
 
-            
             //Title
             let titleBtn = UILabel(text: titles[i], font: .systemFont(ofSize: 28, weight: .heavy), textColor: .label, textAlignment: .left, numberOfLines: 2)
             btn.addSubview(titleBtn)

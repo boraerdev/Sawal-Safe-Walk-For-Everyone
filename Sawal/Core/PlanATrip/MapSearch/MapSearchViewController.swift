@@ -11,28 +11,6 @@ import MapKit
 import RxSwift
 import RxCocoa
 
-//Cell
-final class MapSearchCell: LBTAListCell<MKMapItem> {
-    
-    override var item: MKMapItem! {
-        didSet {
-            nameLbl.text = item.name
-            adressLbl.text = item.address()
-        }
-    }
-    
-    let nameLbl = UILabel()
-    
-    let adressLbl = UILabel(text: "", font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .left, numberOfLines: 2)
-    
-    override func setupViews() {
-        super.setupViews()
-        stack(nameLbl, adressLbl).withMargins(.allSides(20))
-        addSeparatorView()
-        backgroundColor = .systemBackground
-    }
-}
-
 final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem> {
     
     //MARF: Def
@@ -45,7 +23,7 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
     //MARK: UI
     private lazy var searchField = IndentedTextField(placeholder: "Search...", padding: 10, cornerRadius: 8, backgroundColor: .secondarySystemBackground)
     
-    private lazy var currentLocationBtn = UIButton(title: " Current Location", titleColor: .systemBackground, font: .systemFont(ofSize: 17), backgroundColor: .main3, target: self, action: #selector(didTapCur))
+    private lazy var currentLocationBtn = UIButton(title: " Current Location", titleColor: .systemBackground, font: .systemFont(ofSize: 17), backgroundColor: .main3, target: self, action: #selector(didTapCurrentLocation))
 
     //MARK: Core
     override func viewDidLoad() {
@@ -61,6 +39,8 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
     }
 }
 
+
+//MARK: Funcs
 extension MapSearchViewController {
     
     private func prepareMainView() {
@@ -75,11 +55,6 @@ extension MapSearchViewController {
             .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
             .bind(to: searchText)
             .disposed(by: disposeBag)
-    }
-    
-    @objc func didTapCur() {
-        prepareCurrentLocationForSearch?()
-        navigationController?.popViewController(animated: true)
     }
     
     private func performLocalSearch() {
@@ -125,6 +100,11 @@ extension MapSearchViewController {
     }
     
     @objc func didTapBack() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func didTapCurrentLocation() {
+        prepareCurrentLocationForSearch?()
         navigationController?.popViewController(animated: true)
     }
     

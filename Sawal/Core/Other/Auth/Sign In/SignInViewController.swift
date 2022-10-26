@@ -10,6 +10,10 @@ import Lottie
 import RxSwift
 import RxCocoa
 import LBTATools
+import FirebaseAuth
+import FirebaseCore
+import GoogleSignIn
+import FirebaseFirestore
 
 protocol SignInViewControllerInterface: AnyObject {
     
@@ -55,7 +59,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         field.layer.borderColor = UIColor.secondarySystemBackground.cgColor
         field.leftViewMode = .always
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
-        //field.translatesAutoresizingMaskIntoConstraints = false
+        field.placeholder = "example@mail.com"
         return field
     }()
     
@@ -76,7 +80,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
-        //field.translatesAutoresizingMaskIntoConstraints = false
+        field.placeholder = "*********"
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.secondarySystemBackground.cgColor
         field.isSecureTextEntry = true
@@ -123,6 +127,19 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         return btn
     }()
     
+    private lazy var googleSignInBtn: UIView = {
+        let btn = UIView()
+        let attirbutedLabel = UILabel(text: "Contiune with Google", font: .systemFont(ofSize: 15), textColor: .systemBlue, numberOfLines: 1)
+        btn.layer.cornerRadius = 8
+        let imhV = UIImageView(image: .init(named: "googlepng"), contentMode: .scaleAspectFit)
+        btn.stack(btn.hstack(imhV.withWidth(25), attirbutedLabel, spacing: 10), alignment: .center)
+        btn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(setupGoogle)))
+        btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
+        btn.layer.borderWidth = 1
+
+        return btn
+    }()
+    
     //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,6 +150,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         prepareStacks()
         prepareButtons()
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         signInAnimation.play()
@@ -160,6 +178,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
             signField.heightAnchor.constraint(equalToConstant: 45),
             passField.heightAnchor.constraint(equalToConstant: 45),
             registerInButton.heightAnchor.constraint(equalToConstant: 45),
+            googleSignInBtn.heightAnchor.constraint(equalToConstant: 45),
             signInButton.heightAnchor.constraint(equalToConstant: 45),
 
             signFieldText.leadingAnchor.constraint(equalTo: signField.leadingAnchor, constant: 20),
@@ -238,11 +257,139 @@ extension SignInViewController {
             signField,
             passField,
             signInButton,
+            UILabel(text: "or", font: .systemFont(ofSize: 11), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 1),
+            googleSignInBtn,
             registerInButton
         ])
         signStack.axis = .vertical
         signStack.distribution = .fill
         signStack.spacing = 10
         signStack.translatesAutoresizingMaskIntoConstraints = false
+    }
+}
+
+extension SignInViewController{
+    
+    func showTextInputPrompt(withMessage message: String,
+                              completionBlock: @escaping ((Bool, String?) -> Void)) {
+       let prompt = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+       let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+         completionBlock(false, nil)
+       }
+       weak var weakPrompt = prompt
+       let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+         guard let text = weakPrompt?.textFields?.first?.text else { return }
+         completionBlock(true, text)
+       }
+       prompt.addTextField(configurationHandler: nil)
+       prompt.addAction(cancelAction)
+       prompt.addAction(okAction)
+       present(prompt, animated: true, completion: nil)
+     }
+    
+    @objc func setupGoogle(){
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+
+        // Create Google Sign In configuration object.
+        let config = GIDConfiguration(clientID: clientID)
+
+        // Start the sign in flow!
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
+
+          if let error = error {
+              throwAlert(message: error.localizedDescription)
+            return
+          }
+
+          guard
+            let authentication = user?.authentication,
+            let idToken = authentication.idToken
+          else {
+            return
+          }
+
+          let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                         accessToken: authentication.accessToken)
+
+          // ...
+
+            Auth.auth().signIn(with: credential) { authResult, error in
+                if let error = error {
+                  let authError = error as NSError
+                  if authError.code == AuthErrorCode.secondFactorRequired.rawValue {
+                    // The user is a multi-factor user. Second factor challenge is required.
+                    let resolver = authError
+                      .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
+                    var displayNameString = ""
+                    for tmpFactorInfo in resolver.hints {
+                      displayNameString += tmpFactorInfo.displayName ?? ""
+                      displayNameString += " "
+                    }
+                    self.showTextInputPrompt(
+                      withMessage: "Select factor to sign in\n\(displayNameString)",
+                      completionBlock: { userPressedOK, displayName in
+                        var selectedHint: PhoneMultiFactorInfo?
+                        for tmpFactorInfo in resolver.hints {
+                          if displayName == tmpFactorInfo.displayName {
+                            selectedHint = tmpFactorInfo as? PhoneMultiFactorInfo
+                          }
+                        }
+                        PhoneAuthProvider.provider()
+                          .verifyPhoneNumber(with: selectedHint!, uiDelegate: nil,
+                                             multiFactorSession: resolver
+                                               .session) { verificationID, error in
+                            if error != nil {
+                              print(
+                                "Multi factor start sign in failed. Error: \(error.debugDescription)"
+                              )
+                            } else {
+                              self.showTextInputPrompt(
+                                withMessage: "Verification code for \(selectedHint?.displayName ?? "")",
+                                completionBlock: { userPressedOK, verificationCode in
+                                  let credential: PhoneAuthCredential? = PhoneAuthProvider.provider()
+                                    .credential(withVerificationID: verificationID!,
+                                                verificationCode: verificationCode!)
+                                  let assertion: MultiFactorAssertion? = PhoneMultiFactorGenerator
+                                    .assertion(with: credential!)
+                                  resolver.resolveSignIn(with: assertion!) { authResult, error in
+                                    if error != nil {
+                                      print(
+                                        "Multi factor finanlize sign in failed. Error: \(error.debugDescription)"
+                                      )
+                                    } else {
+                                      self.navigationController?.popViewController(animated: true)
+                                    }
+                                  }
+                                }
+                              )
+                            }
+                          }
+                      }
+                    )
+                  } else {
+                      throwAlert(message: error.localizedDescription)
+                    return
+                  }
+                  // ...
+                  return
+                }
+                // User is signed in
+                // ...
+                let data = ["mail": authResult?.user.email, "fullName": authResult?.user.displayName] as [String: Any]
+                Firestore.firestore().collection("users").document(authResult?.user.uid ?? "").setData(data) { err in
+                    guard err == nil else {
+                        print("burada hata")
+                        return
+                    }
+                    AuthManager.shared.fetchUser { _ in}
+                    let vc = UINavigationController(rootViewController: HomeViewController())
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true)
+                    print("Sucessfully login in")
+
+                }
+                
+            }
+        }
     }
 }

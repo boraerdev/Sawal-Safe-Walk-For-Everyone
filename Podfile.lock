@@ -596,6 +596,12 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
+  - AppAuth (1.6.0):
+    - AppAuth/Core (= 1.6.0)
+    - AppAuth/ExternalUserAgent (= 1.6.0)
+  - AppAuth/Core (1.6.0)
+  - AppAuth/ExternalUserAgent (1.6.0):
+    - AppAuth/Core
   - BoringSSL-GRPC (0.0.24):
     - BoringSSL-GRPC/Implementation (= 0.0.24)
     - BoringSSL-GRPC/Interface (= 0.0.24)
@@ -651,6 +657,10 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleSignIn (6.2.4):
+    - AppAuth (~> 1.5)
+    - GTMAppAuth (~> 1.3)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
   - GoogleUtilities/AppDelegateSwizzler (7.8.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -717,6 +727,9 @@ PODS:
     - gRPC-Core/Interface (= 1.44.0)
     - Libuv-gRPC (= 0.0.10)
   - gRPC-Core/Interface (1.44.0)
+  - GTMAppAuth (1.3.1):
+    - AppAuth/Core (~> 1.6)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
   - GTMSessionFetcher/Core (2.1.0)
   - IQKeyboardManagerSwift (6.5.10)
   - Kingfisher (7.4.0)
@@ -747,6 +760,7 @@ DEPENDENCIES:
   - FirebaseFirestore (~> 9.6)
   - FirebaseFirestoreSwift (~> 9.6)
   - FirebaseStorage (~> 9.6)
+  - GoogleSignIn
   - gRPC-Core (~> 1.44)
   - IQKeyboardManagerSwift
   - Kingfisher (~> 7.4)
@@ -758,6 +772,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - AppAuth
     - BoringSSL-GRPC
     - FirebaseAppCheckInterop
     - FirebaseAuth
@@ -771,9 +786,11 @@ SPEC REPOS:
     - FirebaseStorage
     - FirebaseStorageInternal
     - GoogleDataTransport
+    - GoogleSignIn
     - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
+    - GTMAppAuth
     - GTMSessionFetcher
     - IQKeyboardManagerSwift
     - Kingfisher
@@ -789,6 +806,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
+  AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   FirebaseAppCheckInterop: d5ecda0c09f8069406643d6e0fa12c09d1b736e3
   FirebaseAuth: e4a5d3c36e778e41141b91cc861103a441d80bcc
@@ -802,9 +820,11 @@ SPEC CHECKSUMS:
   FirebaseStorage: 1fead543a1f441c3b434c1c9f12560dd82f8b568
   FirebaseStorageInternal: 81d8a597324ccd06c41a43c5700bc1185a2fc328
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
+  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
   GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
   "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
   gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
+  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: ffbb25ec00ebcb5201adab0a56d808f6f1902d9f
   IQKeyboardManagerSwift: 52962c76ab33532f15ad9f3ff4e5715eda5335bb
   Kingfisher: 596b207973051aae5e4c54a1c1cb39837ea10d36
@@ -818,6 +838,6 @@ SPEC CHECKSUMS:
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
 
-PODFILE CHECKSUM: 0469da2c17ee327703e1dc4fa5f0b04ebe327725
+PODFILE CHECKSUM: 65a2347a02502081fe650fa6da3be6db1eaaf01e
 
 COCOAPODS: 1.11.3

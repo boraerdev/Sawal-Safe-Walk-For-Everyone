@@ -14,8 +14,6 @@
 		0A2F2BD128FA042B001C823D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2F2BD028FA042B001C823D /* User.swift */; };
 		0A2F2BD428FA0447001C823D /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2F2BD328FA0447001C823D /* Post.swift */; };
 		0A42A95628EA0D6200B0F380 /* login.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A42A95528EA0D6200B0F380 /* login.json */; };
-		0A45EED22909624400B1CC0A /* DirectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A45EED12909624400B1CC0A /* DirectionCell.swift */; };
-		0A5263D929090FEF004598AA /* ShowRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5263D829090FEF004598AA /* ShowRouteViewController.swift */; };
 		0A53BDA928F9B3A50042BB71 /* RiskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */; };
 		0A53BDAB28F9B6330042BB71 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */; };
 		0A53BDAD28F9C91A0042BB71 /* warning.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A53BDAC28F9C91A0042BB71 /* warning.json */; };
@@ -70,8 +68,6 @@
 		0A2F2BD028FA042B001C823D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = Sawal/Model/User.swift; sourceTree = SOURCE_ROOT; };
 		0A2F2BD328FA0447001C823D /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		0A42A95528EA0D6200B0F380 /* login.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = login.json; sourceTree = "<group>"; };
-		0A45EED12909624400B1CC0A /* DirectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionCell.swift; sourceTree = "<group>"; };
-		0A5263D829090FEF004598AA /* ShowRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowRouteViewController.swift; sourceTree = "<group>"; };
 		0A53BDA828F9B3A50042BB71 /* RiskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskDetailViewController.swift; sourceTree = "<group>"; };
 		0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		0A53BDAC28F9C91A0042BB71 /* warning.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = warning.json; sourceTree = "<group>"; };
@@ -173,15 +169,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		0A5263D729090FD9004598AA /* ShowRoute */ = {
-			isa = PBXGroup;
-			children = (
-				0A5263D829090FEF004598AA /* ShowRouteViewController.swift */,
-				0A45EED12909624400B1CC0A /* DirectionCell.swift */,
-			);
-			path = ShowRoute;
-			sourceTree = "<group>";
-		};
 		0A58FA1B2904971E008F3C47 /* MapSearch */ = {
 			isa = PBXGroup;
 			children = (
@@ -202,7 +189,6 @@
 		0A7B570928F1D0A900146147 /* PlanATrip */ = {
 			isa = PBXGroup;
 			children = (
-				0A5263D729090FD9004598AA /* ShowRoute */,
 				0A58FA1B2904971E008F3C47 /* MapSearch */,
 				0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */,
 				0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */,
@@ -559,7 +545,6 @@
 				0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */,
 				0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */,
 				0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */,
-				0A45EED22909624400B1CC0A /* DirectionCell.swift in Sources */,
 				0A7D123728E20161009C2C4C /* PersonViewController.swift in Sources */,
 				0AF910E528E42C9C004779EF /* HomeControllerViewModel.swift in Sources */,
 				0A58FA1D29049730008F3C47 /* MapSearchCell.swift in Sources */,
@@ -580,7 +565,6 @@
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,
 				0AA7F08328F0D2D2000ED5D3 /* ImageService.swift in Sources */,
 				0AA7F07F28F0CFC5000ED5D3 /* PostService.swift in Sources */,
-				0A5263D929090FEF004598AA /* ShowRouteViewController.swift in Sources */,
 				0A7D123E28E201C9009C2C4C /* ShareViewController.swift in Sources */,
 				0A9D22D528FF2EF500F97E48 /* SettingsViewController.swift in Sources */,
 				0AF36E3D28F2441C00314F79 /* Extentions+MKMapItem.swift in Sources */,

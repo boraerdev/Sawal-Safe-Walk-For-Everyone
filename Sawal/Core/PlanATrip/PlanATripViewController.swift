@@ -38,7 +38,13 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     var isInstructionsAppear = false
 
     //MARK: UI
-    private var fieldMainButtons = UIView()
+    private var instructionsHud = UIView(backgroundColor: .systemBackground)
+    
+    lazy var directionLbl = UILabel(font: .systemFont(ofSize: 15), textColor: .label, numberOfLines: 2)
+    
+    lazy var distanceLbl = UILabel(font: .systemFont(ofSize: 11), textColor: .secondaryLabel, numberOfLines: 1)
+    
+    lazy var directionImage = UIImageView(image: .init(systemName: "arrow.triangle.turn.up.right.diamond"), contentMode: .scaleAspectFit)
     
     private lazy var fieldsBG = UIView(backgroundColor: .secondarySystemBackground)
     
@@ -73,6 +79,7 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     
     private lazy var finishIcon = UIImageView(image: .init(systemName: "pin"))
     
+    
 }
 
 //MARK: Core
@@ -80,22 +87,19 @@ extension PlanATripViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        prepareMainView()
+        setupDelegates()
         addTargets()
+        view.stack(mapView)
+        prepareFields()
+        preapreExitBtn()
+        handleBlur()
         configureSomeUI()
         prepareRiskView()
         DispatchQueue.main.async {
             self.mapView.setUserTrackingMode(.followWithHeading, animated: false)
         }
     }
-    
-    override func viewDidLayoutSubviews() {
-        view.stack(mapView)
-        prepareFields()
-        preapreExitBtn()
-        handleBlur()
-    }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         viewModel.fetchSharedLocations()
         handleSharedAnnotations()
@@ -152,8 +156,10 @@ extension PlanATripViewController {
     }
     
     private func configureSomeUI() {
+        
+        //Corner Radius
+        instructionsHud.layer.cornerRadius = 8
         exitBtn.layer.cornerRadius = 8
-        exitBtn.dropShadow()
         fieldsBG.layer.cornerRadius = 8
         fieldsBG.layer.masksToBounds = true
         
@@ -165,7 +171,12 @@ extension PlanATripViewController {
             field.layer.cornerRadius = 8
             field.backgroundColor = .systemBackground
         }
-                
+        
+        instructionsHud.layer.borderWidth = 2
+        instructionsHud.layer.cornerRadius = 8
+        instructionsHud.layer.borderColor = UIColor.main3.cgColor
+        directionImage.tintColor = .main3
+
         startField.attributedPlaceholder = .init(string: "Start", attributes: [.foregroundColor: UIColor.label.withAlphaComponent(0.3)])
         
         finishField.attributedPlaceholder = .init(string: "Finish", attributes: [.foregroundColor: UIColor.label.withAlphaComponent(0.3)])
@@ -175,10 +186,13 @@ extension PlanATripViewController {
             icon.tintColor = .label.withAlphaComponent(0.3)
         }
         
+        //Shadows
         startBtn.dropShadow()
+        exitBtn.dropShadow()
+        instructionsHud.setupShadow(opacity: 0.5, radius: 10, offset: .zero, color: .main3)
     }
 
-    private func prepareMainView() {
+    private func setupDelegates() {
         manager.delegate = self
         manager.startUpdatingLocation()
         mapView.delegate = self
@@ -191,16 +205,24 @@ extension PlanATripViewController {
         
         fieldsBG.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 10, right: 10), size: .init(width: 0, height: 200))
 
-        fieldMainButtons.hstack(startBtn)
-        fieldMainButtons.withHeight(45)
-        
         fieldsBG.stack(
             UIView(),
             fieldsBG.hstack(startIcon.withWidth(25),startField,spacing: 10, distribution: .fill).withHeight(45),
             fieldsBG.hstack(finishIcon.withWidth(25),finishField,spacing: 10, distribution: .fill).withHeight(45),
-            fieldMainButtons,
+            startBtn.withHeight(45),
             UIView(),
             spacing: 10
+        ).withMargins(.allSides(12))
+        
+        instructionsHud.hstack(
+            directionLbl,
+            UIView(),
+            instructionsHud.stack(
+                directionImage.withSize(.init(width: 25, height: 25)),
+                distanceLbl,
+                alignment: .center,
+                distribution: .fill
+            )
         ).withMargins(.allSides(12))
         
         fieldsBG.dropShadow()
@@ -217,15 +239,33 @@ extension PlanATripViewController {
         }
     }
     
+    private func prepareStepData() {
+        viewModel.currentStep.subscribe { [weak self] result in
+            self?.setStepData(stepNumber: result.element ?? 0)
+        }.disposed(by: disposeBag)
+    }
+
+    private func setStepData(stepNumber: Int) {
+        let currentStep = steps[stepNumber]
+        directionLbl.text = currentStep.instructions
+        distanceLbl.text = String(format: "%.0f m", currentStep.distance)
+        if currentStep.instructions.localizedStandardContains("right") {
+            directionImage.image = .init(systemName: "arrow.turn.up.right")
+        } else if currentStep.instructions.localizedStandardContains("left") {
+            directionImage.image = .init(systemName: "arrow.turn.up.left")
+        } else {
+            directionImage.image = .init(systemName: "arrow.up")
+        }
+    }
+    
+    private func showStepsHud() {
+        view.addSubview(instructionsHud)
+        instructionsHud.anchor(top: nil, leading: view.leadingAnchor, bottom: fieldsBG.topAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 10, right: 10))
+    }
+    
     private func addTargets() {
         startField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeStart)))
         finishField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeFinish)))
-    }
-    
-    private func setupSomeUI() {
-        exitBtn.layer.cornerRadius = 8
-        header.applyGradient(colours: [.main3,.main3Light])
-        fieldsBG.applyGradient(colours: [.main3, .main3Light])
     }
     
     private func addAnnotation(title: String, item: MKMapItem) {
@@ -307,13 +347,14 @@ extension PlanATripViewController: CLLocationManagerDelegate {
         }
     }
     
+    
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         self.stepCounter += 1
         viewModel.currentStep.accept(stepCounter)
         if self.stepCounter < steps.count {
             let currentStep = steps[stepCounter]
             self.speech(message: "In \(currentStep.distance.rounded()) meters, \(currentStep.instructions)")
-            
+            setStepData(stepNumber: stepCounter)
         } else {
             self.speech(message: "Arrived at destination")
             self.stepCounter = 0
@@ -365,6 +406,9 @@ extension PlanATripViewController {
     
     @objc func didTapExit() {
         navigationController?.popViewController(animated: true)
+        viewModel.filteredPostsOnRoute = []
+        viewModel.startLocation.accept(nil)
+        viewModel.finishLocation.accept(nil)
     }
     
     @objc func didTapStart() {
@@ -382,21 +426,9 @@ extension PlanATripViewController {
         
         startMonitoring()
         mapView.showAnnotations(tripAnnotations, animated: false)
-        
-        if isInstructionsAppear {
-            startBtn.setTitle("Instructions", for: .normal)
-            DispatchQueue.main.async {
-                self.startBtn.removeFromSuperview()
-            }
-            
-        } else {
-            startBtn.setTitle("Go", for: .normal)
-            viewModel.currentStep.accept(0)
-        }
-//        let vc = ShowRouteViewController()
-//        vc.items = steps
-//        navigationController?.pushViewController(vc, animated: true)
-        
+        prepareStepData()
+        showStepsHud()
+
     }
     
     @objc private func didTapChangeStart() {

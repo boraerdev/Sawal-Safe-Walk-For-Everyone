@@ -67,10 +67,12 @@ extension PlanATripViewModel: PlanATripViewModelInterFace {
                 return true
             }
         }
+        print("count: \(filteredPostsOnRoute.count)")
         completion(filteredPostsOnRoute)
     }
     
     func detectRisk(postList: [Post]) {
+        guard postList.count != 0 else {return}
         var postCoor: CLLocationCoordinate2D = .init(latitude: 0, longitude: 0)
         DispatchQueue.global(qos: .userInteractive).async {
             self.currentLocation.subscribe { [weak self] result in

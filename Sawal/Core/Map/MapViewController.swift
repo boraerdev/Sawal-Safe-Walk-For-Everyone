@@ -49,6 +49,7 @@ extension MapViewController {
         addClearGesture()
         handleMapKit()
         handleBackBtn()
+        handleBlur()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,6 +70,14 @@ extension MapViewController {
 
 //MARK: Funcs
 extension MapViewController {
+    
+    private func handleBlur() {
+        let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        let visualTopBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        view.addSubviews(visualBottomBlur,visualTopBlur)
+        visualBottomBlur.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        visualTopBlur.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor)
+    }
     
     private func prepareMainView() {
         view.backgroundColor = .systemBackground

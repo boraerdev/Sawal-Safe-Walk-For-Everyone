@@ -35,8 +35,11 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     let speechSynthesizer = AVSpeechSynthesizer()
     var stepCounter = 0
     var steps: [MKRoute.Step] = []
+    var isInstructionsAppear = false
 
     //MARK: UI
+    private var fieldMainButtons = UIView()
+    
     private lazy var fieldsBG = UIView(backgroundColor: .secondarySystemBackground)
     
     private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10)
@@ -90,6 +93,7 @@ extension PlanATripViewController {
         view.stack(mapView)
         prepareFields()
         preapreExitBtn()
+        handleBlur()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,6 +111,14 @@ extension PlanATripViewController {
 
 //MARK: Funcs
 extension PlanATripViewController {
+    
+    private func handleBlur() {
+        let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        let visualTopBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        view.addSubviews(visualBottomBlur,visualTopBlur)
+        visualBottomBlur.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        visualTopBlur.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor)
+    }
     
     fileprivate func preapreExitBtn() {
         view.addSubviews(exitBtn)
@@ -176,16 +188,21 @@ extension PlanATripViewController {
     
     private func prepareFields() {
         view.addSubview(fieldsBG)
-        fieldsBG.anchor(top: .none, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 10, right: 10))
-        fieldsBG.withHeight(200)
-        fieldsBG.hstack(fieldsBG.stack(
+        
+        fieldsBG.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 10, right: 10), size: .init(width: 0, height: 200))
+
+        fieldMainButtons.hstack(startBtn)
+        fieldMainButtons.withHeight(45)
+        
+        fieldsBG.stack(
             UIView(),
             fieldsBG.hstack(startIcon.withWidth(25),startField,spacing: 10, distribution: .fill).withHeight(45),
             fieldsBG.hstack(finishIcon.withWidth(25),finishField,spacing: 10, distribution: .fill).withHeight(45),
-            startBtn.withHeight(45),
+            fieldMainButtons,
             UIView(),
             spacing: 10
-        ), alignment: .center).withMargins(.allSides(12))
+        ).withMargins(.allSides(12))
+        
         fieldsBG.dropShadow()
         
     }
@@ -292,9 +309,11 @@ extension PlanATripViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         self.stepCounter += 1
+        viewModel.currentStep.accept(stepCounter)
         if self.stepCounter < steps.count {
             let currentStep = steps[stepCounter]
             self.speech(message: "In \(currentStep.distance.rounded()) meters, \(currentStep.instructions)")
+            
         } else {
             self.speech(message: "Arrived at destination")
             self.stepCounter = 0
@@ -350,6 +369,7 @@ extension PlanATripViewController {
     
     @objc func didTapStart() {
         guard startField.text != "", finishField.text != "" else {return}
+        isInstructionsAppear.toggle()
         steps = viewModel.sharedRoute.value?.steps ?? []
         
         if (viewModel.startLocation.value?.distance(to: (manager.location?.coordinate)!))! > 200 {
@@ -362,6 +382,21 @@ extension PlanATripViewController {
         
         startMonitoring()
         mapView.showAnnotations(tripAnnotations, animated: false)
+        
+        if isInstructionsAppear {
+            startBtn.setTitle("Instructions", for: .normal)
+            DispatchQueue.main.async {
+                self.startBtn.removeFromSuperview()
+            }
+            
+        } else {
+            startBtn.setTitle("Go", for: .normal)
+            viewModel.currentStep.accept(0)
+        }
+//        let vc = ShowRouteViewController()
+//        vc.items = steps
+//        navigationController?.pushViewController(vc, animated: true)
+        
     }
     
     @objc private func didTapChangeStart() {

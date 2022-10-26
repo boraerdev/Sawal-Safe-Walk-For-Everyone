@@ -90,7 +90,7 @@ extension HomeViewController {
     }
     
     private func configureButtons() {
-        let titles = ["Go Map", "Share a Risk", "Plan a Trip"]
+        let titles = ["Go Map", "Post a Risk", "Plan a Trip"]
         let icons = ["Location", "Attention", "Checkbox"]
         let colors: [UIColor] = [.main1Light, .main2Light, .main3Light]
         [goMapBtn,shareRiskBtn, planTrpBtn].enumerated().forEach { i,btn in

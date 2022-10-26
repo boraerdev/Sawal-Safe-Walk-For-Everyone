@@ -13,7 +13,7 @@ final class WelcomePage2ViewController: UIViewController {
     //MARK: UI
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "Share Risk"
+        lbl.text = "Post Risk"
         lbl.textColor = .systemBackground
         lbl.font = .systemFont(ofSize: 34, weight: .bold)
         return lbl

@@ -39,6 +39,4 @@ extension ShareViewModel: ShareViewModelInterFace {
             self?.isLoading.accept(false)
         }
     }
-    
-    
 }

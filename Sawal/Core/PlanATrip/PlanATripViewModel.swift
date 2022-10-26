@@ -32,6 +32,7 @@ final class PlanATripViewModel {
     let distance: BehaviorRelay<Double?> = .init(value: nil)
     let sharedRoute: BehaviorRelay<MKRoute?> = .init(value: nil)
     var filteredPostsOnRoute: [Post] = []
+    let currentStep: BehaviorRelay<Int> = .init(value: 0)
     static let shared = PlanATripViewModel()
 }
 

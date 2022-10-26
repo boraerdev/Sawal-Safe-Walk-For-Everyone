@@ -172,7 +172,7 @@ extension ShareViewController {
         manager.delegate = self
         view.backgroundColor = .secondarySystemBackground
         navigationItem.setHidesBackButton(true, animated: false)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(didTapShare))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Post", style: .plain, target: self, action: #selector(didTapShare))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didtapCancel))
         mapView.layer.cornerRadius = 8
         configureRiskButtons()
@@ -351,7 +351,7 @@ extension ShareViewController {
             throwAlert(title: "Ttr Again", message: "Description must be greater than 20 characters.",cancel: false)
             return
         }
-        throwAlert(title: "Share this report", message: "Are you sure you want to share this report?", cancel: true) { [weak self] in
+        throwAlert(title: "Share this report", message: "Are you sure you want to post this report?", cancel: true) { [weak self] in
             self?.viewModel.uploadPost { [weak self] result in
                 switch result {
                 case .success(_):

@@ -59,7 +59,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         field.layer.borderColor = UIColor.secondarySystemBackground.cgColor
         field.leftViewMode = .always
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
-        field.placeholder = "example@mail.com"
+        field.placeholder = "Mail"
         return field
     }()
     
@@ -80,7 +80,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
         field.leftView = .init(frame: .init(x: 0, y: 0, width: 15, height: 0))
-        field.placeholder = "*********"
+        field.placeholder = "Password"
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.secondarySystemBackground.cgColor
         field.isSecureTextEntry = true
@@ -113,6 +113,8 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         btn.setTitleColor(UIColor.main3, for: .normal)
         btn.layer.cornerRadius = 8
         btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
+        btn.layer.borderWidth = 1
         return btn
     }()
     
@@ -123,7 +125,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         btn.setTitle("Forgot Password?", for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 13)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitleColor(.label, for: .normal)
+        btn.setTitleColor(.secondaryLabel, for: .normal)
         return btn
     }()
     
@@ -257,8 +259,8 @@ extension SignInViewController {
             signField,
             passField,
             signInButton,
-            UILabel(text: "or", font: .systemFont(ofSize: 11), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 1),
             googleSignInBtn,
+            UILabel(text: "or", font: .systemFont(ofSize: 11), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 1),
             registerInButton
         ])
         signStack.axis = .vertical

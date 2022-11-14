@@ -735,6 +735,8 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to make sure you can take pictures.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to look at risk factors.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need your microphone to voice search";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "We need your voice to voice search";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -771,6 +773,8 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to make sure you can take pictures.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to look at risk factors.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need your microphone to voice search";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "We need your voice to voice search";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

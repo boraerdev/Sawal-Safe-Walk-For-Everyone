@@ -10,6 +10,8 @@ import LBTATools
 import MapKit
 import RxSwift
 import RxCocoa
+import AVFAudio
+import Speech
 
 final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem> {
     
@@ -19,6 +21,16 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
     var navBarHeight: CGFloat = 45
     var searchText: BehaviorRelay<String> = .init(value: "")
     let disposeBag = DisposeBag()
+    
+    //Voice search
+    let audioEngine = AVAudioEngine()
+    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
+    let request = SFSpeechAudioBufferRecognitionRequest()
+    var recognitionTask: SFSpeechRecognitionTask?
+    var detectedLabel: String = ""
+    var tmpBG: UIView? = nil
+    let micStatusImg = UIImageView(image: .init(systemName: "mic.fill"))
+
     
     //MARK: UI
     private lazy var searchField = IndentedTextField(placeholder: "Search...", padding: 10, cornerRadius: 8, backgroundColor: .secondarySystemBackground)
@@ -42,6 +54,59 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
 
 //MARK: Funcs
 extension MapSearchViewController {
+    
+    //For  voice search
+    func recordAndRecognizeSpeech() {
+        let node = audioEngine.inputNode
+        let recordingFormat = node.outputFormat(forBus: 1)
+        node.installTap(onBus: 1, bufferSize: 1024, format: recordingFormat) { buffer, _ in
+            self.request.append(buffer)
+        }
+        
+        audioEngine.prepare()
+        do {
+            try audioEngine.start()
+        } catch let err {
+            print(err.localizedDescription)
+        }
+        
+        guard let myRecognizer = SFSpeechRecognizer() else {
+            print("myrecognizer has not initiliazied")
+            return
+        }
+        
+        if !myRecognizer.isAvailable {
+            print("my recognizer has been already in usage")
+            return
+        }
+        
+        //Add mic view to center of main view
+        handleSpeechView()
+        
+        recognitionTask = speechRecognizer?.recognitionTask(with: request, resultHandler: { result, err in
+            guard err == nil, let result = result else {return}
+            let bestString =  result.bestTranscription.formattedString
+            self.detectedLabel = bestString
+            
+            for segment in result.bestTranscription.segments {
+                let indexTo = bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
+            }
+            
+        })
+        
+    }
+  
+    
+    private func handleSpeechView() {
+        tmpBG?.removeFromSuperview()
+        let bg = UIView(backgroundColor: .white)
+        bg.frame = .init(x: 0, y: 0, width: 200, height: 200)
+        bg.center = view.center
+        bg.setupShadow()
+        bg.stack(micStatusImg)
+        tmpBG = bg
+    }
+    
     
     private func prepareMainView() {
         collectionView.verticalScrollIndicatorInsets = .init(top: navBarHeight, left: 0, bottom: 0, right: 0)
@@ -81,8 +146,14 @@ extension MapSearchViewController {
         containver.fillSuperviewSafeAreaLayoutGuide()
         
         let backBtn = UIButton(image: .init(systemName: "chevron.backward")!, tintColor: .main3, target: self, action: #selector(didTapBack))
+        
+        let micBtn = UIButton(image: .init(systemName: "mic.fill")!, tintColor: .main3, target: self, action: #selector(didTapMic))
+        
         setupCurLocBtn()
-        containver.hstack(backBtn.withWidth(25),searchField,spacing: 10).withMargins(.init(top: 0, left: 20, bottom: 0, right: 20))
+        containver.hstack(backBtn.withWidth(25),
+                          searchField,
+                          micBtn,
+                          spacing: 10).withMargins(.init(top: 0, left: 20, bottom: 0, right: 20))
         
     }
     
@@ -101,6 +172,10 @@ extension MapSearchViewController {
     
     @objc func didTapBack() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func didTapMic() {
+        recordAndRecognizeSpeech()
     }
     
     @objc func didTapCurrentLocation() {

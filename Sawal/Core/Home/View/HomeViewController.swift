@@ -126,7 +126,7 @@ extension HomeViewController {
         .disposed(by: disposeBag)
         
         shareRiskBtn.rx.tap.subscribe(onNext: {[unowned self] in
-            let simulator = true
+            let simulator = false
             simulator ? navigationController?.pushViewController(ShareViewController(), animated: true) :                     navigationController?.pushViewController(CameraView(), animated: true)
         })
         .disposed(by: disposeBag)

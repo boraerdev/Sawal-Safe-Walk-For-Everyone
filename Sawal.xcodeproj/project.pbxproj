@@ -30,7 +30,6 @@
 		0A7D121F28E1FF7A009C2C4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A7D121E28E1FF7A009C2C4C /* Assets.xcassets */; };
 		0A7D122228E1FF7A009C2C4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A7D122028E1FF7A009C2C4C /* LaunchScreen.storyboard */; };
 		0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123328E2013C009C2C4C /* HomeViewController.swift */; };
-		0A7D123728E20161009C2C4C /* PersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123628E20161009C2C4C /* PersonViewController.swift */; };
 		0A7D123E28E201C9009C2C4C /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123D28E201C9009C2C4C /* ShareViewController.swift */; };
 		0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D124028E201D4009C2C4C /* MapViewController.swift */; };
 		0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */; };
@@ -87,7 +86,6 @@
 		0A7D122128E1FF7A009C2C4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A7D122328E1FF7A009C2C4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A7D123328E2013C009C2C4C /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		0A7D123628E20161009C2C4C /* PersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewController.swift; sourceTree = "<group>"; };
 		0A7D123D28E201C9009C2C4C /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		0A7D124028E201D4009C2C4C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
@@ -136,7 +134,6 @@
 			isa = PBXGroup;
 			children = (
 				0A7A730A28FF0CAB00920856 /* Settings */,
-				0A7D123528E20154009C2C4C /* Person */,
 				0ACB8F8128EA211000A17CC4 /* Welcome */,
 				0A2D155328E9EBED001E8240 /* Auth */,
 			);
@@ -279,14 +276,6 @@
 				0AF910E428E42C9C004779EF /* HomeControllerViewModel.swift */,
 			);
 			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		0A7D123528E20154009C2C4C /* Person */ = {
-			isa = PBXGroup;
-			children = (
-				0A7D123628E20161009C2C4C /* PersonViewController.swift */,
-			);
-			path = Person;
 			sourceTree = "<group>";
 		};
 		0A7D123B28E201A6009C2C4C /* Map */ = {
@@ -548,7 +537,6 @@
 				0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */,
 				0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */,
 				0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */,
-				0A7D123728E20161009C2C4C /* PersonViewController.swift in Sources */,
 				0AF910E528E42C9C004779EF /* HomeControllerViewModel.swift in Sources */,
 				0A58FA1D29049730008F3C47 /* MapSearchCell.swift in Sources */,
 				0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */,

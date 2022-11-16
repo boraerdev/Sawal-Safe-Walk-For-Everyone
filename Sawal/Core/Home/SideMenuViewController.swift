@@ -14,7 +14,7 @@ final class SideMenuViewController: UIViewController {
     //MARK: UI
     let exitBtn = UIButton(title: " Log Out", titleColor: .systemRed, backgroundColor: .white, target: self, action: #selector(didTapExit))
     
-    let buttonLists = MenuButtonsList()
+    lazy var buttonLists = MenuButtonsList()
     
     let userFullNameLbl = UILabel(text: AuthManager.shared.currentUser?.fullName, font: .systemFont(ofSize: 22, weight: .heavy), textColor: .white)
     
@@ -31,7 +31,6 @@ extension SideMenuViewController {
         super.viewDidLoad()
         view.applyGradient(colours: [.main3Light, .main3])
         view.clipsToBounds = true
-        
         prepareExitBtn()
         
         view.stack(
@@ -45,16 +44,19 @@ extension SideMenuViewController {
                       spacing: 6),
             spacing: 12
         ).withMargins(.allSides(20))
+        
     }
 }
 
 //MARK: Funcs
 extension SideMenuViewController {
+    
     func prepareExitBtn() {
         exitBtn.tintColor = .systemRed
         exitBtn.setImage(.init(systemName: "delete.left"), for: .normal)
         exitBtn.layer.cornerRadius = 8
     }
+    
     @objc func didTapExit() {
         do {
             try Auth.auth().signOut()
@@ -97,16 +99,15 @@ class MenuButtonCell: LBTAListCell<MenuButton> {
     
 }
 
+
 class MenuButtonsList: LBTAListController<MenuButtonCell, MenuButton>, UICollectionViewDelegateFlowLayout {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         items = [
-            .init(image: .init(systemName: "person")!, title: "Profile", handler: {
-                print("did tap profile")
-            }),
             .init(image: .init(systemName: "gearshape")!, title: "Settings", handler: {
-                print("did tap  settings")
+                let vc = SettingsViewController()
+                self.present(vc, animated: true)
             })
         ]
         collectionView.backgroundColor = .clear

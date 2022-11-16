@@ -23,7 +23,6 @@ final class HomeViewController: UIViewController {
     let sideMenu = SideMenuViewController()
     let darkBgForSideMenu = UIView(backgroundColor: .black.withAlphaComponent(0.1))
 
-    
     //MARK: UI
     private lazy var goMapBtn = UIButton()
     
@@ -64,6 +63,7 @@ extension HomeViewController {
         view.backgroundColor = .secondarySystemBackground
         navigationItem.titleView = welcomeStack
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(didTapMenu))
+        
     }
     
     private func prepareSideMenu() {
@@ -75,6 +75,7 @@ extension HomeViewController {
         view.addSubview(sideMenu.view)
         sideMenu.view.frame = .init(x: -(view.frame.width * 0.8), y: 0, width: view.frame.width * 0.8, height: view.frame.height)
         darkBgForSideMenu.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(closeMenu)))
+        
     }
     
     private func prepareStack() {
@@ -112,16 +113,18 @@ extension HomeViewController {
             btn.addSubview(bgImg)
             bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -40, left: 0, bottom: 0, right: -130), size: .init(width: 350, height: 350))
 
-            //Title
-            let titleBtn = UILabel(text: titles[i], font: .systemFont(ofSize: 28, weight: .bold), textColor: .label, textAlignment: .left, numberOfLines: 2)
-            btn.addSubview(titleBtn)
-            titleBtn.anchor(top: .none, leading: btn.leadingAnchor, bottom: btn.bottomAnchor, trailing: .none, padding: .init(top: 0, left: 20, bottom: 40, right: 0))
-            titleBtn.withWidth(100)
-            
             //Subtitle
             let subtitle = UILabel(text: subtitles[i], font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .left, numberOfLines: 2)
             btn.addSubview(subtitle)
-            subtitle.anchor(top: titleBtn.bottomAnchor, leading: titleBtn.leadingAnchor, bottom: nil, trailing: btn.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 20))
+            subtitle.anchor(top: nil, leading: btn.leadingAnchor, bottom: btn.bottomAnchor, trailing: btn.trailingAnchor, padding: .init(top: 0, left: 20, bottom: 20, right: 20))
+            
+            //Title
+            let titleBtn = UILabel(text: titles[i], font: .systemFont(ofSize: 28, weight: .bold), textColor: .label, textAlignment: .left, numberOfLines: 2)
+            btn.addSubview(titleBtn)
+            titleBtn.anchor(top: nil, leading: subtitle.leadingAnchor, bottom: subtitle.topAnchor, trailing: .none)
+            titleBtn.withWidth(100)
+            
+            
             
         }
     }

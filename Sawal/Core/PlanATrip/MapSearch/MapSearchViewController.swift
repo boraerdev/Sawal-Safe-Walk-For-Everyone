@@ -28,7 +28,7 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
     let request = SFSpeechAudioBufferRecognitionRequest()
     var recognitionTask: SFSpeechRecognitionTask?
     var detectedLabel: String = ""
-    var tmpBG: UIView? = nil
+    var micView: UIView? = nil
     let micStatusImg = UIImageView(image: .init(systemName: "mic.fill"))
 
     
@@ -58,6 +58,7 @@ extension MapSearchViewController {
     //For  voice search
     func recordAndRecognizeSpeech() {
         let node = audioEngine.inputNode
+        node.removeTap(onBus: 1)
         let recordingFormat = node.outputFormat(forBus: 1)
         node.installTap(onBus: 1, bufferSize: 1024, format: recordingFormat) { buffer, _ in
             self.request.append(buffer)
@@ -87,6 +88,8 @@ extension MapSearchViewController {
             guard err == nil, let result = result else {return}
             let bestString =  result.bestTranscription.formattedString
             self.detectedLabel = bestString
+            self.searchField.text = bestString
+            self.searchText.accept(bestString)
             
             for segment in result.bestTranscription.segments {
                 let indexTo = bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
@@ -96,17 +99,41 @@ extension MapSearchViewController {
         
     }
   
-    
     private func handleSpeechView() {
-        tmpBG?.removeFromSuperview()
-        let bg = UIView(backgroundColor: .white)
-        bg.frame = .init(x: 0, y: 0, width: 200, height: 200)
+        micView?.removeFromSuperview()
+        
+        //Dark Bg
+        let bg = UIView(backgroundColor: .black.withAlphaComponent(0.2))
+        bg.frame = view.frame
         bg.center = view.center
-        bg.setupShadow()
-        bg.stack(micStatusImg)
-        tmpBG = bg
+        view.addSubview(bg)
+
+        //Mic View
+        let micField = UIView(backgroundColor: .systemBackground)
+        micField.frame = .init(x: 0, y: 0, width: 200, height: 200)
+        micField.center = view.center
+        bg.addSubview(micField)
+        
+        micField.layer.cornerRadius = 8
+        micStatusImg.contentMode = .scaleAspectFit
+        micStatusImg.tintColor = .main3
+        
+        let btn = UIButton(title: "Stop", titleColor: .label, font: .systemFont(ofSize: 15), backgroundColor: .secondarySystemBackground, target: self, action: #selector(didTapStopRecord))
+        btn.layer.cornerRadius = 4
+        
+        micField.stack(micStatusImg, btn)
+            .withMargins(.allSides(12))
+        micView = bg
     }
     
+    @objc func didTapStopRecord() {
+        self.audioEngine.stop()
+        self.request.endAudio()
+        self.recognitionTask?.cancel()
+        self.recognitionTask = nil
+        micView?.removeFromSuperview()
+        self.searchField.text = detectedLabel
+    }
     
     private func prepareMainView() {
         collectionView.verticalScrollIndicatorInsets = .init(top: navBarHeight, left: 0, bottom: 0, right: 0)

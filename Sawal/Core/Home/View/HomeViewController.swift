@@ -92,6 +92,7 @@ extension HomeViewController {
     private func configureButtons() {
         let titles = ["Go Map", "Post a Risk", "Plan a Trip"]
         let icons = ["Location", "Attention", "Checkbox"]
+        let subtitles = ["Go map and take a look risky areas.", "Post a risk and make trips safe.", "Plan a trip and walk safely."]
         let colors: [UIColor] = [.main1Light, .main2Light, .main3Light]
         [goMapBtn,shareRiskBtn, planTrpBtn].enumerated().forEach { i,btn in
             //Bg Img
@@ -112,10 +113,16 @@ extension HomeViewController {
             bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -40, left: 0, bottom: 0, right: -130), size: .init(width: 350, height: 350))
 
             //Title
-            let titleBtn = UILabel(text: titles[i], font: .systemFont(ofSize: 28, weight: .heavy), textColor: .label, textAlignment: .left, numberOfLines: 2)
+            let titleBtn = UILabel(text: titles[i], font: .systemFont(ofSize: 28, weight: .bold), textColor: .label, textAlignment: .left, numberOfLines: 2)
             btn.addSubview(titleBtn)
-            titleBtn.anchor(top: .none, leading: btn.leadingAnchor, bottom: btn.bottomAnchor, trailing: .none, padding: .init(top: 0, left: 20, bottom: 20, right: 0))
+            titleBtn.anchor(top: .none, leading: btn.leadingAnchor, bottom: btn.bottomAnchor, trailing: .none, padding: .init(top: 0, left: 20, bottom: 40, right: 0))
             titleBtn.withWidth(100)
+            
+            //Subtitle
+            let subtitle = UILabel(text: subtitles[i], font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .left, numberOfLines: 2)
+            btn.addSubview(subtitle)
+            subtitle.anchor(top: titleBtn.bottomAnchor, leading: titleBtn.leadingAnchor, bottom: nil, trailing: btn.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 20))
+            
         }
     }
     
@@ -126,7 +133,7 @@ extension HomeViewController {
         .disposed(by: disposeBag)
         
         shareRiskBtn.rx.tap.subscribe(onNext: {[unowned self] in
-            let simulator = false
+            let simulator = true
             simulator ? navigationController?.pushViewController(ShareViewController(), animated: true) :                     navigationController?.pushViewController(CameraView(), animated: true)
         })
         .disposed(by: disposeBag)

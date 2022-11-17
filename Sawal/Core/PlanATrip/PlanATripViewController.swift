@@ -98,6 +98,7 @@ extension PlanATripViewController {
         DispatchQueue.main.async {
             self.mapView.setUserTrackingMode(.followWithHeading, animated: false)
         }
+        handleGestureAddPin()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -115,6 +116,12 @@ extension PlanATripViewController {
 
 //MARK: Funcs
 extension PlanATripViewController {
+    
+    private func handleGestureAddPin() {
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
+        longPressGesture.minimumPressDuration = 1.0
+        self.mapView.addGestureRecognizer(longPressGesture)
+    }
     
     private func handleBlur() {
         let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
@@ -403,6 +410,37 @@ extension PlanATripViewController: MKMapViewDelegate {
 
 //MARK: Objc
 extension PlanATripViewController {
+    
+    @objc func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
+
+        if gesture.state == .ended {
+            let point = gesture.location(in: self.mapView)
+            let coordinate = self.mapView.convert(point, toCoordinateFrom: self.mapView)
+            let location: CLLocation = .init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            let mapItem: MKMapItem = .init(placemark: .init(coordinate: coordinate))
+            
+            location.fetchLocationInfo { [unowned self] locationInfo, error in
+                if tripAnnotations.isEmpty {
+                    startField.text = locationInfo?.name
+                    viewModel.startLocation.accept(mapItem.placemark.coordinate)
+                    self.startItem = mapItem
+                    updateStartFinishAnnotations()
+
+                } else if tripAnnotations.count < 2 {
+                    finishField.text = locationInfo?.name
+                    viewModel.finishLocation.accept(mapItem.placemark.coordinate)
+                    self.finishItem = mapItem
+                    updateStartFinishAnnotations()
+
+                }
+            }
+            requestForDirections()
+            
+            
+            
+            
+        }
+    }
     
     @objc func didTapExit() {
         navigationController?.popViewController(animated: true)

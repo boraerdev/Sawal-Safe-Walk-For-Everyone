@@ -63,6 +63,8 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         return field
     }()
     
+    private lazy var forgotTextField = IndentedTextField(placeholder: "Email", padding: 10, cornerRadius: 4, backgroundColor: .secondarySystemBackground, isSecureTextEntry: false)
+    
     private lazy var signFieldText: UILabel = {
        let lbl = UILabel()
         lbl.text = "Mail"
@@ -120,12 +122,15 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
     
     private var signStack: UIStackView!
     
+    private var tmpForgotView: UIView? = nil
+    
     private lazy var forgotBtn: UIButton = {
        let btn = UIButton()
         btn.setTitle("Forgot Password?", for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 13)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.setTitleColor(.secondaryLabel, for: .normal)
+        btn.addTarget(self, action: #selector(didTapForgot), for: .touchUpInside)
         return btn
     }()
     
@@ -138,7 +143,6 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         btn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(setupGoogle)))
         btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
         btn.layer.borderWidth = 1
-
         return btn
     }()
     
@@ -151,6 +155,13 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         viewModel.delegate = self
         prepareStacks()
         prepareButtons()
+        layoutSubviews()
+        
+        DispatchQueue.main.async {
+            self.handleButtonGradients()
+        }
+
+
     }
     
     
@@ -162,8 +173,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         signInAnimation.pause()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    private func layoutSubviews() {
         view.addSubview(signInAnimation)
         view.addSubview(signStack)
         view.addSubview(signFieldText)
@@ -198,15 +208,60 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
             forgotBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
             
         ])
-        handleButtonGradients()
     }
 }
 
 
 //MARK: Objc
 extension SignInViewController {
+    
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    @objc func didTapForgot() {
+        tmpForgotView?.removeFromSuperview()
+        let bg = UIView(backgroundColor: .black.withAlphaComponent(0.2))
+        bg.frame = view.frame
+        bg.center = view.center
+        bg.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCloseResetField)))
+        view.addSubview(bg)
+        
+        let container = UIView(backgroundColor: .systemBackground)
+        container.frame = .init(x: 0, y: 0, width: 300, height: 150)
+        container.center = view.center
+        container.layer.cornerRadius = 8
+        bg.addSubview(container)
+        
+        let resetBtn = UIButton(title: "Send Mail", titleColor: .systemBackground, font: .systemFont(ofSize: 17), backgroundColor: .main3, target: self, action: #selector(didTapSendForgot))
+        resetBtn.layer.cornerRadius = 4
+        
+        container.hstack(
+            container.stack(
+                forgotTextField.withHeight(45),
+                resetBtn.withHeight(45),
+                spacing: 10
+            ).withMargins(.allSides(20)),
+            alignment: .center
+        )
+        
+        tmpForgotView = bg
+    }
+    
+    @objc func didTapCloseResetField() {
+        tmpForgotView?.removeFromSuperview()
+    }
+    
+    @objc func didTapSendForgot() {
+        guard forgotTextField.text?.isEmpty == false else {return}
+        viewModel.resetPassword(email: forgotTextField.text ?? "") { result in
+            switch result {
+            case .success(_):
+                self.tmpForgotView?.removeFromSuperview()
+            case .failure(let err):
+                self.throwAlert(message: err.localizedDescription)
+            }
+        }
     }
     
     private func prepareButtons() {

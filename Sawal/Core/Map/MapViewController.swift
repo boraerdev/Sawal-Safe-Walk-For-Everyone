@@ -50,6 +50,7 @@ extension MapViewController {
         handleMapKit()
         handleBackBtn()
         handleBlur()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -203,6 +204,8 @@ extension MapViewController {
         customCallout.withHeight(150)
     }
     
+    
+    
 }
 
 //MARK: CLLocation Delegate
@@ -277,4 +280,5 @@ extension MapViewController {
             self.present(activityVC, animated: true, completion: nil)
         }
     }
+    
 }

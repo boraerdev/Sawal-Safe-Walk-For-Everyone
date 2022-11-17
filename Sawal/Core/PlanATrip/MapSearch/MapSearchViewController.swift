@@ -35,7 +35,7 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
     //MARK: UI
     private lazy var searchField = IndentedTextField(placeholder: "Search...", padding: 10, cornerRadius: 8, backgroundColor: .secondarySystemBackground)
     
-    private lazy var currentLocationBtn = UIButton(title: " Current Location", titleColor: .systemBackground, font: .systemFont(ofSize: 17), backgroundColor: .main3, target: self, action: #selector(didTapCurrentLocation))
+    private lazy var currentLocationBtn = UIButton(title: " Current Location", titleColor: .label, font: .systemFont(ofSize: 17), backgroundColor: .systemBackground, target: self, action: #selector(didTapCurrentLocation))
 
     //MARK: Core
     override func viewDidLoad() {
@@ -43,6 +43,7 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
         performLocalSearch()
         prepareNavBar()
         prepareMainView()
+        handleBlur()
         
     }
     
@@ -97,6 +98,14 @@ extension MapSearchViewController {
             
         })
         
+    }
+    
+    private func handleBlur() {
+        let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        let visualTopBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        view.addSubviews(visualBottomBlur,visualTopBlur)
+        visualBottomBlur.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        visualTopBlur.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor)
     }
   
     private func handleSpeechView() {
@@ -179,7 +188,7 @@ extension MapSearchViewController {
         setupCurLocBtn()
         containver.hstack(backBtn.withWidth(25),
                           searchField,
-                          micBtn,
+                          micBtn.withWidth(25),
                           spacing: 10).withMargins(.init(top: 0, left: 20, bottom: 0, right: 20))
         
     }
@@ -194,7 +203,12 @@ extension MapSearchViewController {
         currentLocationBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
         currentLocationBtn.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         currentLocationBtn.layer.cornerRadius = 8
-        currentLocationBtn.tintColor = .systemBackground
+        currentLocationBtn.tintColor = .label
+        
+        currentLocationBtn.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
+        currentLocationBtn.layer.borderWidth = 0.2
+        currentLocationBtn.layer.cornerRadius = 8
+
     }
     
     @objc func didTapBack() {

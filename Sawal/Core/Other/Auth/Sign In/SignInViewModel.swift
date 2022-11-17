@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+
 protocol SignInViewModelInterface: AnyObject {
     func signInUser(email: String, pass: String, completion: @escaping (Result<Bool, Error>)->())
 }
@@ -34,5 +35,18 @@ extension SignInViewModel: SignInViewModelInterface {
             }
         }
     }
+    
+    func resetPassword(email: String, completion: @escaping (Result<Bool, Error>)->()) {
+        AuthManager.shared.resetPassword(email: email) { result in
+            switch result {
+                
+            case .success(_):
+                completion(.success(true))
+            case .failure(let err):
+                completion(.failure(err))
+            }
+        }
+    }
+    
 }
 

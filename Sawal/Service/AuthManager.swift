@@ -45,6 +45,16 @@ final class AuthManager {
         }
     }
     
+    public func resetPassword(email: String, completion: @escaping (Result<Bool, Error>) -> ()) {
+        Auth.auth().sendPasswordReset(withEmail: email) { err in
+            guard err == nil else {
+                completion(.failure(err!))
+                return
+            }
+            completion(.success(true))
+        }
+    }
+    
     public func register(fullName: String, email: String, pass: String, completion: @escaping (Result<User, Error>) -> ()) {
         let data = ["mail": email, "fullName": fullName] as [String: Any]
         Auth.auth().createUser(withEmail: email, password: pass) { [weak self] result, error in

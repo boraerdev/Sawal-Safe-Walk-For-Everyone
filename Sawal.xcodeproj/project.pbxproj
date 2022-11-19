@@ -32,6 +32,7 @@
 		0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123328E2013C009C2C4C /* HomeViewController.swift */; };
 		0A7D123E28E201C9009C2C4C /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D123D28E201C9009C2C4C /* ShareViewController.swift */; };
 		0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D124028E201D4009C2C4C /* MapViewController.swift */; };
+		0A7D794B2928142C0083D4C3 /* VideoCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D794A2928142C0083D4C3 /* VideoCallViewController.swift */; };
 		0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */; };
 		0A89F85628F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A89F85528F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift */; };
 		0A8C947328F70D630053AEAB /* RiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8C947228F70D630053AEAB /* RiskViewController.swift */; };
@@ -51,8 +52,12 @@
 		0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */; };
 		0ACB8F8828EA2EFD00A17CC4 /* WelcomePage3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */; };
 		0AEA481628ECD566002538D6 /* UIColor+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEA481528ECD566002538D6 /* UIColor+Extentions.swift */; };
+		0AEC1F1529294EB100CA5C0D /* CallService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEC1F1429294EB100CA5C0D /* CallService.swift */; };
+		0AEC1F17292950AF00CA5C0D /* VideoCallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEC1F16292950AF00CA5C0D /* VideoCallViewModel.swift */; };
+		0AEC1F1A292989D000CA5C0D /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEC1F19292989D000CA5C0D /* Const.swift */; };
 		0AF36E3D28F2441C00314F79 /* Extentions+MKMapItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF36E3C28F2441C00314F79 /* Extentions+MKMapItem.swift */; };
 		0AF36F2C28F4710C00A986F0 /* AnnotationTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF36F2B28F4710C00A986F0 /* AnnotationTypes.swift */; };
+		0AF3987929298FDC00D9EFB7 /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF3987829298FDC00D9EFB7 /* Call.swift */; };
 		0AF910E528E42C9C004779EF /* HomeControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF910E428E42C9C004779EF /* HomeControllerViewModel.swift */; };
 		0AF9DCED28EC037500B2570F /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9DCEC28EC037500B2570F /* AuthManager.swift */; };
 		0AF9DCEF28EC03D300B2570F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9DCEE28EC03D300B2570F /* SignInViewModel.swift */; };
@@ -88,6 +93,7 @@
 		0A7D123328E2013C009C2C4C /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		0A7D123D28E201C9009C2C4C /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		0A7D124028E201D4009C2C4C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		0A7D794A2928142C0083D4C3 /* VideoCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewController.swift; sourceTree = "<group>"; };
 		0A856B2228EA07E200ABDD03 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		0A89F85528F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extentions.swift"; sourceTree = "<group>"; };
 		0A8C947228F70D630053AEAB /* RiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskViewController.swift; sourceTree = "<group>"; };
@@ -107,8 +113,12 @@
 		0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage3ViewController.swift; sourceTree = "<group>"; };
 		0AEA481528ECD566002538D6 /* UIColor+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extentions.swift"; sourceTree = "<group>"; };
+		0AEC1F1429294EB100CA5C0D /* CallService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallService.swift; sourceTree = "<group>"; };
+		0AEC1F16292950AF00CA5C0D /* VideoCallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewModel.swift; sourceTree = "<group>"; };
+		0AEC1F19292989D000CA5C0D /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		0AF36E3C28F2441C00314F79 /* Extentions+MKMapItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extentions+MKMapItem.swift"; sourceTree = "<group>"; };
 		0AF36F2B28F4710C00A986F0 /* AnnotationTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationTypes.swift; sourceTree = "<group>"; };
+		0AF3987829298FDC00D9EFB7 /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		0AF910E428E42C9C004779EF /* HomeControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeControllerViewModel.swift; sourceTree = "<group>"; };
 		0AF9DCEC28EC037500B2570F /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		0AF9DCEE28EC03D300B2570F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
@@ -164,6 +174,7 @@
 				0A2F2BD028FA042B001C823D /* User.swift */,
 				0A2F2BD328FA0447001C823D /* Post.swift */,
 				0AA3059D28FC9EAF008C528D /* Comment.swift */,
+				0AF3987829298FDC00D9EFB7 /* Call.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -232,6 +243,7 @@
 		0A7D122928E20013009C2C4C /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				0A7D7949292814080083D4C3 /* VideoCall */,
 				0A2D155228E9EBE8001E8240 /* Other */,
 				0A7D123B28E201A6009C2C4C /* Map */,
 				0A7B570928F1D0A900146147 /* PlanATrip */,
@@ -248,6 +260,8 @@
 				0AA7F07E28F0CFC5000ED5D3 /* PostService.swift */,
 				0AA7F08228F0D2D2000ED5D3 /* ImageService.swift */,
 				0A2F2BCE28FA0424001C823D /* UserService.swift */,
+				0AEC1F1429294EB100CA5C0D /* CallService.swift */,
+				0AEC1F19292989D000CA5C0D /* Const.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -309,6 +323,15 @@
 				0A7D122028E1FF7A009C2C4C /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		0A7D7949292814080083D4C3 /* VideoCall */ = {
+			isa = PBXGroup;
+			children = (
+				0A7D794A2928142C0083D4C3 /* VideoCallViewController.swift */,
+				0AEC1F16292950AF00CA5C0D /* VideoCallViewModel.swift */,
+			);
+			path = VideoCall;
 			sourceTree = "<group>";
 		};
 		0A856B1D28E9EEA700ABDD03 /* Assets */ = {
@@ -535,8 +558,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */,
+				0AF3987929298FDC00D9EFB7 /* Call.swift in Sources */,
 				0A856B2328EA07E200ABDD03 /* RegisterViewController.swift in Sources */,
 				0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */,
+				0AEC1F1A292989D000CA5C0D /* Const.swift in Sources */,
 				0AF910E528E42C9C004779EF /* HomeControllerViewModel.swift in Sources */,
 				0A58FA1D29049730008F3C47 /* MapSearchCell.swift in Sources */,
 				0A7D121628E1FF7A009C2C4C /* AppDelegate.swift in Sources */,
@@ -551,8 +576,10 @@
 				0A8C947328F70D630053AEAB /* RiskViewController.swift in Sources */,
 				0A53BDA928F9B3A50042BB71 /* RiskDetailViewController.swift in Sources */,
 				0A283C2128F2259B00CEE63A /* MapSearchViewController.swift in Sources */,
+				0AEC1F1529294EB100CA5C0D /* CallService.swift in Sources */,
 				0A02361428F5BF2F00929243 /* PlanATripViewModel.swift in Sources */,
 				0AAD849428F825BD0050DA5D /* CapturedImageView.swift in Sources */,
+				0A7D794B2928142C0083D4C3 /* VideoCallViewController.swift in Sources */,
 				0A2F2BD428FA0447001C823D /* Post.swift in Sources */,
 				0A7D123428E2013C009C2C4C /* HomeViewController.swift in Sources */,
 				0AA7F08328F0D2D2000ED5D3 /* ImageService.swift in Sources */,
@@ -570,6 +597,7 @@
 				0AF9DCEF28EC03D300B2570F /* SignInViewModel.swift in Sources */,
 				0AA3059E28FC9EAF008C528D /* Comment.swift in Sources */,
 				0AA7F07D28F0CF21000ED5D3 /* ShareViewModel.swift in Sources */,
+				0AEC1F17292950AF00CA5C0D /* VideoCallViewModel.swift in Sources */,
 				0A7B570B28F1D0BC00146147 /* PlanATripViewController.swift in Sources */,
 				0A2F2BCF28FA0424001C823D /* UserService.swift in Sources */,
 				0AF36F2C28F4710C00A986F0 /* AnnotationTypes.swift in Sources */,

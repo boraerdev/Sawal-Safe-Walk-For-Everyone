@@ -44,6 +44,8 @@ final class HomeViewController: UIViewController {
     
     private lazy var planTrpBtn = UIButton()
     
+    private lazy var videoCallBtn = UIButton()
+    
 }
 
 //MARK: Core
@@ -80,10 +82,11 @@ extension HomeViewController {
     
     private func prepareStack() {
         let container = UIView()
-        view.stack(container).withMargins(.init(top: 10, left: 20, bottom:0, right: 20))
+        view.stack(container).withMargins(.init(top: 10, left: 20, bottom:10, right: 20))
         container.stack(
             container.hstack(goMapBtn, shareRiskBtn, spacing: 10, distribution: .fillEqually),
             planTrpBtn,
+            videoCallBtn,
             spacing: 10,
             distribution: .fillEqually
         )
@@ -91,11 +94,11 @@ extension HomeViewController {
     }
     
     private func configureButtons() {
-        let titles = ["Go Map", "Post a Risk", "Plan a Trip"]
-        let icons = ["Location", "Attention", "Checkbox"]
-        let subtitles = ["Go map and take a look risky areas.", "Post a risk and make trips safe.", "Plan a trip and walk safely."]
-        let colors: [UIColor] = [.main1Light, .main2Light, .main3Light]
-        [goMapBtn,shareRiskBtn, planTrpBtn].enumerated().forEach { i,btn in
+        let titles = ["Map", "Post", "Plan a Trip", "Be My Eye"]
+        let icons = ["Location", "Attention", "Checkbox", "Compass"]
+        let subtitles = ["Go map and take a look risky areas.", "Post a risk and make trips safer.", "Plan a trip and walk safely.", "Start a video call and get directions."]
+        let colors: [UIColor] = [.main1Light, .main2Light, .main3Light, .systemBlue]
+        [goMapBtn,shareRiskBtn, planTrpBtn, videoCallBtn].enumerated().forEach { i,btn in
             //Bg Img
             let bgImg = UIImageView(image: .init(named: icons[i])!)
             bgImg.contentMode = .scaleAspectFit
@@ -111,7 +114,7 @@ extension HomeViewController {
             btn.layer.cornerRadius = 8
             btn.layer.masksToBounds = true
             btn.addSubview(bgImg)
-            bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -40, left: 0, bottom: 0, right: -130), size: .init(width: 350, height: 350))
+            bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -100, left: 0, bottom: 0, right: -140), size: .init(width: 350, height: 350))
 
             //Subtitle
             let subtitle = UILabel(text: subtitles[i], font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .left, numberOfLines: 2)
@@ -145,6 +148,10 @@ extension HomeViewController {
             navigationController?.pushViewController(PlanATripViewController(), animated: true)
         })
         .disposed(by: disposeBag)
+        
+        videoCallBtn.rx.tap.subscribe(onNext: { [unowned self] in
+            navigationController?.pushViewController(VideoCallViewController(), animated: true)
+        })
         
     }
 

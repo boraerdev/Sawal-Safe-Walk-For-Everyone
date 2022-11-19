@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "Attention@1x.jpg",
+      "filename" : "Attention.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Attention@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Attention@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

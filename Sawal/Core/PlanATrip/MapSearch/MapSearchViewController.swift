@@ -18,7 +18,7 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
     //MARF: Def
     var selectionHandler: ((MKMapItem)->())?
     var prepareCurrentLocationForSearch: (()->())?
-    var navBarHeight: CGFloat = 45
+    var navBarHeight: CGFloat = 65
     var searchText: BehaviorRelay<String> = .init(value: "")
     let disposeBag = DisposeBag()
     
@@ -189,7 +189,7 @@ extension MapSearchViewController {
         containver.hstack(backBtn.withWidth(25),
                           searchField,
                           micBtn.withWidth(25),
-                          spacing: 10).withMargins(.init(top: 0, left: 20, bottom: 0, right: 20))
+                          spacing: 10).withMargins(.init(top: 10, left: 20, bottom: 10, right: 20))
         
     }
     
@@ -200,7 +200,7 @@ extension MapSearchViewController {
         currentLocationBtn.setImage(.init(systemName: "circle.circle"), for: .normal)
         currentLocationBtn.imageView?.contentMode = .scaleAspectFit
         currentLocationBtn.contentEdgeInsets = .init(top: 10, left: 20, bottom: 10, right: 20)
-        currentLocationBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
+        currentLocationBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
         currentLocationBtn.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         currentLocationBtn.layer.cornerRadius = 8
         currentLocationBtn.tintColor = .label

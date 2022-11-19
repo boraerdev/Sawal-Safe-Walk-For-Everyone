@@ -37,6 +37,16 @@ final class MapViewController: UIViewController {
     var tempHud: UIView?
     
     var hudContainer = UIView(backgroundColor: .clear)
+    
+    private lazy var exitBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(.init(systemName: "xmark"), for: .normal)
+        btn.tintColor = .label
+        btn.layer.cornerRadius = 8
+        btn.backgroundColor = .secondarySystemBackground
+        btn.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
+        return btn
+    }()
 
 }
 
@@ -124,13 +134,9 @@ extension MapViewController {
     }
     
     private func handleBackBtn() {
-        let btn = UIButton(image: .init(systemName: "xmark")!, tintColor: .label, target: self, action: #selector(didTapBack))
-        btn.backgroundColor = .secondarySystemBackground
-        btn.clipsToBounds = false
-        btn.layer.cornerRadius = 8
-        btn.dropShadow()
-        view.addSubview(btn)
-        btn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
+        view.addSubviews(exitBtn)
+        exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
+        exitBtn.dropShadow()
     }
     
     private func handleAnnotationImage(_ annotation: MKAnnotation, for annotationView: MKAnnotationView ) {

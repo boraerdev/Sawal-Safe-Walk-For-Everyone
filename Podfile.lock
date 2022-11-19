@@ -596,6 +596,33 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
+  - AgoraRtcEngine_iOS (4.0.1):
+    - AgoraRtcEngine_iOS/AINS (= 4.0.1)
+    - AgoraRtcEngine_iOS/AudioBeauty (= 4.0.1)
+    - AgoraRtcEngine_iOS/ClearVision (= 4.0.1)
+    - AgoraRtcEngine_iOS/ContentInspect (= 4.0.1)
+    - AgoraRtcEngine_iOS/PVC (= 4.0.1)
+    - AgoraRtcEngine_iOS/ReplayKit (= 4.0.1)
+    - AgoraRtcEngine_iOS/RtcBasic (= 4.0.1)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 4.0.1)
+    - AgoraRtcEngine_iOS/SuperResolution (= 4.0.1)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 4.0.1)
+  - AgoraRtcEngine_iOS/AINS (4.0.1)
+  - AgoraRtcEngine_iOS/AudioBeauty (4.0.1)
+  - AgoraRtcEngine_iOS/ClearVision (4.0.1)
+  - AgoraRtcEngine_iOS/ContentInspect (4.0.1)
+  - AgoraRtcEngine_iOS/PVC (4.0.1)
+  - AgoraRtcEngine_iOS/ReplayKit (4.0.1)
+  - AgoraRtcEngine_iOS/RtcBasic (4.0.1)
+  - AgoraRtcEngine_iOS/SpatialAudio (4.0.1)
+  - AgoraRtcEngine_iOS/SuperResolution (4.0.1)
+  - AgoraRtcEngine_iOS/VirtualBackground (4.0.1)
+  - AgoraRtm_iOS (1.5.1)
+  - AgoraRtmControl_iOS (4.0.2):
+    - AgoraRtm_iOS (~> 1.5.1)
+  - AgoraUIKit_iOS (4.0.2):
+    - AgoraRtcEngine_iOS (~> 4.0.1)
+    - AgoraRtmControl_iOS (= 4.0.2)
   - AppAuth (1.6.0):
     - AppAuth/Core (= 1.6.0)
     - AppAuth/ExternalUserAgent (= 1.6.0)
@@ -756,6 +783,7 @@ PODS:
   - RxSwift (6.5.0)
 
 DEPENDENCIES:
+  - AgoraUIKit_iOS
   - FirebaseAuth
   - FirebaseFirestore (~> 9.6)
   - FirebaseFirestoreSwift (~> 9.6)
@@ -772,6 +800,10 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - AgoraRtcEngine_iOS
+    - AgoraRtm_iOS
+    - AgoraRtmControl_iOS
+    - AgoraUIKit_iOS
     - AppAuth
     - BoringSSL-GRPC
     - FirebaseAppCheckInterop
@@ -806,6 +838,10 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
+  AgoraRtcEngine_iOS: 0b293c63fbd60c882a0358d78522f38bf0d0bbd9
+  AgoraRtm_iOS: 595a9fa33a409831e6183396ea8f8bc563918403
+  AgoraRtmControl_iOS: 514d52b931235853503693f90c52ca30b8a3a494
+  AgoraUIKit_iOS: 01aec1a58e978517774c171590f627c36e922768
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   FirebaseAppCheckInterop: d5ecda0c09f8069406643d6e0fa12c09d1b736e3
@@ -838,6 +874,6 @@ SPEC CHECKSUMS:
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
 
-PODFILE CHECKSUM: 65a2347a02502081fe650fa6da3be6db1eaaf01e
+PODFILE CHECKSUM: 445c84b40a6d7a2b506ca625165ee2112dc49bc8
 
 COCOAPODS: 1.11.3

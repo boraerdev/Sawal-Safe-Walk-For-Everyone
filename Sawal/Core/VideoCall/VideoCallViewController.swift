@@ -14,16 +14,18 @@ import AgoraUIKit
 import AgoraRtcKit
 
 protocol VideoCallViewControllerInterface: AnyObject {
+    func didTapJoin(role: AgoraClientRole, channel: String)
 }
 
 class VideoCallViewController: UIViewController, VideoCallViewControllerInterface {
+    
+    
     
     //MARK: Def
     let manager = CLLocationManager()
     var location: BehaviorRelay<CLLocationCoordinate2D?> = .init(value: nil)
     let disposeBag = DisposeBag()
-    let vievModel = VideoCallViewModel()
-    var calls: BehaviorRelay<[Call]> = .init(value: [])
+    let viewModel = VideoCallViewModel.shared
     
     //MARK: UI
     let mainContainer = UIView(backgroundColor: .systemBackground)
@@ -32,19 +34,23 @@ class VideoCallViewController: UIViewController, VideoCallViewControllerInterfac
     //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchCalls()
         view.backgroundColor = .secondarySystemBackground
         createMainContainer()
         view.stack(mainContainer).withMargins(.init(top: 10, left: 20, bottom: 10, right: 20))
         manager.delegate = self
-        vievModel.delegate = self
+        viewModel.delegate = self
         manager.startUpdatingLocation()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        fetchCalls()
         fillContainer()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         if agoraView != nil {
             agoraView.leaveChannel()
+            CallService.shared.removeCall(for: userUid ?? "")
         }
     }
     
@@ -62,7 +68,7 @@ extension VideoCallViewController {
     
     private func fetchCalls() {
         CallService.shared.fetchActiveCalls { [unowned self]  call in
-            calls.accept(call)
+            viewModel.calls.accept(call)
         }
     }
     
@@ -91,6 +97,11 @@ extension VideoCallViewController {
     }
     
     func initializeAndJoinChannel(role: AgoraClientRole, channel: String){
+        
+        if role == .broadcaster {
+            CallService.shared.makeCall(for: userUid ?? "") { res in
+            }
+        }
         
         var options = AgoraSettings()
         options.tokenURL = serverUrl
@@ -135,8 +146,9 @@ extension VideoCallViewController {
     
     private func prepareCalls() -> UIView {
         let table = CallList()
-        table.items = calls.value
-        calls.subscribe { result in
+        table.items = viewModel.calls.value
+        table.delegate = self
+        viewModel.calls.subscribe { result in
             table.items = result.element ?? []
         }.disposed(by: disposeBag)
         return table.view
@@ -159,19 +171,21 @@ extension VideoCallViewController {
         mainContainer.subviews.forEach { v in
             v.removeFromSuperview()
         }
-        initializeAndJoinChannel(role: .broadcaster, channel: "TestBora")
+        initializeAndJoinChannel(role: .broadcaster, channel: userUid ?? "")
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: .init(handler: {_ in self.didTapStop()}))
     }
-
-    @objc func didTapJoin() {
+    
+    func didTapJoin(role: AgoraClientRole, channel: String ) {
         mainContainer.subviews.forEach { v in
             v.removeFromSuperview()
         }
-        initializeAndJoinChannel(role: .audience, channel: "TestBora")
+        initializeAndJoinChannel(role: role, channel: channel)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: .init(handler: {_ in self.didTapStop()}))
     }
     
     @objc func didTapStop() {
         agoraView.leaveChannel()
+        CallService.shared.removeCall(for: userUid ?? "")
         mainContainer.subviews.forEach { v in
             v.removeFromSuperview()
         }
@@ -179,52 +193,4 @@ extension VideoCallViewController {
         fillContainer()
     }
 
-}
-
-class CallCell: LBTAListCell<Call> {
-    
-    let label = UILabel(text: "test")
-    let joinBtn = UIButton(title: "Join", titleColor: .systemBackground, font: .systemFont(ofSize: 13), backgroundColor: .main3, target: self, action: #selector(didTapjoin))
-    
-    override var item: Call! {
-        didSet {
-            fetchUser(uid: item.authorUid)
-        }
-    }
-    
-    @objc func didTapjoin() {
-        print("join")
-    }
-    
-    func fetchUser(uid: String) {
-        UserService.shared.getUser(uid: uid) { [unowned self] user in
-            label.text = user.fullName
-        }
-    }
-    
-    override func setupViews() {
-        super.setupViews()
-        backgroundColor = .clear
-        layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
-        layer.borderWidth = 0.2
-        layer.cornerRadius = 8
-        joinBtn.layer.cornerRadius = 4
-        hstack(label, UIView(), joinBtn.withWidth(70)).withMargins(.allSides(10))
-    }
-    
-}
-
-class CallList: LBTAListController<CallCell, Call>, UICollectionViewDelegateFlowLayout{
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: view.frame.width, height: 50)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        5
-    }
 }

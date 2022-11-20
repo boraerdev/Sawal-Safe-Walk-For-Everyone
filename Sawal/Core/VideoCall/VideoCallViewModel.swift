@@ -7,14 +7,18 @@
 
 import Foundation
 import FirebaseAuth
+import RxSwift
+import RxCocoa
 
 protocol VideoCallViewModelInterface: AnyObject {
     func makeCall(completion: @escaping (Result<Bool, Error>)->())
 }
 
 class VideoCallViewModel {
+    static let shared = VideoCallViewModel()
     weak var delegate: VideoCallViewControllerInterface?
     let userUid = Auth.auth().currentUser?.uid
+    var calls: BehaviorRelay<[Call]> = .init(value: [])
 }
 
 extension VideoCallViewModel: VideoCallViewModelInterface {

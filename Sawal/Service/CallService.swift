@@ -12,7 +12,6 @@ import FirebaseAuth
 
 class CallService {
     static let shared = CallService()
-    let UserUid = Auth.auth().currentUser?.uid
     var token = ""
     
     func makeCall(for authorUid: String, completion: @escaping (Result<Bool, Error>)->()) {
@@ -68,12 +67,23 @@ class CallService {
         completion(token)
     }
     
+    func removeCall(for uid: String) {
+        Firestore.firestore().collection("calls").document(uid).delete()
+    }
+    
     func fetchActiveCalls(completion: @escaping ([Call])->()) {
         Firestore.firestore().collection("calls").getDocuments{ query, err in
             guard err == nil, let query = query else {
                 return
             }
-            let calls = query.documents.compactMap({try? $0.data(as: Call.self)})
+            let calls = query.documents.compactMap({doc in
+                let call = try? doc.data(as: Call.self)
+                if call?.authorUid != userUid ?? "" {
+                    return call
+                } else {
+                    return nil
+                }
+            })
             completion(calls)
         }
     }

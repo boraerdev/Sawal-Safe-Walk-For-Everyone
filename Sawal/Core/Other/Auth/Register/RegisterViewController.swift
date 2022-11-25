@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol RegisterViewControllerInterface: AnyObject {
-    
+    func bindFields()
 }
 
 final class RegisterViewController: UIViewController, RegisterViewControllerInterface {
@@ -146,7 +146,7 @@ final class RegisterViewController: UIViewController, RegisterViewControllerInte
         bindFields()
     }
     
-    private func bindFields() {
+    func bindFields() {
         fullNameField.rx.text.orEmpty.bind(to: viewModel.fullName).disposed(by: disposeBag)
         signField.rx.text.orEmpty.bind(to: viewModel.email).disposed(by: disposeBag)
         passField.rx.text.orEmpty.bind(to: viewModel.pass).disposed(by: disposeBag)
@@ -164,7 +164,7 @@ final class RegisterViewController: UIViewController, RegisterViewControllerInte
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true)
                 case .failure(let error):
-                    self.throwAlert(message: error.localizedDescription)
+                    self.throwMessage(title: "Error", error.localizedDescription)
                 }
             }
             
@@ -257,11 +257,13 @@ extension RegisterViewController {
         signStack.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private func throwAlert(message: String) {
-        let alert = UIAlertController(title: "Try Again", message: message, preferredStyle: .alert)
+}
+
+extension RegisterViewController: ThrowMessage {
+    func throwMessage(title: String, _ message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(.init(title: "OK", style: .default))
         self.present(alert, animated: true)
     }
-
 }
 

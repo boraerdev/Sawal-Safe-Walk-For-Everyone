@@ -12,19 +12,26 @@ import RxCocoa
 import LBTATools
 
 protocol HomeViewControllerInterface: AnyObject {
+    func prepareMainView()
+    func prepareSideMenu()
+    func prepareStack()
+    func configureButtons()
+    func bindButtons()
 }
 
 //MARK: Def, UI
-final class HomeViewController: UIViewController {
+final class HomeViewController: UIViewController, HomeViewControllerInterface {
     
     //MARK: Def
     let viewModel = HomeControllerViewModel()
     let disposeBag = DisposeBag()
     let sideMenu = SideMenuViewController()
     let darkBgForSideMenu = UIView(backgroundColor: .black.withAlphaComponent(0.1))
+    let badgeText = UILabel(text: "1",font: .systemFont(ofSize: 13), textColor: .white)
 
     //MARK: UI
     private lazy var goMapBtn = UIButton()
+    private var tmpCircleView: UIView? = nil
     
     private lazy var welcomeStack: UIStackView = {
         let welcomeText = UILabel()
@@ -54,21 +61,34 @@ extension HomeViewController {
         super.viewDidLoad()
         prepareMainView()
         prepareStack()
-        performButtons()
+        bindButtons()
+        viewModel.fetchCalls()
+        updateBadge()
     }
 }
 
 //MARK: Funcs
 extension HomeViewController {
     
-    private func prepareMainView() {
+    func updateBadge() {
+        VideoCallViewModel.shared.calls.subscribe { [unowned self] calls in
+            if calls.element?.count ?? 0 > 0 {
+                badgeText.text = String(calls.element?.count ?? 0)
+                handleBadge()
+            } else {
+                tmpCircleView?.removeFromSuperview()
+            }
+        }.disposed(by: disposeBag)
+    }
+    
+    func prepareMainView() {
         view.backgroundColor = .secondarySystemBackground
         navigationItem.titleView = welcomeStack
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(didTapMenu))
         
     }
     
-    private func prepareSideMenu() {
+    func prepareSideMenu() {
         addChild(sideMenu)
         sideMenu.didMove(toParent: self)
         darkBgForSideMenu.isUserInteractionEnabled = true
@@ -80,7 +100,7 @@ extension HomeViewController {
         
     }
     
-    private func prepareStack() {
+    func prepareStack() {
         let container = UIView()
         view.stack(container).withMargins(.init(top: 10, left: 20, bottom:10, right: 20))
         container.stack(
@@ -93,14 +113,19 @@ extension HomeViewController {
         configureButtons()
     }
     
-    private func configureButtons() {
-        let titles = ["Map", "Post", "Plan a Trip", "Be My Eye"]
-        let icons = ["Location", "Attention", "Checkbox", "Compass"]
-        let subtitles = ["Go map and take a look risky areas.", "Post a risk and make trips safer.", "Plan a trip and walk safely.", "Start a video call and get directions."]
-        let colors: [UIColor] = [.main1Light, .main2Light, .main3Light, .systemBlue]
+    func configureButtons() {
+        
+        let buttons: [HomeBtnViewModel] = [
+            .init(title: "Map", subtitle: "Go map and take a look risky areas.", imgName: "Location"),
+            .init(title: "Post", subtitle: "Post a risk and make trips safer.", imgName: "Attention"),
+            .init(title: "Plan a Trip", subtitle: "Plan a trip and walk safely.", imgName: "Checkbox"),
+            .init(title: "Be My Eyes", subtitle: "Start a video call and get directions.", imgName: "Compass")
+        ]
+        
+
         [goMapBtn,shareRiskBtn, planTrpBtn, videoCallBtn].enumerated().forEach { i,btn in
             //Bg Img
-            let bgImg = UIImageView(image: .init(named: icons[i])!)
+            let bgImg = UIImageView(image: .init(named: buttons[i].imgName)!)
             bgImg.contentMode = .scaleAspectFit
             bgImg.tintColor = .secondarySystemBackground
             bgImg.alpha = 1
@@ -108,7 +133,6 @@ extension HomeViewController {
             //Btn
             btn.backgroundColor = .systemBackground
             btn.setTitle("", for: .normal)
-            btn.setTitleColor(colors[i], for: .normal)
             btn.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
             btn.layer.borderWidth = 0.2
             btn.layer.cornerRadius = 8
@@ -117,22 +141,20 @@ extension HomeViewController {
             bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -100, left: 0, bottom: 0, right: -140), size: .init(width: 350, height: 350))
 
             //Subtitle
-            let subtitle = UILabel(text: subtitles[i], font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .left, numberOfLines: 2)
+            let subtitle = UILabel(text: buttons[i].subtitle, font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .left, numberOfLines: 2)
             btn.addSubview(subtitle)
             subtitle.anchor(top: nil, leading: btn.leadingAnchor, bottom: btn.bottomAnchor, trailing: btn.trailingAnchor, padding: .init(top: 0, left: 20, bottom: 20, right: 20))
             
             //Title
-            let titleBtn = UILabel(text: titles[i], font: .systemFont(ofSize: 28, weight: .bold), textColor: .label, textAlignment: .left, numberOfLines: 2)
+            let titleBtn = UILabel(text: buttons[i].title, font: .systemFont(ofSize: 28, weight: .bold), textColor: .label, textAlignment: .left, numberOfLines: 2)
             btn.addSubview(titleBtn)
             titleBtn.anchor(top: nil, leading: subtitle.leadingAnchor, bottom: subtitle.topAnchor, trailing: .none)
             titleBtn.withWidth(100)
             
-            
-            
         }
     }
     
-    private func performButtons() {
+    func bindButtons() {
         goMapBtn.rx.tap.subscribe(onNext: { [unowned self] in
             navigationController?.pushViewController(MapViewController(), animated: true)
         })
@@ -152,13 +174,30 @@ extension HomeViewController {
         videoCallBtn.rx.tap.subscribe(onNext: { [unowned self] in
             navigationController?.pushViewController(VideoCallViewController(), animated: true)
         })
+        .disposed(by: disposeBag)
         
+    }
+
+    func handleBadge() {
+        tmpCircleView?.removeFromSuperview()
+        let circleView = UIView(backgroundColor: .red)
+        let padding: CGFloat = -10
+        let btnSize: CGFloat = 20
+        circleView.withSize(.init(width: btnSize, height: btnSize))
+        circleView.layer.cornerRadius = btnSize/2
+        circleView.dropShadow()
+        view.addSubview(circleView)
+        circleView.anchor(top: videoCallBtn.topAnchor, leading: nil, bottom: nil, trailing: videoCallBtn.trailingAnchor, padding: .init(top: padding, left: 0, bottom: 0, right: padding))
+        circleView.stack(badgeText, alignment: .center)
+        tmpCircleView = circleView
+
     }
 
 }
 
 //MARK: Objc
 extension HomeViewController {
+    
     @objc func didTapMenu() {
         welcomeStack.isHidden = true
         prepareSideMenu()
@@ -179,4 +218,5 @@ extension HomeViewController {
             self?.welcomeStack.isHidden = false
         }
     }
+    
 }

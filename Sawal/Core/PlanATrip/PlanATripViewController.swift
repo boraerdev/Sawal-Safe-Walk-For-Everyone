@@ -15,6 +15,24 @@ import AVFoundation
 
 protocol PlanATripViewControllerInterFace: AnyObject {
     func speech(message: String)
+    func handleGestureAddPin()
+    func handleBlur()
+    func preapreExitBtn()
+    func prepareRiskView()
+    func AddRiskView()
+    func RemoveRiskView()
+    func configureSomeUI()
+    func setupDelegates()
+    func prepareFields()
+    func startMonitoring()
+    func prepareStepData()
+    func setStepData(stepNumber: Int)
+    func showStepsHud()
+    func addTargets()
+    func addAnnotation(title: String, item: MKMapItem)
+    func updateStartFinishAnnotations()
+    func requestForDirections()
+    func handleSharedAnnotations()
 }
 
 //MARK: Def, UI
@@ -117,13 +135,13 @@ extension PlanATripViewController {
 //MARK: Funcs
 extension PlanATripViewController {
     
-    private func handleGestureAddPin() {
+    func handleGestureAddPin() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
         longPressGesture.minimumPressDuration = 1.0
         self.mapView.addGestureRecognizer(longPressGesture)
     }
     
-    private func handleBlur() {
+    func handleBlur() {
         let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
         let visualTopBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
         view.addSubviews(visualBottomBlur,visualTopBlur)
@@ -131,12 +149,12 @@ extension PlanATripViewController {
         visualTopBlur.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor)
     }
     
-    fileprivate func preapreExitBtn() {
+    func preapreExitBtn() {
         view.addSubviews(exitBtn)
         exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
     }
     
-    private func prepareRiskView() {
+    func prepareRiskView() {
         viewModel.riskMode.subscribe { [weak self] result in
             if result.element == .inAreaCloser || result.element == .inAreaAway {
                 self?.AddRiskView()
@@ -148,7 +166,7 @@ extension PlanATripViewController {
         }.disposed(by: disposeBag)
     }
     
-    private func AddRiskView() {
+    func AddRiskView() {
         guard !isNowPlaying else {return}
         let vc = RiskView()
         DispatchQueue.main.async {
@@ -157,12 +175,12 @@ extension PlanATripViewController {
         curRiskView = vc
     }
     
-    private func RemoveRiskView() {
+    func RemoveRiskView() {
         guard isNowPlaying else {return}
         curRiskView?.navigationController?.popViewController(animated: true)
     }
     
-    private func configureSomeUI() {
+    func configureSomeUI() {
         
         //Corner Radius
         instructionsHud.layer.cornerRadius = 8
@@ -199,7 +217,7 @@ extension PlanATripViewController {
         instructionsHud.setupShadow(opacity: 0.5, radius: 10, offset: .zero, color: .main3)
     }
 
-    private func setupDelegates() {
+    func setupDelegates() {
         manager.delegate = self
         manager.startUpdatingLocation()
         mapView.delegate = self
@@ -207,7 +225,7 @@ extension PlanATripViewController {
         viewModel.view = self
     }
     
-    private func prepareFields() {
+    func prepareFields() {
         view.addSubview(fieldsBG)
         
         fieldsBG.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 10, right: 10), size: .init(width: 0, height: 200))
@@ -236,7 +254,7 @@ extension PlanATripViewController {
         
     }
     
-    private func startMonitoring() {
+    func startMonitoring() {
         let route = viewModel.sharedRoute.value
         guard let route = route else {return}
         for i in 0 ..< route.steps.count {
@@ -246,13 +264,13 @@ extension PlanATripViewController {
         }
     }
     
-    private func prepareStepData() {
+    func prepareStepData() {
         viewModel.currentStep.subscribe { [weak self] result in
             self?.setStepData(stepNumber: result.element ?? 0)
         }.disposed(by: disposeBag)
     }
 
-    private func setStepData(stepNumber: Int) {
+    func setStepData(stepNumber: Int) {
         let currentStep = steps[stepNumber]
         directionLbl.text = currentStep.instructions
         distanceLbl.text = String(format: "%.0f m", currentStep.distance)
@@ -265,17 +283,17 @@ extension PlanATripViewController {
         }
     }
     
-    private func showStepsHud() {
+    func showStepsHud() {
         view.addSubview(instructionsHud)
         instructionsHud.anchor(top: nil, leading: view.leadingAnchor, bottom: fieldsBG.topAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 10, right: 10))
     }
     
-    private func addTargets() {
+    func addTargets() {
         startField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeStart)))
         finishField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapChangeFinish)))
     }
     
-    private func addAnnotation(title: String, item: MKMapItem) {
+    func addAnnotation(title: String, item: MKMapItem) {
         let annotation = DirectionEndPoint(type: title)
         annotation.coordinate = item.placemark.coordinate
         annotation.title = title
@@ -285,7 +303,7 @@ extension PlanATripViewController {
         self.tripAnnotations.append(annotation)
     }
     
-    private func updateStartFinishAnnotations() {
+    func updateStartFinishAnnotations() {
         if let _ = startItem {
             if let ano = mapView.annotations.first(where: {$0.title == "Start"}) {
                 mapView.removeAnnotation(ano)
@@ -304,7 +322,7 @@ extension PlanATripViewController {
         mapView.showAnnotations(tripAnnotations, animated: false)
     }
     
-    private func requestForDirections() {
+    func requestForDirections() {
         viewModel.requestForDirections { [weak self] route in
             DispatchQueue.main.async {
                 self?.tripAnnotations.removeAll(keepingCapacity: false)
@@ -315,7 +333,7 @@ extension PlanATripViewController {
         self.mapView.showAnnotations(tripAnnotations , animated: true)
     }
     
-    private func handleSharedAnnotations() {
+    func handleSharedAnnotations() {
         viewModel.posts.subscribe { [weak self] posts in
             posts.element?.forEach({ post in
                 let ano = RiskColoredAnnotations(post: post)

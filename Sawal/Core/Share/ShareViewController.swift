@@ -21,10 +21,18 @@ enum RiskDegree: Int {
 }
 
 protocol ShareViewControllerInterface: AnyObject {
-}
+    func prepareMainView()
+    func handleMapView()
+    func setLocationName()
+    func configureRiskButtons()
+    func throwAlert(title: String, message: String,cancel: Bool, handler: (()->())?)
+    func fetchLocationInfo(for location: CLLocation?)
+    func handleBind()
+    func bindMapViewImage()
+    func prepareannotationView(for annotationView: MKAnnotationView?)}
 
 //MARK: Def, UI
-final class ShareViewController: UIViewController {
+final class ShareViewController: UIViewController, ShareViewControllerInterface {
     
     //MARK: Def
     private var currentLocation: BehaviorRelay<CLLocation?> = .init(value: nil)
@@ -167,7 +175,7 @@ extension ShareViewController {
 //MARK: Funcs
 extension ShareViewController {
     
-    private func prepareMainView() {
+    func prepareMainView() {
         viewModel.view = self
         manager.delegate = self
         view.backgroundColor = .secondarySystemBackground
@@ -179,40 +187,40 @@ extension ShareViewController {
         manager.startUpdatingLocation()
     }
     
-    private func handleMapView() {
-        mapView.delegate = self
-        mapView.showsUserLocation = true
-    }
+    func handleMapView() {
+    mapView.delegate = self
+    mapView.showsUserLocation = true
+}
 
-    private func prepareStack() {
-        view.stack(view.hstack(headerLocation, currentDateLabel),
-                   mapView.withHeight(250),
-                   postField,
-                   UIView(),
-                   view.hstack( view.hstack(UILabel(text:"Risk:",font: .systemFont(ofSize:15), textColor: .secondaryLabel),lowBtn,medBtn,highBtn,
-                        spacing: 5) ,UIView(), countLbl).padBottom(10),
-                   view.hstack(postImage,addImageBtn, spacing: 5, distribution: .fillEqually).withHeight(100),
-                   spacing: 5)
-        .withMargins(.init(top: 10, left: 10, bottom: 0, right: 10))
-        view.addSubviews(spinner,successAnimation)
-    }
+    func prepareStack() {
+    view.stack(view.hstack(headerLocation, currentDateLabel),
+                mapView.withHeight(250),
+                postField,
+                UIView(),
+                view.hstack( view.hstack(UILabel(text:"Risk:",font: .systemFont(ofSize:15), textColor: .secondaryLabel),lowBtn,medBtn,highBtn,
+                    spacing: 5) ,UIView(), countLbl).padBottom(10),
+                view.hstack(postImage,addImageBtn, spacing: 5, distribution: .fillEqually).withHeight(100),
+                spacing: 5)
+    .withMargins(.init(top: 10, left: 10, bottom: 0, right: 10))
+    view.addSubviews(spinner,successAnimation)
+}
 
-    private func setLocationName() {
-        let inf = "\(locationInfo?.name ?? ""), \(locationInfo?.administrativeArea ?? "")"
-        headerLocation.text = inf
-    }
+    func setLocationName() {
+    let inf = "\(locationInfo?.name ?? ""), \(locationInfo?.administrativeArea ?? "")"
+    headerLocation.text = inf
+}
     
-    private func configureRiskButtons() {
-        [lowBtn, medBtn, highBtn].enumerated().forEach { i, btn in
-            btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
-            btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
-            btn.layer.borderWidth = 2
-            btn.layer.cornerRadius = 4
-            btn.tag = RiskDegree(rawValue: i)?.rawValue ?? 0
-        }
+    func configureRiskButtons() {
+    [lowBtn, medBtn, highBtn].enumerated().forEach { i, btn in
+        btn.contentEdgeInsets = .init(top: 4, left: 10, bottom: 4, right: 10)
+        btn.layer.borderColor = UIColor.secondarySystemBackground.cgColor
+        btn.layer.borderWidth = 2
+        btn.layer.cornerRadius = 4
+        btn.tag = RiskDegree(rawValue: i)?.rawValue ?? 0
     }
+}
     
-    private func throwAlert(title: String, message: String,cancel: Bool = false, handler: (()->())? = nil) {
+    func throwAlert(title: String, message: String,cancel: Bool = false, handler: (()->())? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         if cancel {
             alert.addAction(.init(title: "Cancel", style: .cancel))
@@ -225,7 +233,7 @@ extension ShareViewController {
         self.present(alert, animated: true)
     }
     
-    private func fetchLocationInfo(for location: CLLocation?) {
+    func fetchLocationInfo(for location: CLLocation?) {
         location?.fetchLocationInfo { [weak self] locationInfo, error in
             guard error == nil else { return }
             self?.locationInfo = locationInfo
@@ -233,7 +241,7 @@ extension ShareViewController {
         }
     }
     
-    private func handleBind() {
+    func handleBind() {
         postField.rx.text.orEmpty.bind(to: viewModel.description).disposed(by: disposeBag)
         ShareViewController.annotationImage.bind(to: viewModel.postImage)
             .disposed(by: disposeBag)
@@ -245,7 +253,7 @@ extension ShareViewController {
         }.disposed(by: disposeBag)
     }
     
-    private func bindMapViewImage() {
+    func bindMapViewImage() {
         ShareViewController.annotationImage.subscribe { [weak self] result in
             if let i = result.element {
                 if i != nil {
@@ -256,7 +264,7 @@ extension ShareViewController {
         }.disposed(by: disposeBag)
     }
     
-    private func prepareannotationView(for annotationView: MKAnnotationView?) {
+    func prepareannotationView(for annotationView: MKAnnotationView?) {
         annotationView?.layer.borderWidth = 2
         annotationView?.contentMode = .scaleAspectFill
         annotationView?.layer.borderColor = UIColor.systemBackground.cgColor
@@ -309,9 +317,6 @@ extension ShareViewController: CLLocationManagerDelegate {
     }
 }
 
-//MARK: Interface Delegate
-extension ShareViewController: ShareViewControllerInterface {}
-
 //MARK: Objc
 extension ShareViewController {
     
@@ -348,7 +353,7 @@ extension ShareViewController {
 
     @objc func didTapShare() {
         guard postField.text != "Explain this situation...", postField.text.count > 20 else {
-            throwAlert(title: "Ttr Again", message: "Description must be greater than 20 characters.",cancel: false)
+            throwAlert(title: "Try Again", message: "Description must be greater than 20 characters.",cancel: false)
             return
         }
         throwAlert(title: "Share this report", message: "Are you sure you want to post this report?", cancel: true) { [weak self] in

@@ -19,13 +19,14 @@ class VideoCallViewModel {
     weak var delegate: VideoCallViewControllerInterface?
     let userUid = Auth.auth().currentUser?.uid
     var calls: BehaviorRelay<[Call]> = .init(value: [])
+    var isLoading : BehaviorRelay<Bool> = .init(value: false)
 }
 
 extension VideoCallViewModel: VideoCallViewModelInterface {
     
     func makeCall(completion: @escaping (Result<Bool, Error>) -> ()) {
         guard userUid != nil else {return}
-        CallService.shared.makeCall(for: userUid!) { result in
+        CallService.shared.makeCall(for: userUid!) { [unowned self] result in
             switch result {
             case .success(_):
                 completion(.success(true))

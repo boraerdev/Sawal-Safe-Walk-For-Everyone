@@ -15,8 +15,14 @@ import FirebaseCore
 import GoogleSignIn
 import FirebaseFirestore
 
+protocol ThrowMessage {
+    func throwMessage(title: String, _ message: String)
+}
+
 protocol SignInViewControllerInterface: AnyObject {
-    
+    func layoutSubviews()
+    func prepareButtons()
+    func prepareStacks()
 }
 
 final class SignInViewController: UIViewController, SignInViewControllerInterface {
@@ -161,9 +167,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
             self.handleButtonGradients()
         }
 
-
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         signInAnimation.play()
@@ -173,7 +177,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         signInAnimation.pause()
     }
     
-    private func layoutSubviews() {
+    internal func layoutSubviews() {
         view.addSubview(signInAnimation)
         view.addSubview(signStack)
         view.addSubview(signFieldText)
@@ -259,12 +263,12 @@ extension SignInViewController {
             case .success(_):
                 self.tmpForgotView?.removeFromSuperview()
             case .failure(let err):
-                self.throwAlert(message: err.localizedDescription)
+                self.throwMessage(title: "Error", err.localizedDescription)
             }
         }
     }
     
-    private func prepareButtons() {
+    internal func prepareButtons() {
         registerInButton.rx.tap.subscribe(onNext: { [unowned self] in
             navigationController?.pushViewController(RegisterViewController(), animated: true)
         }).disposed(by: disposeBag)
@@ -284,7 +288,7 @@ extension SignInViewController {
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true)
                 case .failure(let error):
-                    self.throwAlert(message: error.localizedDescription)
+                    self.throwMessage(title: "Error", error.localizedDescription)
                 }
             }
             
@@ -302,13 +306,7 @@ extension SignInViewController {
             UIColor.main3Light])
     }
     
-    private func throwAlert(message: String) {
-        let alert = UIAlertController(title: "Try Again", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: "OK", style: .default))
-        self.present(alert, animated: true)
-    }
-    
-    private func prepareStacks() {
+    func prepareStacks() {
         //MailField-PassField-Buttons Stack
         signStack = .init(arrangedSubviews: [
             signField,
@@ -343,7 +341,6 @@ extension SignInViewController{
        prompt.addAction(okAction)
        present(prompt, animated: true, completion: nil)
      }
-    
     @objc func setupGoogle(){
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
 
@@ -354,7 +351,7 @@ extension SignInViewController{
         GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
 
           if let error = error {
-              throwAlert(message: error.localizedDescription)
+              throwMessage(title: "Error", error.localizedDescription)
             return
           }
 
@@ -424,7 +421,7 @@ extension SignInViewController{
                       }
                     )
                   } else {
-                      throwAlert(message: error.localizedDescription)
+                      self.throwMessage(title: "Error", error.localizedDescription)
                     return
                   }
                   // ...
@@ -449,4 +446,13 @@ extension SignInViewController{
             }
         }
     }
+}
+
+extension SignInViewController: ThrowMessage {
+    func throwMessage(title: String, _ message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: "OK", style: .default))
+        self.present(alert, animated: true)
+    }
+    
 }

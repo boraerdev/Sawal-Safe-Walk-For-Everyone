@@ -23,6 +23,7 @@ class CallCell: LBTAListCell<Call> {
     
     @objc func didTapjoin() {
         if let parent = parentController as? CallList {
+            print("cell çalıştı")
             parent.joinChannel(uid: item.authorUid)
         }
     }
@@ -72,6 +73,7 @@ class CallList: LBTAListController<CallCell, Call>, UICollectionViewDelegateFlow
 //    }
     
     func joinChannel(uid: String) {
+        print("calllist çalıştı")
         delegate?.didTapJoin(role: .audience, channel: uid)
     }
     

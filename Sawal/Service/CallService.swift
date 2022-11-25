@@ -72,7 +72,7 @@ class CallService {
     }
     
     func fetchActiveCalls(completion: @escaping ([Call])->()) {
-        Firestore.firestore().collection("calls").getDocuments{ query, err in
+        Firestore.firestore().collection("calls").addSnapshotListener{ query, err in
             guard err == nil, let query = query else {
                 return
             }
@@ -84,7 +84,7 @@ class CallService {
                     return nil
                 }
             })
-            completion(calls)
+            VideoCallViewModel.shared.calls.accept(calls)
         }
     }
 

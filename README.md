@@ -1,1 +1,1 @@
-![Sawal](https://user-images.githubusercontent.com/102177298/198149110-42fcaab9-5df8-4860-b886-1b77461b3f37.png)
+![MacBook Pro 16_ - 1](https://user-images.githubusercontent.com/102177298/204049844-afc6780b-a96f-42db-a336-6c857ae9b751.png)

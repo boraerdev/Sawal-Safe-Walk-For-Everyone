@@ -9,24 +9,33 @@ import UIKit
 import LBTATools
 import FirebaseAuth
 
-final class SideMenuViewController: UIViewController {
+protocol SideMenuViewControllerInterface: AnyObject {
+    
+}
+
+final class SideMenuViewController: UIViewController, SideMenuViewControllerInterface {
+    
+    //MARK: Def
+    lazy var buttonLists: MenuButtonsList = {
+        let list = MenuButtonsList()
+        list.delegate = self
+        return list
+    }()
     
     //MARK: UI
     let exitBtn = UIButton(title: " Log Out", titleColor: .systemRed, backgroundColor: .white, target: self, action: #selector(didTapExit))
-    
-    lazy var buttonLists = MenuButtonsList()
     
     let userFullNameLbl = UILabel(text: AuthManager.shared.currentUser?.fullName, font: .systemFont(ofSize: 22, weight: .heavy), textColor: .white)
     
     let userMailLbl = UILabel(text: AuthManager.shared.currentUser?.mail, font: .systemFont(ofSize: 13, weight: .light), textColor: .white)
     
     let versionLbl = UILabel(text: "v0.0.5", font: .systemFont(ofSize: 13, weight: .light), textColor: .white, textAlignment: .center, numberOfLines: 1)
-    
 
 }
 
 //MARK: Core
 extension SideMenuViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.applyGradient(colours: [.main3Light, .main3])
@@ -66,55 +75,8 @@ extension SideMenuViewController {
         } catch _ {
         }
     }
-}
-
-struct MenuButton {
-    let image: UIImage
-    let title: String
-    let handler: ()->()
-}
-
-class MenuButtonCell: LBTAListCell<MenuButton> {
-    
-    override var item: MenuButton! {
-        didSet {
-            btn.setTitle(item.title, for: .normal)
-            btnImage.image = item.image
-        }
-    }
-    
-    let btnImage = UIImageView(image: nil, contentMode: .scaleAspectFit)
-    let btn = UIButton(title: "", titleColor: .white, font: .systemFont(ofSize: 15), target: self, action: #selector(didTapBtn))
-    
-    override func setupViews() {
-        super.setupViews()
-        backgroundColor = .clear
-        btnImage.tintColor = .white
-        hstack(btnImage, btn, UIView(), spacing: 10)
-    }
-    
-    @objc func didTapBtn() {
-        item.handler()
-    }
     
 }
 
 
-class MenuButtonsList: LBTAListController<MenuButtonCell, MenuButton>, UICollectionViewDelegateFlowLayout {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        items = [
-            .init(image: .init(systemName: "gearshape")!, title: "Settings", handler: {
-                let vc = SettingsViewController()
-                self.present(vc, animated: true)
-            })
-        ]
-        collectionView.backgroundColor = .clear
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: view.frame.width, height: 45)
-    }
-    
-}
+

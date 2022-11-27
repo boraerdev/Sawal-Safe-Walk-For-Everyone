@@ -7,10 +7,11 @@
 
 import UIKit
 import LBTATools
-import SwiftUI
 
 class SettingsViewController: UIViewController {
     
+    //MARK: Def
+    // Cell name-desc-icon
     let infoContainerList: ItemsList = {
        let list = ItemsList()
         list.items = [
@@ -21,7 +22,6 @@ class SettingsViewController: UIViewController {
         ]
         return list
     }()
-    
     let devContainerList: ItemsList = {
        let list = ItemsList()
         list.items = [
@@ -32,11 +32,12 @@ class SettingsViewController: UIViewController {
         return list
     }()
     
+    //MARK: Core
     override func viewDidLoad() {
+        title = "Settings"
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         view.stack(
-            prepareCustomTitle(),
             prepareInfoContainer(),
             prepareDeveloperContainer(),
             UIView(),
@@ -44,11 +45,10 @@ class SettingsViewController: UIViewController {
             .withMargins(.allSides(16))
     }
     
-    func prepareCustomTitle() -> UIView {
-        let title = UILabel(text: "Settings", font: .systemFont(ofSize: 22, weight: .bold), textColor: .label, textAlignment: .center, numberOfLines: 1)
-        return title
-    }
-    
+}
+
+//MARK: Funcs
+extension SettingsViewController {
     func prepareInfoContainer() -> UIView {
         let bg = UIView(backgroundColor: .secondarySystemBackground)
         bg.withHeight(CGFloat(infoContainerList.items.count)*50)
@@ -66,74 +66,7 @@ class SettingsViewController: UIViewController {
         bg.clipsToBounds = true
         return bg
     }
-    
-}
 
-class ItemsCell: LBTAListCell<[String]> {
-    
-    override var item: [String]! {
-        didSet{
-            title.text = item[0]
-            desc.text = item[1]
-            image.image = .init(systemName: item[2])
-        }
-    }
-    
-    let title = UILabel(text: "", font: .systemFont(ofSize: 17, weight: .bold), textColor: .label, textAlignment: .center, numberOfLines: 0)
-    
-    let desc = UILabel(text: "", font: .systemFont(ofSize: 17, weight: .regular), textColor: .label, textAlignment: .center, numberOfLines: 0)
-    
-    let image = UIImageView(image: .init(systemName: "house"), contentMode: .scaleAspectFit)
-
-    
-    override func setupViews() {
-        super.setupViews()
-        image.tintColor = .label
-        image.withWidth(15)
-        image.withHeight(15)
-        backgroundColor = .clear
-        stack(
-            hstack(image, title,UIView(), desc, spacing: 10)
-        )
-            .withMargins(.init(top: 5, left: 20, bottom: 5, right: 20))
-        
-    }
-    
-}
-
-class ItemsList: LBTAListController<ItemsCell, [String]>, UICollectionViewDelegateFlowLayout {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        collectionView.backgroundColor = .clear
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: view.frame.width, height: 50)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        0
-    }
-        
 }
 
 
-//Previews
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContainerView()
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        
-        func makeUIViewController(context: Context) -> some UIViewController {
-            return SettingsViewController()
-        }
-        
-        func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-            
-        }
-        
-    }
-}

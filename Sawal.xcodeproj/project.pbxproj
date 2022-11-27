@@ -20,6 +20,8 @@
 		0A53BDAD28F9C91A0042BB71 /* warning.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A53BDAC28F9C91A0042BB71 /* warning.json */; };
 		0A558F0F2909D6680052FE6A /* UIButton+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A558F0E2909D6680052FE6A /* UIButton+Extentions.swift */; };
 		0A58FA1D29049730008F3C47 /* MapSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A58FA1C29049730008F3C47 /* MapSearchCell.swift */; };
+		0A5EB1832933F62D002A23C6 /* SideMenuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5EB1822933F62D002A23C6 /* SideMenuListView.swift */; };
+		0A5EB1852933F87A002A23C6 /* ItemsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5EB1842933F87A002A23C6 /* ItemsList.swift */; };
 		0A67613128F04A3500019BC4 /* CustomCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613028F04A3500019BC4 /* CustomCameraController.swift */; };
 		0A67613528F0676100019BC4 /* CLLocation+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */; };
 		0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */; };
@@ -80,6 +82,8 @@
 		0A53BDAC28F9C91A0042BB71 /* warning.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = warning.json; sourceTree = "<group>"; };
 		0A558F0E2909D6680052FE6A /* UIButton+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extentions.swift"; sourceTree = "<group>"; };
 		0A58FA1C29049730008F3C47 /* MapSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchCell.swift; sourceTree = "<group>"; };
+		0A5EB1822933F62D002A23C6 /* SideMenuListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuListView.swift; sourceTree = "<group>"; };
+		0A5EB1842933F87A002A23C6 /* ItemsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsList.swift; sourceTree = "<group>"; };
 		0A67613028F04A3500019BC4 /* CustomCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCameraController.swift; sourceTree = "<group>"; };
 		0A67613428F0676100019BC4 /* CLLocation+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extentions.swift"; sourceTree = "<group>"; };
 		0A70FC0D28EACEBA006029D5 /* WelcomePage2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage2ViewController.swift; sourceTree = "<group>"; };
@@ -190,10 +194,20 @@
 			path = MapSearch;
 			sourceTree = "<group>";
 		};
+		0A5EB1812933F616002A23C6 /* SideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */,
+				0A5EB1822933F62D002A23C6 /* SideMenuListView.swift */,
+			);
+			path = SideMenu;
+			sourceTree = "<group>";
+		};
 		0A7A730A28FF0CAB00920856 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				0A9D22D428FF2EF400F97E48 /* SettingsViewController.swift */,
+				0A5EB1842933F87A002A23C6 /* ItemsList.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -271,9 +285,9 @@
 		0A7D122C28E2002B009C2C4C /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				0A5EB1812933F616002A23C6 /* SideMenu */,
 				0A7D122D28E20030009C2C4C /* View */,
 				0A7D122E28E20034009C2C4C /* ViewModel */,
-				0A53BDAA28F9B6330042BB71 /* SideMenuViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -599,6 +613,7 @@
 				0A89F85628F337A400003DD8 /* CLLocationCoordinate2D+Extentions.swift in Sources */,
 				0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */,
 				0AF9DCEF28EC03D300B2570F /* SignInViewModel.swift in Sources */,
+				0A5EB1852933F87A002A23C6 /* ItemsList.swift in Sources */,
 				0AA3059E28FC9EAF008C528D /* Comment.swift in Sources */,
 				0AA7F07D28F0CF21000ED5D3 /* ShareViewModel.swift in Sources */,
 				0AEC1F17292950AF00CA5C0D /* VideoCallViewModel.swift in Sources */,
@@ -608,6 +623,7 @@
 				0A2D155628E9EC09001E8240 /* SignInViewController.swift in Sources */,
 				0A70FC0E28EACEBB006029D5 /* WelcomePage2ViewController.swift in Sources */,
 				0A53BDAB28F9B6330042BB71 /* SideMenuViewController.swift in Sources */,
+				0A5EB1832933F62D002A23C6 /* SideMenuListView.swift in Sources */,
 				0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

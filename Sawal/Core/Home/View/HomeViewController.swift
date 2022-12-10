@@ -15,7 +15,6 @@ protocol HomeViewControllerInterface: AnyObject {
     func prepareMainView()
     func prepareSideMenu()
     func prepareStack()
-    func configureButtons()
     func bindButtons()
 }
 
@@ -26,12 +25,15 @@ final class HomeViewController: UIViewController, HomeViewControllerInterface {
     let viewModel = HomeControllerViewModel()
     let disposeBag = DisposeBag()
     let sideMenu = SideMenuViewController()
-    let darkBgForSideMenu = UIView(backgroundColor: .black.withAlphaComponent(0.1))
-    let badgeText = UILabel(text: "1",font: .systemFont(ofSize: 13), textColor: .white)
 
     //MARK: UI
-    private lazy var goMapBtn = UIButton()
-    private var tmpCircleView: UIView? = nil
+    private lazy var goMapBtn = HomeMainButton(imgName: "Location", subtitle: "Go map and take a look risky areas.", title: "Map")
+    
+    private lazy var shareRiskBtn = HomeMainButton(imgName: "Attention", subtitle: "Post a risk and make trips safer.", title: "Post")
+    
+    private lazy var planTrpBtn = HomeMainButton(imgName: "Checkbox", subtitle: "Plan a trip and walk safely.", title: "Plan a Trip")
+    
+    private lazy var videoCallBtn = HomeMainButton(imgName: "Compass", subtitle: "Start a video call and get directions.", title: "Be My Eyes")
     
     private lazy var welcomeStack: UIStackView = {
         let welcomeText = UILabel()
@@ -47,12 +49,12 @@ final class HomeViewController: UIViewController, HomeViewControllerInterface {
         return stack
     }()
     
-    private lazy var shareRiskBtn = UIButton()
+    private var tmpCircleView: UIView? = nil
     
-    private lazy var planTrpBtn = UIButton()
+    let darkBgForSideMenu = UIView(backgroundColor: .black.withAlphaComponent(0.1))
     
-    private lazy var videoCallBtn = UIButton()
-    
+    let badgeText = UILabel(text: "1",font: .systemFont(ofSize: 13), textColor: .white)
+
 }
 
 //MARK: Core
@@ -97,7 +99,6 @@ extension HomeViewController {
         view.addSubview(sideMenu.view)
         sideMenu.view.frame = .init(x: -(view.frame.width * 0.8), y: 0, width: view.frame.width * 0.8, height: view.frame.height)
         darkBgForSideMenu.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(closeMenu)))
-        
     }
     
     func prepareStack() {
@@ -110,71 +111,26 @@ extension HomeViewController {
             spacing: 10,
             distribution: .fillEqually
         )
-        configureButtons()
-    }
-    
-    func configureButtons() {
-        
-        let buttons: [HomeBtnViewModel] = [
-            .init(title: "Map", subtitle: "Go map and take a look risky areas.", imgName: "Location"),
-            .init(title: "Post", subtitle: "Post a risk and make trips safer.", imgName: "Attention"),
-            .init(title: "Plan a Trip", subtitle: "Plan a trip and walk safely.", imgName: "Checkbox"),
-            .init(title: "Be My Eyes", subtitle: "Start a video call and get directions.", imgName: "Compass")
-        ]
-        
-
-        [goMapBtn,shareRiskBtn, planTrpBtn, videoCallBtn].enumerated().forEach { i,btn in
-            //Bg Img
-            let bgImg = UIImageView(image: .init(named: buttons[i].imgName)!)
-            bgImg.contentMode = .scaleAspectFit
-            bgImg.tintColor = .secondarySystemBackground
-            bgImg.alpha = 1
-            
-            //Btn
-            btn.backgroundColor = .systemBackground
-            btn.setTitle("", for: .normal)
-            btn.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
-            btn.layer.borderWidth = 0.2
-            btn.layer.cornerRadius = 8
-            btn.layer.masksToBounds = true
-            btn.addSubview(bgImg)
-            bgImg.anchor(top: btn.topAnchor, leading: .none, bottom: .none, trailing: btn.trailingAnchor, padding: .init(top: -100, left: 0, bottom: 0, right: -140), size: .init(width: 350, height: 350))
-
-            //Subtitle
-            let subtitle = UILabel(text: buttons[i].subtitle, font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .left, numberOfLines: 2)
-            btn.addSubview(subtitle)
-            subtitle.anchor(top: nil, leading: btn.leadingAnchor, bottom: btn.bottomAnchor, trailing: btn.trailingAnchor, padding: .init(top: 0, left: 20, bottom: 20, right: 20))
-            
-            //Title
-            let titleBtn = UILabel(text: buttons[i].title, font: .systemFont(ofSize: 28, weight: .bold), textColor: .label, textAlignment: .left, numberOfLines: 2)
-            btn.addSubview(titleBtn)
-            titleBtn.anchor(top: nil, leading: subtitle.leadingAnchor, bottom: subtitle.topAnchor, trailing: .none)
-            titleBtn.withWidth(100)
-            
-        }
     }
     
     func bindButtons() {
+        
         goMapBtn.rx.tap.subscribe(onNext: { [unowned self] in
             navigationController?.pushViewController(MapViewController(), animated: true)
-        })
-        .disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
         
         shareRiskBtn.rx.tap.subscribe(onNext: {[unowned self] in
             let simulator = true
-            simulator ? navigationController?.pushViewController(ShareViewController(), animated: true) :                     navigationController?.pushViewController(CameraView(), animated: true)
-        })
-        .disposed(by: disposeBag)
+            simulator ? navigationController?.pushViewController(ShareViewController(), animated: true) :                navigationController?.pushViewController(CameraView(), animated: true)
+        }).disposed(by: disposeBag)
         
         planTrpBtn.rx.tap.subscribe(onNext: { [unowned self] in
             navigationController?.pushViewController(PlanATripViewController(), animated: true)
-        })
-        .disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
         
         videoCallBtn.rx.tap.subscribe(onNext: { [unowned self] in
             navigationController?.pushViewController(VideoCallViewController(), animated: true)
-        })
-        .disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
         
     }
 
@@ -190,7 +146,6 @@ extension HomeViewController {
         circleView.anchor(top: videoCallBtn.topAnchor, leading: nil, bottom: nil, trailing: videoCallBtn.trailingAnchor, padding: .init(top: padding, left: 0, bottom: 0, right: padding))
         circleView.stack(badgeText, alignment: .center)
         tmpCircleView = circleView
-
     }
 
 }

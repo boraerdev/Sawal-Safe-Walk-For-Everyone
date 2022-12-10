@@ -70,8 +70,22 @@ extension UIView {
         self.addSubviews(visualBottomBlur,visualTopBlur)
         visualBottomBlur.anchor(top: self.safeAreaLayoutGuide.bottomAnchor, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: self.trailingAnchor)
         visualTopBlur.anchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: self.safeAreaLayoutGuide.topAnchor, trailing: self.trailingAnchor)
-
     }
     
+    func addExitBtn() -> UIButton {
+        lazy var exitBtn: UIButton = {
+            let btn = UIButton()
+            btn.setImage(.init(systemName: "xmark"), for: .normal)
+            btn.tintColor = .label
+            btn.layer.cornerRadius = 8
+            btn.backgroundColor = .secondarySystemBackground
+            return btn
+        }()
+        
+        self.addSubviews(exitBtn)
+        exitBtn.anchor(top: self.safeAreaLayoutGuide.topAnchor, leading: self.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
+        exitBtn.dropShadow()
+        return exitBtn
+    }
     
 }

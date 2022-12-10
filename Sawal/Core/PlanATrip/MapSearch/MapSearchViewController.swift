@@ -33,7 +33,7 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
 
     
     //MARK: UI
-    private lazy var searchField = IndentedTextField(placeholder: "Search...", padding: 10, cornerRadius: 8, backgroundColor: .secondarySystemBackground)
+    private lazy var searchField = SearchTextField(placeholder: "Search...", padding: 10)
     
     private lazy var currentLocationBtn = UIButton(title: " Current Location", titleColor: .label, font: .systemFont(ofSize: 17), backgroundColor: .systemBackground, target: self, action: #selector(didTapCurrentLocation))
 
@@ -43,8 +43,7 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
         performLocalSearch()
         prepareNavBar()
         prepareMainView()
-        handleBlur()
-        
+        view.handleSafeAreaBlurs()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,14 +99,6 @@ extension MapSearchViewController {
         
     }
     
-    private func handleBlur() {
-        let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-        let visualTopBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-        view.addSubviews(visualBottomBlur,visualTopBlur)
-        visualBottomBlur.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        visualTopBlur.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor)
-    }
-  
     private func handleSpeechView() {
         micView?.removeFromSuperview()
         
@@ -186,10 +177,11 @@ extension MapSearchViewController {
         let micBtn = UIButton(image: .init(systemName: "mic.fill")!, tintColor: .main3, target: self, action: #selector(didTapMic))
         
         setupCurLocBtn()
-        containver.hstack(backBtn.withWidth(25),
-                          searchField,
-                          micBtn.withWidth(25),
-                          spacing: 10).withMargins(.init(top: 10, left: 20, bottom: 10, right: 20))
+        containver.hstack(
+            backBtn.withWidth(25),
+            searchField.withHeight(45),
+            micBtn.withWidth(25),
+            spacing: 10).withMargins(.init(top: 10, left: 20, bottom: 10, right: 20))
         
     }
     
@@ -225,7 +217,6 @@ extension MapSearchViewController {
     }
     
 }
-
 
 extension MapSearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

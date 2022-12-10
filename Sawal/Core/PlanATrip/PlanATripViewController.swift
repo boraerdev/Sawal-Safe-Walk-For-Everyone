@@ -16,7 +16,6 @@ import AVFoundation
 protocol PlanATripViewControllerInterFace: AnyObject {
     func speech(message: String)
     func handleGestureAddPin()
-    func preapreExitBtn()
     func prepareRiskView()
     func AddRiskView()
     func RemoveRiskView()
@@ -71,15 +70,6 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     
     private lazy var startIcon = UIImageView(image: .init(systemName: "circle.circle"))
     
-    private lazy var exitBtn: UIButton = {
-        let btn = UIButton()
-        btn.setImage(.init(systemName: "xmark"), for: .normal)
-        btn.tintColor = .label
-        btn.backgroundColor = .secondarySystemBackground
-        btn.addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
-        return btn
-    }()
-    
     private lazy var header = UIView(backgroundColor: .systemBackground)
     
     private lazy var startBtn: UIButton = {
@@ -108,7 +98,6 @@ extension PlanATripViewController {
         addTargets()
         view.stack(mapView)
         prepareFields()
-        preapreExitBtn()
         view.handleSafeAreaBlurs()
         configureSomeUI()
         prepareRiskView()
@@ -116,6 +105,7 @@ extension PlanATripViewController {
             self.mapView.setUserTrackingMode(.followWithHeading, animated: false)
         }
         handleGestureAddPin()
+        view.addExitBtn().addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -138,11 +128,6 @@ extension PlanATripViewController {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
         longPressGesture.minimumPressDuration = 1.0
         self.mapView.addGestureRecognizer(longPressGesture)
-    }
-    
-    func preapreExitBtn() {
-        view.addSubviews(exitBtn)
-        exitBtn.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 10, bottom: 0, right: 0), size: .init(width: 45, height: 45))
     }
     
     func prepareRiskView() {
@@ -175,7 +160,6 @@ extension PlanATripViewController {
         
         //Corner Radius
         instructionsHud.layer.cornerRadius = 8
-        exitBtn.layer.cornerRadius = 8
         fieldsBG.layer.cornerRadius = 8
         fieldsBG.layer.masksToBounds = true
         
@@ -195,7 +179,6 @@ extension PlanATripViewController {
         
         //Shadows
         startBtn.dropShadow()
-        exitBtn.dropShadow()
         instructionsHud.setupShadow(opacity: 0.5, radius: 10, offset: .zero, color: .main3)
     }
 

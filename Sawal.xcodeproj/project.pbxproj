@@ -55,6 +55,7 @@
 		0ACB8F8428EA212500A17CC4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */; };
 		0ACB8F8828EA2EFD00A17CC4 /* WelcomePage3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */; };
 		0AEA481628ECD566002538D6 /* UIColor+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEA481528ECD566002538D6 /* UIColor+Extentions.swift */; };
+		0AEBEDEE2944B18E001A2D0A /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEBEDED2944B18E001A2D0A /* SearchTextField.swift */; };
 		0AEC1F1529294EB100CA5C0D /* CallService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEC1F1429294EB100CA5C0D /* CallService.swift */; };
 		0AEC1F17292950AF00CA5C0D /* VideoCallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEC1F16292950AF00CA5C0D /* VideoCallViewModel.swift */; };
 		0AEC1F1A292989D000CA5C0D /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEC1F19292989D000CA5C0D /* Const.swift */; };
@@ -119,6 +120,7 @@
 		0ACB8F8328EA212500A17CC4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0ACB8F8728EA2EFD00A17CC4 /* WelcomePage3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage3ViewController.swift; sourceTree = "<group>"; };
 		0AEA481528ECD566002538D6 /* UIColor+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extentions.swift"; sourceTree = "<group>"; };
+		0AEBEDED2944B18E001A2D0A /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		0AEC1F1429294EB100CA5C0D /* CallService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallService.swift; sourceTree = "<group>"; };
 		0AEC1F16292950AF00CA5C0D /* VideoCallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewModel.swift; sourceTree = "<group>"; };
 		0AEC1F19292989D000CA5C0D /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 		0A7B570928F1D0A900146147 /* PlanATrip */ = {
 			isa = PBXGroup;
 			children = (
+				0AEBEDEC2944B172001A2D0A /* View */,
 				0A58FA1B2904971E008F3C47 /* MapSearch */,
 				0A7B570A28F1D0BC00146147 /* PlanATripViewController.swift */,
 				0A02361328F5BF2F00929243 /* PlanATripViewModel.swift */,
@@ -430,6 +433,14 @@
 			path = PagingView;
 			sourceTree = "<group>";
 		};
+		0AEBEDEC2944B172001A2D0A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0AEBEDED2944B18E001A2D0A /* SearchTextField.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		0AF36F2A28F470FA00A986F0 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -625,6 +636,7 @@
 				0A53BDAB28F9B6330042BB71 /* SideMenuViewController.swift in Sources */,
 				0A5EB1832933F62D002A23C6 /* SideMenuListView.swift in Sources */,
 				0A7D124128E201D4009C2C4C /* MapViewController.swift in Sources */,
+				0AEBEDEE2944B18E001A2D0A /* SearchTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,7 +16,6 @@ import AVFoundation
 protocol PlanATripViewControllerInterFace: AnyObject {
     func speech(message: String)
     func handleGestureAddPin()
-    func handleBlur()
     func preapreExitBtn()
     func prepareRiskView()
     func AddRiskView()
@@ -66,9 +65,9 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     
     private lazy var fieldsBG = UIView(backgroundColor: .secondarySystemBackground)
     
-    private lazy var startField = IndentedTextField(placeholder: "Start", padding: 10)
+    private lazy var startField = SearchTextField(placeholder: "Start", padding: 10)
     
-    private lazy var finishField = IndentedTextField(placeholder: "Finish", padding: 10)
+    private lazy var finishField = SearchTextField(placeholder: "Finish", padding: 10)
     
     private lazy var startIcon = UIImageView(image: .init(systemName: "circle.circle"))
     
@@ -110,7 +109,7 @@ extension PlanATripViewController {
         view.stack(mapView)
         prepareFields()
         preapreExitBtn()
-        handleBlur()
+        view.handleSafeAreaBlurs()
         configureSomeUI()
         prepareRiskView()
         DispatchQueue.main.async {
@@ -139,14 +138,6 @@ extension PlanATripViewController {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
         longPressGesture.minimumPressDuration = 1.0
         self.mapView.addGestureRecognizer(longPressGesture)
-    }
-    
-    func handleBlur() {
-        let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-        let visualTopBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-        view.addSubviews(visualBottomBlur,visualTopBlur)
-        visualBottomBlur.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        visualTopBlur.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor)
     }
     
     func preapreExitBtn() {
@@ -190,21 +181,12 @@ extension PlanATripViewController {
         
         [startField, finishField].forEach { field in
             field.withHeight(45)
-            field.textColor = .label
-            field.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
-            field.layer.borderWidth = 0.2
-            field.layer.cornerRadius = 8
-            field.backgroundColor = .systemBackground
         }
         
         instructionsHud.layer.borderWidth = 2
         instructionsHud.layer.cornerRadius = 8
         instructionsHud.layer.borderColor = UIColor.main3.cgColor
         directionImage.tintColor = .main3
-
-        startField.attributedPlaceholder = .init(string: "Start", attributes: [.foregroundColor: UIColor.label.withAlphaComponent(0.3)])
-        
-        finishField.attributedPlaceholder = .init(string: "Finish", attributes: [.foregroundColor: UIColor.label.withAlphaComponent(0.3)])
         
         [startIcon, finishIcon].forEach { icon in
             icon.contentMode = .scaleAspectFit
@@ -352,10 +334,34 @@ extension PlanATripViewController {
             self.speechSynthesizer.speak(speecU)
     }
     
+    func selectImageForPinView(ano: MKAnnotation)-> UIImage {
+        if let ano = ano as? DirectionEndPoint {
+            switch ano.type {
+            case "Start":
+                return .init(named: "StartPin")!
+            case "Finish":
+                return .init(named: "FinishPin")!
+            default: break
+            }
+        } else if let ano = ano as? RiskColoredAnnotations {
+            switch ano.post.riskDegree {
+            case 0:
+                return .init(named: "LowPin")!
+            case 1:
+                return .init(named: "MedPin")!
+            case 2:
+                return .init(named: "HighPin")!
+            default: break
+            }
+        }
+        return UIImage()
+    }
+    
 }
 
 //MARK: CLManagerDelegate
 extension PlanATripViewController: CLLocationManagerDelegate {
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let loca = locations.first else {return}
         viewModel.currentLocation.accept(loca.coordinate)
@@ -371,7 +377,6 @@ extension PlanATripViewController: CLLocationManagerDelegate {
             print("ok")
         }
     }
-    
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         self.stepCounter += 1
@@ -397,27 +402,10 @@ extension PlanATripViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is DirectionEndPoint || annotation is RiskColoredAnnotations) {return nil}
         let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id")
-        if let customAnnotation = annotation as? DirectionEndPoint {
-            if customAnnotation.type == "Start" {
-                annotationView.image = .init(named: "StartPin")
-            } else if customAnnotation.type == "Finish" {
-                annotationView.image = .init(named: "FinishPin")
-            }
-        } else {
-            annotationView.canShowCallout = true
-            if let customPin = annotation as? RiskColoredAnnotations {
-                if customPin.post.riskDegree == 0 {
-                    annotationView.image = .init(named: "LowPin")
-                }else if customPin.post.riskDegree == 1 {
-                    annotationView.image = .init(named: "MedPin")
-                }else if customPin.post.riskDegree == 2 {
-                    annotationView.image = .init(named: "HighPin")
-                }
-            }
-        }
+        annotationView.image = selectImageForPinView(ano: annotation)
         return annotationView
     }
-    
+        
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
            let polylineRenderer = MKPolylineRenderer(overlay: overlay)
         polylineRenderer.strokeColor = .systemRed
@@ -449,14 +437,9 @@ extension PlanATripViewController {
                     viewModel.finishLocation.accept(mapItem.placemark.coordinate)
                     self.finishItem = mapItem
                     updateStartFinishAnnotations()
-
                 }
             }
             requestForDirections()
-            
-            
-            
-            
         }
     }
     

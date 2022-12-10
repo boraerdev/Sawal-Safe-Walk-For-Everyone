@@ -64,5 +64,14 @@ extension UIView {
         layer.shadowOffset = .zero
     }
     
+    func handleSafeAreaBlurs() {
+        let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        let visualTopBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        self.addSubviews(visualBottomBlur,visualTopBlur)
+        visualBottomBlur.anchor(top: self.safeAreaLayoutGuide.bottomAnchor, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: self.trailingAnchor)
+        visualTopBlur.anchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: self.safeAreaLayoutGuide.topAnchor, trailing: self.trailingAnchor)
+
+    }
+    
     
 }

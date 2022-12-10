@@ -59,8 +59,7 @@ extension MapViewController {
         addClearGesture()
         handleMapKit()
         handleBackBtn()
-        handleBlur()
-        
+        view.handleSafeAreaBlurs()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,14 +80,6 @@ extension MapViewController {
 
 //MARK: Funcs
 extension MapViewController {
-    
-    private func handleBlur() {
-        let visualBottomBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-        let visualTopBlur = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-        view.addSubviews(visualBottomBlur,visualTopBlur)
-        visualBottomBlur.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        visualTopBlur.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor)
-    }
     
     private func prepareMainView() {
         view.backgroundColor = .systemBackground
@@ -142,17 +133,20 @@ extension MapViewController {
     private func handleAnnotationImage(_ annotation: MKAnnotation, for annotationView: MKAnnotationView ) {
         annotationView.canShowCallout = true
         if let customPin = annotation as? RiskColoredAnnotations {
-            if customPin.post.riskDegree == 0 {
+            switch customPin.post.riskDegree {
+            case 0:
                 annotationView.image = .init(named: "LowPin")
-            }else if customPin.post.riskDegree == 1 {
+            case 1:
                 annotationView.image = .init(named: "MedPin")
-            }else if customPin.post.riskDegree == 2 {
+            case 2:
                 annotationView.image = .init(named: "HighPin")
+            default: break
             }
         }
     }
     
     private func setupPostInfoHud(view: MKAnnotationView) {
+        
         let customCallout = UIView(backgroundColor: .clear)
         let hudView = UIView(backgroundColor: .secondarySystemBackground)
         let post: Post!
@@ -168,12 +162,30 @@ extension MapViewController {
         hudView.dropShadow()
         
         if let ano = view.annotation as? RiskColoredAnnotations {
+            
+            //Set Data
             post = ano.post
             selectedPost = ano.post
+            
+            //Configure Items
             bgImage.kf.setImage(with: URL(string: post.imageURL!), placeholder: UIImage(systemName: "wifi"))
-            riskDEgreeLbl.text = post.riskDegree == 0 ? "Low Risk Area" : post.riskDegree == 1 ? "Medium Risk Area" : "High Risk Area"
-            riskDEgreeLbl.textColor = post.riskDegree == 0 ? .systemOrange : post.riskDegree == 1 ? .systemRed : .main2
+            
             descLbl.text = post.description
+
+            switch post.riskDegree {
+            case 0:
+                riskDEgreeLbl.text = "Low Risk Area"
+                riskDEgreeLbl.textColor = .systemOrange
+            case 1:
+                riskDEgreeLbl.text = "Medium Risk Area"
+                riskDEgreeLbl.textColor = .systemRed
+            case 2:
+                riskDEgreeLbl.text = "High Risk Area"
+                riskDEgreeLbl.textColor = .main2
+            default: break
+            }
+            
+            //Fetch Adress
             let loc = CLLocation(latitude: post.location.latitude, longitude: post.location.longitude)
             loc.fetchLocationInfo { locationInfo, error in
                 adressLbl.text = locationInfo?.name
@@ -209,8 +221,6 @@ extension MapViewController {
         customCallout.withWidth(100)
         customCallout.withHeight(150)
     }
-    
-    
     
 }
 

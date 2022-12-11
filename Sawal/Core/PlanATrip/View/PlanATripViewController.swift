@@ -70,22 +70,15 @@ final class PlanATripViewController: UIViewController, PlanATripViewControllerIn
     
     private lazy var startIcon = UIImageView(image: .init(systemName: "circle.circle"))
     
+    private lazy var finishIcon = UIImageView(image: .init(systemName: "pin"))
+    
     private lazy var header = UIView(backgroundColor: .systemBackground)
     
-    private lazy var startBtn: UIButton = {
-        let btn = UIButton()
-        btn.setTitle(" Go", for: .normal)
-        btn.setTitleColor(.label, for: .normal)
-        btn.setImage(.init(systemName: "arrowtriangle.right"), for: .normal)
-        btn.tintColor = .label
-        btn.backgroundColor = .systemBackground
-        btn.layer.cornerRadius = 8
+    private lazy var startBtn: MainButton = {
+        let btn = MainButton(title: "Go", imgName: "arrowtriangle.right")
         btn.addTarget(self, action: #selector(didTapStart), for: .touchUpInside)
         return btn
     }()
-    
-    private lazy var finishIcon = UIImageView(image: .init(systemName: "pin"))
-    
     
 }
 
@@ -178,7 +171,7 @@ extension PlanATripViewController {
         }
         
         //Shadows
-        startBtn.dropShadow()
+        //startBtn.dropShadow()
         instructionsHud.setupShadow(opacity: 0.5, radius: 10, offset: .zero, color: .main3)
     }
 

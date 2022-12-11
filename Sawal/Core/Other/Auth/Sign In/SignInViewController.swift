@@ -43,17 +43,7 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         return ani
     }()
     
-    private lazy var spinner: UIActivityIndicatorView = {
-        let ind = UIActivityIndicatorView(style: .large)
-        ind.frame = .init(x: 0, y: 0, width: 100, height: 100)
-        let bg = UIView()
-        bg.backgroundColor = .secondarySystemBackground
-        bg.layer.cornerRadius = 8
-        bg.frame = ind.bounds
-        ind.layer.insertSublayer(bg.layer, at: 0)
-        ind.center = view.center
-        return ind
-    }()
+    private lazy var spinner = UIActivityIndicatorView()
     
     private lazy var signField: UITextField = {
         let field = UITextField()
@@ -104,14 +94,9 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         return lbl
     }()
     
-    private lazy var signInButton: UIButton = {
-       let btn = UIButton()
-        btn.setTitle("Sign In", for: .normal)
-        btn.layer.cornerRadius = 8
-        btn.setTitleColor(.systemBackground, for: .normal)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.clipsToBounds = true
-        btn.layer.masksToBounds = true
+    private lazy var signInButton: MainButton = {
+        let btn = MainButton(title: "Sign In", tintColor: .systemBackground)
+        btn.backgroundColor = .main3
         return btn
     }()
     
@@ -166,6 +151,8 @@ final class SignInViewController: UIViewController, SignInViewControllerInterfac
         DispatchQueue.main.async {
             self.handleButtonGradients()
         }
+        
+        spinner = view.setupSpinner()
 
     }
     

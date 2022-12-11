@@ -35,7 +35,11 @@ final class MapSearchViewController: LBTAListController<MapSearchCell, MKMapItem
     //MARK: UI
     private lazy var searchField = SearchTextField(placeholder: "Search...", padding: 10)
     
-    private lazy var currentLocationBtn = UIButton(title: " Current Location", titleColor: .label, font: .systemFont(ofSize: 17), backgroundColor: .systemBackground, target: self, action: #selector(didTapCurrentLocation))
+    private lazy var currentLocationBtn: MainButton = {
+       let btn = MainButton(title: "Current Location", imgName: "circle.circle")
+        btn.addTarget(self, action: #selector(didTapCurrentLocation), for: .touchUpInside)
+        return btn
+    }()
 
     //MARK: Core
     override func viewDidLoad() {
@@ -94,9 +98,7 @@ extension MapSearchViewController {
             for segment in result.bestTranscription.segments {
                 let indexTo = bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
             }
-            
         })
-        
     }
     
     private func handleSpeechView() {
@@ -124,15 +126,6 @@ extension MapSearchViewController {
         micField.stack(micStatusImg, btn)
             .withMargins(.allSides(12))
         micView = bg
-    }
-    
-    @objc func didTapStopRecord() {
-        self.audioEngine.stop()
-        self.request.endAudio()
-        self.recognitionTask?.cancel()
-        self.recognitionTask = nil
-        micView?.removeFromSuperview()
-        self.searchField.text = detectedLabel
     }
     
     private func prepareMainView() {
@@ -182,26 +175,20 @@ extension MapSearchViewController {
             searchField.withHeight(45),
             micBtn.withWidth(25),
             spacing: 10).withMargins(.init(top: 10, left: 20, bottom: 10, right: 20))
-        
     }
     
     func setupCurLocBtn() {
         guard prepareCurrentLocationForSearch != nil else {return}
-        currentLocationBtn.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(currentLocationBtn)
-        currentLocationBtn.setImage(.init(systemName: "circle.circle"), for: .normal)
-        currentLocationBtn.imageView?.contentMode = .scaleAspectFit
-        currentLocationBtn.contentEdgeInsets = .init(top: 10, left: 20, bottom: 10, right: 20)
-        currentLocationBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
-        currentLocationBtn.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        currentLocationBtn.layer.cornerRadius = 8
-        currentLocationBtn.tintColor = .label
-        
-        currentLocationBtn.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
-        currentLocationBtn.layer.borderWidth = 0.2
-        currentLocationBtn.layer.cornerRadius = 8
-
+        currentLocationBtn.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 20, bottom: 20, right: 20))
+        currentLocationBtn.withHeight(45)
     }
+    
+    
+}
+
+//MARK: Objc
+extension MapSearchViewController {
     
     @objc func didTapBack() {
         navigationController?.popViewController(animated: true)
@@ -214,6 +201,15 @@ extension MapSearchViewController {
     @objc func didTapCurrentLocation() {
         prepareCurrentLocationForSearch?()
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func didTapStopRecord() {
+        self.audioEngine.stop()
+        self.request.endAudio()
+        self.recognitionTask?.cancel()
+        self.recognitionTask = nil
+        micView?.removeFromSuperview()
+        self.searchField.text = detectedLabel
     }
     
 }

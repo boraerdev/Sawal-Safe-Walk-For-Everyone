@@ -44,17 +44,7 @@ final class RegisterViewController: UIViewController, RegisterViewControllerInte
         return field
     }()
     
-    private lazy var spinner: UIActivityIndicatorView = {
-        let ind = UIActivityIndicatorView(style: .large)
-        ind.frame = .init(x: 0, y: 0, width: 100, height: 100)
-        let bg = UIView()
-        bg.backgroundColor = .secondarySystemBackground
-        bg.layer.cornerRadius = 8
-        bg.frame = ind.bounds
-        ind.layer.insertSublayer(bg.layer, at: 0)
-        ind.center = view.center
-        return ind
-    }()
+    private lazy var spinner = UIActivityIndicatorView()
     
     private lazy var fullNameField: UITextField = {
         let field = UITextField()
@@ -144,6 +134,7 @@ final class RegisterViewController: UIViewController, RegisterViewControllerInte
         viewModel.delegate = self
         prepareStacks()
         bindFields()
+        spinner = view.setupSpinner()
     }
     
     func bindFields() {

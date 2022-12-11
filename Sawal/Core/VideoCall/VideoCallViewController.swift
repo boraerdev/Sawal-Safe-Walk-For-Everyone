@@ -15,6 +15,9 @@ import AgoraRtcKit
 
 protocol VideoCallViewControllerInterface: AnyObject {
     func didTapJoin(role: AgoraClientRole, channel: String)
+    var mainContainer: UIView {get set}
+    var agoraView: AgoraVideoViewer! {get set}
+    var spinner: UIActivityIndicatorView {get set}
 }
 
 class VideoCallViewController: UIViewController, VideoCallViewControllerInterface {
@@ -26,36 +29,25 @@ class VideoCallViewController: UIViewController, VideoCallViewControllerInterfac
     let viewModel = VideoCallViewModel.shared
     
     //MARK: UI
-    let mainContainer = UIView(backgroundColor: .systemBackground)
+    var mainContainer = UIView(backgroundColor: .systemBackground)
     
     var agoraView: AgoraVideoViewer!
     
-    let activeCallsLbl = UILabel(text: "", font: .systemFont(ofSize: 11), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 0)
+    lazy var activeCallsLbl = UILabel(text: "", font: .systemFont(ofSize: 11), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 0)
     
-    private lazy var spinner: UIActivityIndicatorView = {
-        let ind = UIActivityIndicatorView(style: .large)
-        ind.frame = .init(x: 0, y: 0, width: 100, height: 100)
-        let bg = UIView()
-        bg.backgroundColor = .secondarySystemBackground
-        bg.layer.cornerRadius = 8
-        bg.frame = ind.bounds
-        ind.layer.insertSublayer(bg.layer, at: 0)
-        ind.center = view.center
-        return ind
-    }()
-
+    var spinner = UIActivityIndicatorView()
+    
     //MARK: Core
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .secondarySystemBackground
-        createMainContainer()
-        view.stack(mainContainer).withMargins(.init(top: 10, left: 20, bottom: 10, right: 20))
-        view.addSubview(spinner)
-        manager.delegate = self
         viewModel.delegate = self
+        manager.delegate = self
+        viewModel.viewDidLoad()
+        view.backgroundColor = .secondarySystemBackground
+        view.stack(mainContainer).withMargins(.init(top: 10, left: 20, bottom: 10, right: 20))
         manager.startUpdatingLocation()
-        bindLoading()
         updateActiveCallsLbl()
+        spinner = view.setupSpinner()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,6 +55,7 @@ class VideoCallViewController: UIViewController, VideoCallViewControllerInterfac
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        clearMainContainer()
         if agoraView != nil {
             agoraView.leaveChannel()
             CallService.shared.removeCall(for: userUid ?? "")
@@ -80,30 +73,21 @@ extension VideoCallViewController {
         }.disposed(by: disposeBag)
     }
     
-    private func bindLoading(){
-        viewModel.isLoading.subscribe { [weak self] result in
-            result ? self?.spinner.startAnimating() : self?.spinner.stopAnimating()
-        }
-        .disposed(by: disposeBag)
-    }
-    
-    private func createMainContainer() {
+    private func fillContainer() {
+        
         mainContainer.layer.cornerRadius = 8
         mainContainer.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
         mainContainer.layer.borderWidth = 0.2
         
-    }
-    
-    private func fillContainer() {
-        
-        let videoImg = UIImageView(image: .init(named: "Video"), contentMode: .scaleAspectFit)
+        lazy var videoImg = UIImageView(image: .init(named: "Video"), contentMode: .scaleAspectFit)
 
-        let label = UILabel(text: "A video call will begin and a call request will be sent to volunteers when you click to Video Call button. Live location and back camera view are will be shared with the volunteer. You can ask her/him whatever you want.", font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 0)
+        lazy var label = UILabel(text: "A video call will begin and a call request will be sent to volunteers when you click to Video Call button. Live location and back camera view are will be shared with the volunteer. You can ask her/him whatever you want.", font: .systemFont(ofSize: 13), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 0)
         
-        let privacyLbl = UILabel(text: "By using our services, you’re agreeing to terms.", font: .systemFont(ofSize: 11), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 0)
-        let adressLabel = fetchLocationInfo()
+        lazy var privacyLbl = UILabel(text: "By using our services, you’re agreeing to terms.", font: .systemFont(ofSize: 11), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 0)
+        lazy var adressLabel = fetchLocationInfo()
         
-        let callBtn = prepareMeetButtons()
+        lazy var callBtn = MainButton(title: "Video Call", tintColor: .systemBackground, backgroundColor: .main3)
+        callBtn.addTarget(self, action: #selector(didTapCall), for: .touchUpInside)
         
         mainContainer.stack(
             videoImg.withHeight(150),
@@ -118,48 +102,8 @@ extension VideoCallViewController {
         .withMargins(.allSides(12))
     }
     
-    func initializeAndJoinChannel(role: AgoraClientRole, channel: String){
-        
-        viewModel.isLoading.accept(true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
-            viewModel.isLoading.accept(false)
-        }
-        
-        if role == .broadcaster {
-            CallService.shared.makeCall(for: userUid ?? "") { _ in }
-        }
-        
-        var options = AgoraSettings()
-        options.tokenURL = serverUrl
-        
-        agoraView = AgoraVideoViewer(
-            connectionData: AgoraConnectionData(
-                appId: appId
-            ),
-            agoraSettings: options
-        )
-        agoraView.fills(view: mainContainer)
-        
-        agoraView.join(
-            channel: channel,
-            as: role,
-            fetchToken: true,
-            uid: .init(Float16.random(in: 0...1000))
-        )
-    }
-    
-    private func prepareMeetButtons() -> UIButton {
-        let callBtn = UIButton(title: "Video Call", titleColor: .systemBackground, font: .systemFont(ofSize: 17), backgroundColor: .main3, target: self, action: #selector(didTapCall))
-        
-        callBtn.layer.cornerRadius = 8
-        callBtn.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.5).cgColor
-        callBtn.layer.borderWidth = 0.2
-        
-        return callBtn
-    }
-    
     private func fetchLocationInfo() -> UILabel {
-        let adressLabel = UILabel(text: "", font: .systemFont(ofSize: 17), textColor: .label, textAlignment: .center, numberOfLines: 0)
+        lazy var adressLabel = UILabel(text: "", font: .systemFont(ofSize: 17), textColor: .label, textAlignment: .center, numberOfLines: 0)
         self.location.take(2).subscribe { result in
             let location = CLLocation(latitude: result?.latitude ?? 0, longitude: result?.longitude ?? 0)
             location.fetchLocationInfo { locationInfo, error in
@@ -171,13 +115,19 @@ extension VideoCallViewController {
     }
     
     private func prepareCalls() -> UIView {
-        let table = CallList()
+        lazy var table = CallList()
         table.items = viewModel.calls.value
         table.delegate = self
         viewModel.calls.subscribe { result in
             table.items = result.element ?? []
         }.disposed(by: disposeBag)
         return table.view
+    }
+    
+    func clearMainContainer() {
+        mainContainer.subviews.forEach { v in
+            v.removeFromSuperview()
+        }
     }
     
 }
@@ -194,30 +144,24 @@ extension VideoCallViewController: CLLocationManagerDelegate {
 extension VideoCallViewController {
     
     @objc func didTapCall() {
-        mainContainer.subviews.forEach { v in
-            v.removeFromSuperview()
-        }
-        initializeAndJoinChannel(role: .broadcaster, channel: userUid ?? "")
+        clearMainContainer()
+        viewModel.initializeAndJoinChannel(role: .broadcaster, channel: userUid ?? "")
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Leave", style: .plain, target: self, action: #selector(didTapStop))
     }
     
     func didTapJoin(role: AgoraClientRole, channel: String ) {
         print("didtapjoin chabnell: \(channel)")
-        mainContainer.subviews.forEach { v in
-            v.removeFromSuperview()
-        }
-        initializeAndJoinChannel(role: role, channel: channel)
+        clearMainContainer()
+        viewModel.initializeAndJoinChannel(role: role, channel: channel)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Leave", style: .plain, target: self, action: #selector(didTapStop))
     }
     
     @objc func didTapStop() {
         agoraView.leaveChannel()
         CallService.shared.removeCall(for: userUid ?? "")
-        mainContainer.subviews.forEach { v in
-            v.removeFromSuperview()
-        }
+        clearMainContainer()
         navigationItem.rightBarButtonItem = nil
         fillContainer()
     }
-
+    
 }

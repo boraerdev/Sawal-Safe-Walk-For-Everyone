@@ -14,12 +14,6 @@ import PhotosUI
 import Lottie
 import LBTATools
 
-enum RiskDegree: Int {
-    case low
-    case medium
-    case high
-}
-
 protocol ShareViewControllerInterface: AnyObject {
     func prepareMainView()
     func handleMapView()
@@ -190,7 +184,7 @@ extension ShareViewController {
     func handleMapView() {
     mapView.delegate = self
     mapView.showsUserLocation = true
-}
+    }
 
     func prepareStack() {
     view.stack(view.hstack(headerLocation, currentDateLabel),
@@ -414,4 +408,10 @@ extension ShareViewController: PHPickerViewControllerDelegate {
             }
         }
     }
+}
+
+enum RiskDegree: Int {
+    case low
+    case medium
+    case high
 }

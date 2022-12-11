@@ -21,10 +21,3 @@ extension HomeControllerViewModel: HomeViewModelInterface {
         CallService.shared.fetchActiveCalls {  _ in }
     }
 }
-
-struct HomeBtnViewModel {
-    let title: String
-    let subtitle: String
-    let imgName: String
-}
-

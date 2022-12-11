@@ -87,7 +87,6 @@ extension HomeViewController {
         view.backgroundColor = .secondarySystemBackground
         navigationItem.titleView = welcomeStack
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(didTapMenu))
-        
     }
     
     func prepareSideMenu() {

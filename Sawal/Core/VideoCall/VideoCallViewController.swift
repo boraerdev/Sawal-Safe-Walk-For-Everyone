@@ -29,13 +29,21 @@ class VideoCallViewController: UIViewController, VideoCallViewControllerInterfac
     let viewModel = VideoCallViewModel.shared
     
     //MARK: UI
-    var mainContainer = UIView(backgroundColor: .systemBackground)
+    var mainContainer = UIView(
+        backgroundColor: .systemBackground
+    )
     
     var agoraView: AgoraVideoViewer!
     
-    lazy var activeCallsLbl = UILabel(text: "", font: .systemFont(ofSize: 11), textColor: .secondaryLabel, textAlignment: .center, numberOfLines: 0)
-    
     var spinner = UIActivityIndicatorView()
+    
+    lazy var activeCallsLbl = UILabel(
+        text: "",
+        font: .systemFont(ofSize: 11),
+        textColor: .secondaryLabel,
+        textAlignment: .center,
+        numberOfLines: 0
+    )
     
     //MARK: Core
     override func viewDidLoad() {
@@ -104,6 +112,11 @@ extension VideoCallViewController {
     
     private func fetchLocationInfo() -> UILabel {
         lazy var adressLabel = UILabel(text: "", font: .systemFont(ofSize: 17), textColor: .label, textAlignment: .center, numberOfLines: 0)
+        updateAdressLblText(for: adressLabel)
+        return adressLabel
+    }
+    
+    private func updateAdressLblText(for adressLabel: UILabel) {
         self.location.take(2).subscribe { result in
             let location = CLLocation(latitude: result?.latitude ?? 0, longitude: result?.longitude ?? 0)
             location.fetchLocationInfo { locationInfo, error in
@@ -111,7 +124,6 @@ extension VideoCallViewController {
                 adressLabel.text = "\(locationInfo?.administrativeArea ?? ""), \(locationInfo?.thoroughfare ?? ""), \(locationInfo?.locality ?? ""), \(locationInfo?.postalCode ?? "")"
             }
         }.disposed(by: disposeBag)
-        return adressLabel
     }
     
     private func prepareCalls() -> UIView {
@@ -124,7 +136,7 @@ extension VideoCallViewController {
         return table.view
     }
     
-    func clearMainContainer() {
+    private func clearMainContainer() {
         mainContainer.subviews.forEach { v in
             v.removeFromSuperview()
         }

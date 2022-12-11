@@ -13,7 +13,9 @@ import RxCocoa
 class CallCell: LBTAListCell<Call> {
     
     let label = UILabel(text: "test")
-    let joinBtn = UIButton(title: "Join", titleColor: .systemBackground, font: .systemFont(ofSize: 13), backgroundColor: .main3, target: self, action: #selector(didTapjoin))
+    let joinBtn = UIButton(
+        title: "Join", titleColor: .systemBackground, font: .systemFont(ofSize: 13), backgroundColor: .main3, target: self, action: #selector(didTapjoin)
+    )
     
     override var item: Call! {
         didSet {
@@ -28,12 +30,6 @@ class CallCell: LBTAListCell<Call> {
         }
     }
     
-    func fetchUser(uid: String) {
-        UserService.shared.getUser(uid: uid) { [unowned self] user in
-            label.text = user.fullName
-        }
-    }
-    
     override func setupViews() {
         super.setupViews()
         backgroundColor = .clear
@@ -42,7 +38,12 @@ class CallCell: LBTAListCell<Call> {
         layer.cornerRadius = 8
         joinBtn.layer.cornerRadius = 4
         hstack(label, UIView(), joinBtn.withWidth(70)).withMargins(.allSides(10))
-        
+    }
+    
+    func fetchUser(uid: String) {
+        UserService.shared.getUser(uid: uid) { [unowned self] user in
+            label.text = user.fullName
+        }
     }
     
 }
@@ -51,7 +52,6 @@ class CallCell: LBTAListCell<Call> {
 class CallList: LBTAListController<CallCell, Call>, UICollectionViewDelegateFlowLayout{
     
     weak var delegate: VideoCallViewControllerInterface?
-    let videoCallVM = VideoCallViewModel.shared
     let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -65,12 +65,6 @@ class CallList: LBTAListController<CallCell, Call>, UICollectionViewDelegateFlow
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         5
     }
-    
-//    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        videoCallVM.calls.subscribe { [unowned self] result in
-//
-//        }.disposed(by: disposeBag)
-//    }
     
     func joinChannel(uid: String) {
         print("calllist çalıştı")

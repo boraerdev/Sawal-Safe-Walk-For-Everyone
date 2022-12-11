@@ -61,17 +61,7 @@ final class ShareViewController: UIViewController, ShareViewControllerInterface 
         return ani
     }()
     
-    private lazy var spinner: UIActivityIndicatorView = {
-        let ind = UIActivityIndicatorView(style: .large)
-        ind.frame = .init(x: 0, y: 0, width: 100, height: 100)
-        let bg = UIView()
-        bg.backgroundColor = .secondarySystemBackground
-        bg.layer.cornerRadius = 8
-        bg.frame = ind.bounds
-        ind.layer.insertSublayer(bg.layer, at: 0)
-        ind.center = view.center
-        return ind
-    }()
+    private lazy var spinner = UIActivityIndicatorView()
     
     private lazy var mapViewContainer: UIView = {
        let view = UIView()
@@ -81,13 +71,17 @@ final class ShareViewController: UIViewController, ShareViewControllerInterface 
         return view
     }()
     
-    private lazy var lowBtn = UIButton(title: "Low", titleColor: .systemOrange, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    private lazy var lowBtn = UIButton(
+        title: "Low", titleColor: .systemOrange, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     
-    private lazy var medBtn = UIButton(title: "Medium", titleColor: .systemRed, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    private lazy var medBtn = UIButton(
+        title: "Medium", titleColor: .systemRed, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     
-    private lazy var highBtn = UIButton(title: "High", titleColor: .main2Light, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
+    private lazy var highBtn = UIButton(
+        title: "High", titleColor: .main2Light, font: .systemFont(ofSize: 15), backgroundColor: .clear, target: self, action: #selector(didTapRiskBtn(_:)))
     
-    private lazy var headerLocation = UILabel(font: .systemFont(ofSize: 11), textColor: .secondaryLabel)
+    private lazy var headerLocation = UILabel(
+        font: .systemFont(ofSize: 11), textColor: .secondaryLabel)
     
     private lazy var countLbl: UILabel = {
        let lbl = UILabel()
@@ -172,6 +166,7 @@ extension ShareViewController {
     func prepareMainView() {
         viewModel.view = self
         manager.delegate = self
+        spinner = view.setupSpinner()
         view.backgroundColor = .secondarySystemBackground
         navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Post", style: .plain, target: self, action: #selector(didTapShare))
@@ -182,8 +177,8 @@ extension ShareViewController {
     }
     
     func handleMapView() {
-    mapView.delegate = self
-    mapView.showsUserLocation = true
+        mapView.delegate = self
+        mapView.showsUserLocation = true
     }
 
     func prepareStack() {
@@ -200,9 +195,9 @@ extension ShareViewController {
 }
 
     func setLocationName() {
-    let inf = "\(locationInfo?.name ?? ""), \(locationInfo?.administrativeArea ?? "")"
-    headerLocation.text = inf
-}
+        let inf = "\(locationInfo?.name ?? ""), \(locationInfo?.administrativeArea ?? "")"
+        headerLocation.text = inf
+    }
     
     func configureRiskButtons() {
     [lowBtn, medBtn, highBtn].enumerated().forEach { i, btn in
@@ -266,7 +261,7 @@ extension ShareViewController {
         annotationView?.layer.cornerRadius = 8
         annotationView?.clipsToBounds = true
         annotationView?.layer.masksToBounds = true
-        annotationView?.makeConstraints(top: nil, left: nil, right: nil, bottom: nil, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 0, width: 70, height: 70)
+        annotationView?.withSize(.init(width: 70, height: 70))
     }
     
 }
